@@ -4,7 +4,7 @@ import { DEFAULTS, model, money, num } from '/js/lcc-model.js';
 document.addEventListener('DOMContentLoaded', () => {
   initSlideEngine({
     lessonFile: '005.ComparacaoEconomica.html',
-    maxSteps: [0, 0, 0, 0, 0, 3, 0, 0]
+    maxSteps: [0, 0, 0, 0, 0, 0, 3, 0, 0]
   });
 
   // Slide 2: Tabela de fluxo ano a ano
@@ -53,6 +53,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   ['m5-r', 'm5-n', 'm5-c'].forEach((id) => document.getElementById(id)?.addEventListener('input', updatePVSim));
   updatePVSim();
+
+  // Slide 4: Conversor Taxa Real vs Nominal (Equação de Fisher)
+  function updateFisherSim() {
+    const nomInput = document.getElementById('m5-nom-r');
+    const infInput = document.getElementById('m5-inf-r');
+    const nomPct = nomInput ? Number(nomInput.value) : 10;
+    const infPct = infInput ? Number(infInput.value) : 4;
+    const nom = nomPct / 100;
+    const inf = infPct / 100;
+    const realPct = ((1 + nom) / (1 + inf) - 1) * 100;
+    const approxPct = nomPct - infPct;
+
+    const nomEl = document.getElementById('m5-nom-r-val');
+    const infEl = document.getElementById('m5-inf-r-val');
+    const realEl = document.getElementById('m5-real-r-val');
+    const subEl = document.getElementById('m5-real-r-sub');
+
+    if (nomEl) nomEl.textContent = `${num(nomPct, 1)}% a.a.`;
+    if (infEl) infEl.textContent = `${num(infPct, 1)}% a.a.`;
+    if (realEl) realEl.textContent = `${num(realPct, 2)}% a.a.`;
+    if (subEl) subEl.textContent = `Subtração simples daria ${num(approxPct, 2)}% (aprox.)`;
+  }
+  ['m5-nom-r', 'm5-inf-r'].forEach((id) => document.getElementById(id)?.addEventListener('input', updateFisherSim));
+  updateFisherSim();
 
   // Slide 4: Fluxo de Caixa Horizontal & VPL
   function updateHCF() {
