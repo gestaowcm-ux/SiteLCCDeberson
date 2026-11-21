@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deck de Cards Empilhados — Mentoria de Confiabilidade</title>
+  <meta name="description" content="Demonstração interativa de deck de cards empilhados com descarte por gesto de swipe e dispersão radial no scroll.">
+  <link rel="stylesheet" href="./style.css">
+  
+  <!-- CDNs do GSAP, ScrollTrigger e Draggable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+
+  <style>
+    /* Estilos para o Deck de Cards (Fundo Branco & Fontes do Sistema) */
+    :root {
+      --card-width: 320px;
+      --card-height: 400px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--color-canvas-soft);
+      color: var(--color-ink);
+      font-family: var(--font-family);
+      overflow-x: hidden;
+    }
+
+    /* Hero Header */
+    .hero-section {
+      height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 var(--spacing-xl);
+      background: radial-gradient(circle at center, #ffffff 0%, var(--color-canvas-soft) 100%);
+      border-bottom: 1px solid var(--color-border);
+      margin-top: 80px; /* Margem para a nav-bar */
+    }
+
+    .hero-section h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-ink);
+    }
+
+    .hero-section p {
+      color: var(--color-body);
+      max-width: 600px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .section-title-tag {
+      background-color: rgba(5, 150, 105, 0.1);
+      color: var(--color-success);
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: var(--rounded-pill);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: var(--spacing-lg);
+      display: inline-block;
+    }
+
+    /* --- SEÇÃO 1: SWIPE DECK --- */
+    .swipe-section {
+      padding: 80px var(--spacing-xl);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-canvas);
+      position: relative;
+      min-height: 100vh;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .deck-container-swipe {
+      position: relative;
+      width: var(--card-width);
+      height: var(--card-height);
+      margin: 40px auto;
+    }
+
+    .card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--rounded-xl);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      padding: var(--spacing-2xl);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      will-change: transform, opacity;
+      color: var(--color-ink);
+    }
+
+    .card:active {
+      cursor: grabbing;
+    }
+
+    /* Estilo das Informações dos Cards */
+    .card-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--color-border);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-body h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+      color: var(--color-ink);
+    }
+
+    .card-body p {
+      color: var(--color-body);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--color-mute);
+      border-top: 1px solid var(--color-border);
+      padding-top: var(--spacing-sm);
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: var(--rounded-pill);
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+
+    .badge-active { background-color: rgba(5, 150, 105, 0.1); color: var(--color-success); }
+    .badge-pending { background-color: rgba(219, 38, 38, 0.08); color: var(--color-danger); }
+
+    /* Botão de reset */
+    .reset-btn-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .reset-btn-container.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .reset-btn {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border: 1px solid var(--color-primary);
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: var(--rounded-pill);
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .reset-btn:hover {
+      background-color: #333333;
+      transform: translateY(-2px);
+    }
+
+    /* --- SEÇÃO 2: SCROLL SCATTER --- */
+    .scroll-scatter-section {
+      height: 250vh; /* Altura estendida para suportar a rolagem com scrub */
+      background-color: var(--color-canvas-soft);
+      position: relative;
+    }
+
+    .pin-container {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .deck-container-scatter {
+      position: relative;
+      width: var(--card-width);
+      height: var(--card-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scatter-card {
+      position: absolute;
+      width: var(--card-width);
+      height: var(--card-height);
+      border-radius: var(--rounded-xl);
+      padding: var(--spacing-2xl);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      will-change: transform;
+      color: var(--color-ink);
+    }
+
+    /* Cores de borda para destacar os cards no grid espalhado */
+    .sc-1 { border-top: 3px solid var(--color-danger); }
+    .sc-2 { border-top: 3px solid var(--color-warning); }
+    .sc-3 { border-top: 3px solid var(--color-success); }
+    .sc-4 { border-top: 3px solid var(--color-primary); }
+
+    .spacer-bottom {
+      height: 40vh;
+      background-color: var(--color-canvas);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-body);
+      font-size: 0.95rem;
+      border-top: 1px solid var(--color-border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Navegação Superior (nav-bar) -->
+  
+
+  <!-- Intro Header -->
+  <section class="hero-section">
+    <span class="section-title-tag">Cards Empilhados</span>
+    <h1>Deck de Cards Interativo</h1>
+    <p>
+      Uma demonstração cinética tátil da mentoria. O módulo apresenta duas abordagens tridimensionais: um baralho que responde a gestos táteis de descarte e um grid que se dispersa radialmente sob a rolagem.
+    </p>
+    <div style="margin-top: 30px; font-size: 0.9rem; color: var(--color-success); font-weight: 600;">
+      Desça para iniciar ↓
+    </div>
+  </section>
+
+  <!-- SEÇÃO 1: Gesto de Arraste (Swipe Stack) -->
+  <section class="swipe-section">
+    <span class="section-title-tag">Interação 1: Gesto Swipe</span>
+    <h2 class="display-sm" style="margin-bottom: 10px; font-weight: 700;">Descarte de Cartas Interativo</h2>
+    <p style="color: var(--color-body); max-width: 500px; text-align: center; font-size: 0.95rem; margin-bottom: 40px;">
+      Pressione e arraste horizontalmente o card do topo. Arremesse-o rápido ou puxe além do limite lateral para removê-lo da pilha.
+    </p>
+
+    <div class="deck-container-swipe">
+      
+      <!-- Card 4 (Fundo) -->
+      <div class="card swipe-card">
+        <div class="card-header">
+          <span class="status-badge badge-pending">Nível Básico</span>
+          <span class="card-number">04</span>
+        </div>
+        <div class="card-body">
+          <h3>Gestão de KPIs</h3>
+          <p>Mapeamento e controle de indicadores-chave de desempenho como OEE, MTTR e MTBF direto no navegador para tomadas de decisão.</p>
+        </div>
+        <div class="card-footer">
+          <span>Módulo IV</span>
+          <span>Status: Aguardando</span>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card swipe-card">
+        <div class="card-header">
+          <span class="status-badge badge-pending">Nível Médio</span>
+          <span class="card-number">03</span>
+        </div>
+        <div class="card-body">
+          <h3>Auditoria de Processos</h3>
+          <p>Auditorias sistemáticas de PCM e rotinas de manutenção para checagem de conformidade com os padrões mundiais.</p>
+        </div>
+        <div class="card-footer">
+          <span>Módulo III</span>
+          <span>Status: Aguardando</span>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card swipe-card">
+        <div class="card-header">
+          <span class="status-badge badge-active">Nível Avançado</span>
+          <span class="card-number">02</span>
+        </div>
+        <div class="card-body">
+          <h3>Causa Raiz (RCA)</h3>
+          <p>Investigação estruturada de falhas físicas, humanas e latentes por meio de diagramas de causas e efeito.</p>
+        </div>
+        <div class="card-footer">
+          <span>Módulo II</span>
+          <span>Status: Ativo</span>
+        </div>
+      </div>
+
+      <!-- Card 1 (Topo Inicial) -->
+      <div class="card swipe-card">
+        <div class="card-header">
+          <span class="status-badge badge-active">Nível Master</span>
+          <span class="card-number">01</span>
+        </div>
+        <div class="card-body">
+          <h3>Criticidade & RCM</h3>
+          <p>Configuração das prioridades operacionais usando critérios e matrizes da Manutenção Centrada em Confiabilidade.</p>
+        </div>
+        <div class="card-footer">
+          <span>Módulo I</span>
+          <span>Status: Ativo</span>
+        </div>
+      </div>
+
+      <!-- Botão que aparece quando todos os cards são deslizados -->
+      <div class="reset-btn-container" id="resetContainer">
+        <button class="reset-btn" onclick="resetSwipeDeck()">Restaurar Deck</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SEÇÃO 2: Dispersão Radial no Scroll (Scroll Scatter) -->
+  <section class="scroll-scatter-section">
+    <div class="pin-container">
+      
+      <div style="position: absolute; top: 8%; text-align: center; width: 100%; padding: 0 20px; z-index: 2;">
+        <span class="section-title-tag">Interação 2: Scroll Scatter</span>
+        <h2 class="display-sm" style="font-weight: 700; margin-bottom: 5px;">Dispersão por Rotação no Scroll</h2>
+        <p style="color: var(--color-body); font-size: 0.95rem; max-width: 500px; margin: 0 auto;">
+          Role a página lentamente para baixo e observe os cartões se desempilharem e se espalharem em uma grade geométrica flutuante.
+        </p>
+      </div>
+
+      <div class="deck-container-scatter">
+        <!-- Card 1 (Fundo da Pilha) -->
+        <div class="scatter-card sc-1">
+          <div class="card-header">
+            <span class="card-number" style="color: var(--color-danger);">M1</span>
+          </div>
+          <div class="card-body">
+            <h3>Análise FMEA</h3>
+            <p>Mapeamento estruturado dos modos de falha críticos, efeitos e índices de severidade.</p>
+          </div>
+          <div class="card-footer">
+            <span>Criticidade</span>
+            <span>Risco Alto</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="scatter-card sc-2">
+          <div class="card-header">
+            <span class="card-number" style="color: var(--color-warning);">M2</span>
+          </div>
+          <div class="card-body">
+            <h3>Ishikawa (6M)</h3>
+            <p>Diagrama de causa e efeito focado em métodos, máquinas, materiais e fatores humanos.</p>
+          </div>
+          <div class="card-footer">
+            <span>Causa Raiz</span>
+            <span>Investigação</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="scatter-card sc-3">
+          <div class="card-header">
+            <span class="card-number" style="color: var(--color-success);">M3</span>
+          </div>
+          <div class="card-body">
+            <h3>Auditorias 5S</h3>
+            <p>Rotinas e checklists práticos de auditoria de conformidade física e limpeza industrial.</p>
+          </div>
+          <div class="card-footer">
+            <span>PCM</span>
+            <span>Maturidade</span>
+          </div>
+        </div>
+
+        <!-- Card 4 (Topo da Pilha) -->
+        <div class="scatter-card sc-4">
+          <div class="card-header">
+            <span class="card-number" style="color: var(--color-primary);">M4</span>
+          </div>
+          <div class="card-body">
+            <h3>Backlog e Carga</h3>
+            <p>Gerenciamento estratégico das ordens pendentes e planejamento de recursos de homem-hora.</p>
+          </div>
+          <div class="card-footer">
+            <span>PCM</span>
+            <span>Gestão</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Rodapé simples de espaçamento -->
+  <div class="spacer-bottom">
+    <button class="btn btn-primary" onclick="window.location.href='./index.html'" id="btn-deck-back">
+      Voltar para a página inicial
+    </button>
+    <span style="margin-top: 15px; font-size: 12px; color: var(--color-mute);">Fim da demonstração conceitual de motion design.</span>
+  </div>
+
+  <script src="/mentoria-modal.js"></script>
+
+  <script>
+    // Inicializa as bibliotecas GSAP
+    gsap.registerPlugin(ScrollTrigger, Draggable);
+
+    let activeCardIndex;
+    let swipeCards;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initSwipeDeck();
+      initScrollScatter();
+    });
+
+    /* --- LÓGICA DA SEÇÃO 1: GESTO DE SWIPE --- */
+    function initSwipeDeck() {
+      swipeCards = gsap.utils.toArray('.swipe-card');
+      activeCardIndex = swipeCards.length - 1;
+
+      swipeCards.forEach((card, index) => {
+        const depth = swipeCards.length - 1 - index;
+        
+        // Posição empilhada inicial
+        gsap.set(card, {
+          zIndex: index,
+          y: depth * -10,
+          scale: 1 - (depth * 0.035),
+          rotation: (index % 2 === 0 ? -1 : 1) * (depth * 1.5),
+          transformOrigin: "bottom center"
+        });
+
+        // Habilita gesto arrastável via GSAP Draggable
+        Draggable.create(card, {
+          type: "x,y",
+          edgeResistance: 0.65,
+          onDrag: function() {
+            // Rotaciona levemente o card conforme ele é arrastado lateralmente
+            const rotateAmt = this.x * 0.06;
+            gsap.set(this.target, { 
+              rotate: rotateAmt,
+              cursor: "grabbing"
+            });
+          },
+          onDragEnd: function() {
+            const threshold = 120; // limite em pixels para descarte
+            const velocityX = this.velocityX;
+            
+            // Se ultrapassar o limiar de arrasto ou for arremessado rapidamente
+            if (Math.abs(this.x) > threshold || Math.abs(velocityX) > 400) {
+              const direction = this.x > 0 ? 1 : -1;
+              const flyX = direction * (window.innerWidth + 200);
+              const flyY = this.y + (this.velocityY * 0.12); // movimento balístico
+              
+              gsap.to(this.target, {
+                x: flyX,
+                y: flyY,
+                rotate: direction * 35,
+                opacity: 0,
+                duration: 0.6,
+                ease: "power2.out",
+                onComplete: () => {
+                  this.target.style.display = "none";
+                  activeCardIndex--;
+                  if (activeCardIndex < 0) {
+                    // Exibe o botão de reset caso todas as cartas tenham sido descartadas
+                    document.getElementById('resetContainer').classList.add('is-visible');
+                  }
+                }
+              });
+            } else {
+              // Retorna a carta para a pilha com amortecimento elástico
+              gsap.to(this.target, {
+                x: 0,
+                y: (swipeCards.length - 1 - index) * -10,
+                rotate: (index % 2 === 0 ? -1 : 1) * ((swipeCards.length - 1 - index) * 1.5),
+                duration: 0.55,
+                ease: "elastic.out(1.1, 0.6)"
+              });
+            }
+          }
+        });
+      });
+    }
+
+    // Função de reset do deck de deslizar
+    function resetSwipeDeck() {
+      document.getElementById('resetContainer').classList.remove('is-visible');
+      activeCardIndex = swipeCards.length - 1;
+
+      swipeCards.forEach((card, index) => {
+        card.style.display = "flex";
+        const depth = swipeCards.length - 1 - index;
+        
+        gsap.fromTo(card, 
+          { 
+            x: 0, 
+            y: -window.innerHeight - 80, 
+            rotate: index % 2 === 0 ? -12 : 12, 
+            opacity: 0 
+          },
+          {
+            x: 0,
+            y: depth * -10,
+            rotate: (index % 2 === 0 ? -1 : 1) * (depth * 1.5),
+            opacity: 1,
+            scale: 1 - (depth * 0.035),
+            duration: 0.8,
+            delay: (swipeCards.length - 1 - index) * 0.12,
+            ease: "back.out(1.3)"
+          }
+        );
+      });
+    }
+
+    /* --- LÓGICA DA SEÇÃO 2: DISPERSÃO NO SCROLL --- */
+    function initScrollScatter() {
+      const scatterCards = gsap.utils.toArray('.scatter-card');
+      
+      // Ângulo inicial embaralhado de cada carta
+      scatterCards.forEach((card, index) => {
+        const rotationAngles = [-3, 2, -1, 4];
+        gsap.set(card, {
+          zIndex: index,
+          rotate: rotationAngles[index % rotationAngles.length]
+        });
+      });
+
+      // Cria a timeline com ScrollTrigger acoplada à rolagem física
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".scroll-scatter-section",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.8, // amortecimento físico suave
+          pin: true,
+          invalidateOnRefresh: true
+        }
+      });
+
+      const isMobile = () => window.innerWidth < 768;
+
+      // Desloca cada card para uma coordenada específica (dispersão 2x2)
+      tl.to(scatterCards[3], { // M4 -> Canto inferior direito
+        x: () => isMobile() ? 15 : 330,
+        y: () => isMobile() ? 190 : 200,
+        rotate: 8,
+        duration: 1
+      }, 0)
+      .to(scatterCards[2], { // M3 -> Canto inferior esquerdo
+        x: () => isMobile() ? -15 : -330,
+        y: () => isMobile() ? 90 : 200,
+        rotate: -10,
+        duration: 1
+      }, 0)
+      .to(scatterCards[1], { // M2 -> Canto superior direito
+        x: () => isMobile() ? 15 : 330,
+        y: () => isMobile() ? -90 : -200,
+        rotate: 12,
+        duration: 1
+      }, 0)
+      .to(scatterCards[0], { // M1 -> Canto superior esquerdo
+        x: () => isMobile() ? -15 : -330,
+        y: () => isMobile() ? -190 : -200,
+        rotate: -14,
+        duration: 1
+      }, 0);
+    }
+  </script>
+<script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

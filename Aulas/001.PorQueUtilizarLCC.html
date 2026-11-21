@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 1 — Por que utilizar o LCC? | Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/lcc-slides.css">
+  <style>
+    /* Slide 3: 4 Perspectivas sobre o Dilema A vs B (Largura Total, Minimalista) */
+    .meeting-stage {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: clamp(14px, 2vh, 22px);
+    }
+    .persona-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: clamp(10px, 1.2vw, 18px);
+      flex-shrink: 0;
+    }
+    .persona-tab {
+      background: var(--color-canvas-softer);
+      border: 1.5px solid var(--color-border);
+      border-radius: 14px;
+      padding: clamp(12px, 1.8vh, 20px) clamp(14px, 1.4vw, 22px);
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .persona-tab:hover {
+      border-color: #a3a3a3;
+      background: var(--color-canvas-soft);
+    }
+    .persona-tab.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+    .persona-tab.is-turning-point.active {
+      border-color: var(--color-danger);
+      box-shadow: 0 8px 22px rgba(220, 38, 38, 0.22);
+    }
+    .persona-role {
+      font-size: clamp(11px, min(0.95vw, 1.5vh), 15px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-body);
+    }
+    .persona-tab.active .persona-role {
+      color: #fca5a5;
+    }
+    .persona-name {
+      font-size: clamp(18px, min(1.7vw, 2.7vh), 28px);
+      font-weight: 800;
+      color: var(--color-ink);
+    }
+    .persona-tab.active .persona-name {
+      color: #ffffff;
+    }
+    .persona-stance {
+      font-size: clamp(12.5px, min(1.1vw, 1.8vh), 18px);
+      color: var(--color-body);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .persona-tab.active .persona-stance {
+      color: rgba(255, 255, 255, 0.84);
+    }
+    .persona-detail-card {
+      flex: 1;
+      min-height: 0;
+      background: var(--color-canvas-softer);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--rounded-xl);
+      padding: clamp(20px, 3vh, 38px) clamp(24px, 2.8vw, 44px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: clamp(14px, 2vh, 24px);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    .persona-detail-card.turning-point {
+      background: #fffafa;
+      border-color: var(--color-danger);
+    }
+    .persona-quote-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .persona-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 18px;
+      border-radius: var(--rounded-pill);
+      background: var(--color-primary);
+      color: #ffffff;
+      font-size: clamp(13px, min(1.1vw, 1.8vh), 18px);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    .persona-detail-card.turning-point .persona-badge-pill {
+      background: var(--color-danger);
+    }
+    .persona-proposal-tag {
+      font-size: clamp(13px, min(1.1vw, 1.8vh), 18px);
+      font-weight: 700;
+      color: var(--color-ink);
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      padding: 6px 18px;
+      border-radius: var(--rounded-pill);
+    }
+    .persona-quote-text {
+      font-size: clamp(22px, min(2.35vw, 3.8vh), 40px);
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      color: var(--color-ink);
+      margin: 0;
+      padding-left: clamp(16px, 1.8vw, 28px);
+      border-left: 6px solid var(--color-primary);
+    }
+    .persona-detail-card.turning-point .persona-quote-text {
+      border-left-color: var(--color-danger);
+    }
+    .persona-analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(14px, 1.8vw, 24px);
+    }
+    .persona-analysis-box {
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      padding: clamp(14px, 2vh, 24px) clamp(16px, 1.8vw, 28px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .persona-analysis-label {
+      font-size: clamp(11.5px, min(0.98vw, 1.6vh), 16px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--color-body);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .persona-analysis-box.risk-box .persona-analysis-label {
+      color: var(--color-danger);
+    }
+    .persona-analysis-val {
+      font-size: clamp(15px, min(1.4vw, 2.3vh), 23px);
+      line-height: 1.4;
+      color: var(--color-ink);
+      margin: 0;
+      font-weight: 500;
+    }
+    @media (max-width: 992px) {
+      .persona-analysis-grid { grid-template-columns: 1fr; }
+      .persona-tabs { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="slides-container">
+    <div class="slides-wrapper" id="slides-wrapper">
+
+      <!-- Slide 1: Capa -->
+      <main class="slide-section active-slide cover-slide" id="slide-1">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Módulo 1: Por que utilizar o LCC?</h3>
+          <p>Dê boas-vindas ao módulo de abertura (duração sugerida: 25 min). O objetivo é provocar a turma com um dilema real de compra: sair da comparação isolada de preço de aquisição para uma visão estruturada de custo ao longo do ciclo de vida.</p>
+        </div>
+        <div class="cover-technical-grid"></div>
+        <div class="cover-content">
+          <span class="cover-badge animate-item">MÓDULO 01 • 25 MIN</span>
+          <h1 class="cover-title animate-item delay-1">Por que utilizar o LCC?</h1>
+          <div class="cover-divider animate-item delay-2"></div>
+          <p class="cover-subtitle animate-item delay-3">O preço de compra é apenas o começo da conta. Descubra por que decisões baseadas apenas na cotação inicial costumam gerar passivos ocultos de energia, manutenção e indisponibilidade.</p>
+          <div class="cover-meta-row animate-item delay-4">
+            <span class="cover-pill">Caso Base: Bombas A vs B</span>
+            <span class="cover-pill">Simulação de Inversão</span>
+            <button type="button" class="cover-cta" data-start-lesson>Iniciar Módulo →</button>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <span>CURSO LCC — MANUTENÇÃO · CONFIABILIDADE · GESTÃO DE ATIVOS</span>
+          <span>MÓDULO 01 / 08</span>
+        </div>
+      </main>
+
+      <!-- Slide 2: Simulação de Votação — Qual você compraria? -->
+      <section class="slide-section" id="slide-2">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Qual você compraria?</h3>
+          <p>Apresente as duas propostas fictícias. Ambas atendem à vazão e à pressão requeridas, mas ainda não sabemos se todos os demais requisitos foram verificados. Faça uma votação ao vivo com a turma e ouça justificativas sem indicar uma vencedora. Não revele consumo, manutenção ou vida útil ainda.</p>
+          <p><strong>Debate:</strong> Quem escolheria A? Quem escolheria B? O que precisamos saber antes de aprovar?</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+        <span class="technical-corner-tick tick-tl"></span><span class="technical-corner-tick tick-tr"></span>
+        <span class="technical-corner-tick tick-bl"></span><span class="technical-corner-tick tick-br"></span>
+
+        <div class="slide-header align-left">
+          <span class="body-sm-strong animate-item">DILEMA DE AQUISIÇÃO • VOTAÇÃO DA TURMA</span>
+          <h2 class="display-xl animate-item delay-1">Qual você compraria?</h2>
+          <p class="slide-subtitle animate-item delay-2">O preço isolado não resolve a decisão. Ambas atendem à vazão e à pressão requeridas.</p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-asymmetric animate-item delay-2">
+            <div class="lcc-card accent-dark accent-strip-left" id="vote-card-a" style="padding: clamp(20px, 3vh, 36px);">
+              <div>
+                <span class="card-kicker">Proposta A • Menor Preço Inicial</span>
+                <div class="hero-callout-num" style="margin: 14px 0;">R$ 80.000</div>
+                <p class="card-text">Preço de compra do equipamento. Vazão e pressão nominais atendidas.</p>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 16px;">
+                <button type="button" class="tab-pill" id="btn-vote-a" style="background:#ffffff; color:#000000;">+ Votar em A</button>
+                <span id="count-vote-a" style="font-size: 22px; font-weight: 800;">0 votos</span>
+              </div>
+            </div>
+
+            <div class="lcc-card" id="vote-card-b" style="margin-top: clamp(14px, 2.5vh, 28px);">
+              <div>
+                <span class="card-kicker">Proposta B • Maior Investimento Inicial</span>
+                <div class="card-metric" style="margin: 10px 0;">R$ 110.000</div>
+                <p class="card-text">Preço de compra do equipamento (+R$ 30.000). Vazão e pressão nominais atendidas.</p>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 12px;">
+                <button type="button" class="tab-pill" id="btn-vote-b">+ Votar em B</button>
+                <span id="count-vote-b" style="font-size: 20px; font-weight: 800;">0 votos</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sim-panel animate-item delay-3" style="flex-direction: row; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div id="vote-summary-text" style="font-weight: 700; font-size: clamp(14px, 1.25vw, 18px);">
+              Registre os votos da turma acima antes de revelar o que falta na proposta.
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill" id="btn-reveal-trap">Revelar ponto cego</button>
+              <button type="button" class="tab-pill" id="btn-reset-votes">Zerar votos</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Reflexão — 4 Pontos de Vista sobre o Mesmo Caso -->
+      <section class="slide-section" id="slide-3">
+        <div class="speaker-notes" style="display: none;">
+          <h3>4 pontos de vista sobre a mesma decisão</h3>
+          <p>Logo após a votação da turma entre Proposta A (R$ 80 mil) e Proposta B (R$ 110 mil), mostre que a mesma divisão acontece dentro da empresa. Percorra os 4 personagens com a seta ou clicando nas abas.</p>
+          <p><strong>Pergunta para a turma:</strong> Quem está errado nessa reunião? Ninguém está agindo de má-fé — cada área enxerga uma fração real do problema. Ao chegar em <strong>Beatriz (Finanças)</strong>, destaque como a pergunta do LCC unifica as áreas na mesma régua econômica.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header-bar">
+          <div class="slide-header">
+            <span class="body-sm-strong">REFLEXÃO • MESMO CASO, 4 PONTOS DE VISTA</span>
+            <h2 class="display-xl">Quem tem razão na sala?</h2>
+          </div>
+          <div class="step-controls-inline">
+            <span class="step-pill-label" data-step-label>Perspectiva 1/4</span>
+            <div class="step-dots-mini" data-step-dots></div>
+            <button type="button" class="btn-step-next" data-step-next>Avançar ▸</button>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="meeting-stage animate-item delay-1">
+            <div class="persona-tabs" id="m1-persona-tabs" role="tablist" aria-label="Pontos de vista sobre a compra">
+              <button type="button" class="persona-tab active" data-persona="0">
+                <span class="persona-role">Suprimentos</span>
+                <span class="persona-name">Paulo</span>
+                <span class="persona-stance">Escolher Proposta A</span>
+              </button>
+              <button type="button" class="persona-tab" data-persona="1">
+                <span class="persona-role">Operação</span>
+                <span class="persona-name">Rafael</span>
+                <span class="persona-stance">Priorizar Proposta B</span>
+              </button>
+              <button type="button" class="persona-tab" data-persona="2">
+                <span class="persona-role">Engenharia / Manut.</span>
+                <span class="persona-name">Clara</span>
+                <span class="persona-stance">Faltam dados de uso</span>
+              </button>
+              <button type="button" class="persona-tab is-turning-point" data-persona="3">
+                <span class="persona-role">Finanças</span>
+                <span class="persona-name">Beatriz</span>
+                <span class="persona-stance">A pergunta do LCC</span>
+              </button>
+            </div>
+
+            <div class="persona-detail-card" id="m1-persona-card">
+              <div class="persona-quote-header">
+                <span class="persona-badge-pill" id="m1-p-badge">Paulo • Gerência de Suprimentos</span>
+                <span class="persona-proposal-tag" id="m1-p-proposal">Defesa: Proposta A (R$ 80.000)</span>
+              </div>
+
+              <blockquote class="persona-quote-text" id="m1-p-quote">
+                “Se ambas atendem à vazão e à pressão especificadas, por que pagar R$ 30 mil a mais? O orçamento de compras precisa proteger o caixa agora.”
+              </blockquote>
+
+              <div class="persona-analysis-grid">
+                <div class="persona-analysis-box">
+                  <span class="persona-analysis-label" id="m1-p-focus-label">Foco legítimo da área</span>
+                  <p class="persona-analysis-val" id="m1-p-focus-val">Economizar R$ 30.000 no desembolso imediato (t = 0) e cumprir a meta de redução de custo na compra.</p>
+                </div>
+                <div class="persona-analysis-box risk-box">
+                  <span class="persona-analysis-label" id="m1-p-blind-label">O que fica fora deste recorte</span>
+                  <p class="persona-analysis-val" id="m1-p-blind-val">Ignora quanto a bomba mais barata pode consumir a mais de energia elétrica e exigir de manutenção nos próximos anos.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Ciclo e Fases de Vida do Ativo (Conectado & Interativo) -->
+      <section class="slide-section" id="slide-4">
+        <div class="speaker-notes" style="display: none;">
+          <h3>A compra é apenas o começo — Ciclo de Vida do Ativo</h3>
+          <p>Percorra a trajetória da bomba desde a concepção até sua retirada (e retroalimentação). Cite projeto, instalação, energia, peças, intervenções e destinação. A análise de uma decisão atual distingue custos futuros dos já incorridos.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header-bar">
+          <div class="slide-header">
+            <span class="body-sm-strong">TRAJETÓRIA DO ATIVO • CLIQUE OU AVANCE NAS FASES</span>
+            <h2 class="display-xl">A compra é apenas o começo do ciclo</h2>
+          </div>
+          <div class="step-controls-inline">
+            <span class="step-pill-label" data-step-label>Fase 1/5</span>
+            <div class="step-dots-mini" data-step-dots></div>
+            <button type="button" class="btn-step-next" data-step-next>Avançar ▸</button>
+          </div>
+        </div>
+
+        <div class="slide-body" style="justify-content: space-evenly;">
+          <!-- Fluxo Circular Conectado (Estilo Caminho da Confiabilidade) -->
+          <div class="lc-track-wrap animate-item delay-1">
+            <div class="lc-track-line"><div class="lc-track-fill" id="lc-progress-line"></div></div>
+            <div class="lc-nodes-grid" id="lifecycle-phase-nodes">
+              <button type="button" class="lc-node-btn is-active" data-phase="0">
+                <div class="lc-node-circle">
+                  <svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.7.6 1 1.4 1 2.3h6c0-.9.3-1.7 1-2.3A7 7 0 0 0 12 2z"/></svg>
+                </div>
+                <span class="lc-node-label">1. Concepção</span>
+              </button>
+              <button type="button" class="lc-node-btn" data-phase="1">
+                <div class="lc-node-circle">
+                  <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+                </div>
+                <span class="lc-node-label">2. Aquisição</span>
+              </button>
+              <button type="button" class="lc-node-btn" data-phase="2">
+                <div class="lc-node-circle">
+                  <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </div>
+                <span class="lc-node-label">3. Instalação</span>
+              </button>
+              <button type="button" class="lc-node-btn" data-phase="3">
+                <div class="lc-node-circle">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <span class="lc-node-label">4. Operação &amp; Manut.</span>
+              </button>
+              <button type="button" class="lc-node-btn" data-phase="4">
+                <div class="lc-node-circle">
+                  <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                </div>
+                <span class="lc-node-label">5. Descomissionamento</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Palco de Detalhe Conectado (Fonte Grande) -->
+          <div class="lc-detail-stage animate-item delay-2">
+            <div style="display:flex; flex-direction:column; justify-content:center; gap:10px;">
+              <span class="card-kicker" id="lc-detail-kicker" style="font-size:14px; color:var(--color-danger);">FASE 01 DE 05 • INÍCIO DO CICLO</span>
+              <h3 id="lc-detail-title" style="font-size:clamp(28px, 3vw, 44px); font-weight:900; line-height:1.1; margin:0; color:var(--color-ink);">1. Concepção &amp; Especificação</h3>
+              <p id="lc-detail-desc" style="font-size:clamp(18px, 1.85vw, 26px); line-height:1.4; color:var(--color-body); margin:0;">
+                Define necessidade, vazão, pressão, eficiência e acessibilidade. Decisões aqui travam grande parte dos custos futuros antes mesmo da compra.
+              </p>
+            </div>
+
+            <div class="lcc-card" style="background:#ffffff; padding: clamp(18px, 2.5vh, 28px); justify-content:space-between;">
+              <div>
+                <span class="card-kicker" style="font-size:13px;">Impacto Direto no LCC</span>
+                <p id="lc-detail-impact" style="font-size:clamp(17px, 1.65vw, 23px); font-weight:700; line-height:1.35; margin:10px 0 0; color:var(--color-ink);">
+                  Selecionar mal o ponto de operação gera consumo excessivo e falhas crônicas por anos.
+                </p>
+              </div>
+              <div id="lc-detail-next" style="border-top:1px solid var(--color-border); padding-top:12px; font-size:clamp(14px, 1.3vw, 18px); font-weight:700; color:var(--color-danger);">
+                Conexão → Entrega os requisitos técnicos para a Fase 02 (Aquisição).
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Simulador Interativo de Inversão de Custos (LCC vs Preço) -->
+      <section class="slide-section" id="slide-5">
+        <div class="speaker-notes" style="display: none;">
+          <h3>O menor preço leva ao menor custo?</h3>
+          <p>Apresente a hipótese: A consome mais energia e exige mais intervenções. Use os controles deslizantes de horas de operação/ano e horizonte para demonstrar como o regime de uso pode inverter a diferença inicial de R$ 30 mil. Não é preciso detalhar ainda os cálculos matemáticos do desconto (serão aprofundados no Módulo 5).</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">SIMULAÇÃO INTERATIVA • ICEBERG DO LCC</span>
+          <h2 class="display-xl animate-item delay-1">A diferença inicial pode se inverter</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Horas de operação / ano <strong id="sim1-hours-val">6.000 h</strong></label>
+                <input type="range" id="sim1-hours" min="100" max="8760" step="100" value="6000">
+              </div>
+              <div class="sim-field">
+                <label>Horizonte da análise <strong id="sim1-years-val">8 anos</strong></label>
+                <input type="range" id="sim1-years" min="1" max="15" step="1" value="8">
+              </div>
+              <div class="sim-field" style="flex: 0 0 auto; min-width: 180px;">
+                <label>Cenários Rápidos</label>
+                <div style="display:flex; gap:6px;">
+                  <button type="button" class="tab-pill" id="btn-sim1-low">Reserva (300h)</button>
+                  <button type="button" class="tab-pill active" id="btn-sim1-base">Base (6.000h)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lcc-card animate-item delay-2" style="gap: 14px;">
+            <div class="bar-row">
+              <strong style="font-size: 16px;">Bomba A</strong>
+              <div class="bar-track" id="sim1-track-a">
+                <div class="bar-fill capex" id="sim1-a-capex" title="Investimento Inicial"></div>
+                <div class="bar-fill energy" id="sim1-a-energy" title="Energia (VP)"></div>
+                <div class="bar-fill maint" id="sim1-a-maint" title="Manutenção e Op. (VP)"></div>
+                <div class="bar-fill loss" id="sim1-a-loss" title="Perdas por Falha (VP)"></div>
+              </div>
+              <strong id="sim1-total-a" style="text-align:right; font-variant-numeric: tabular-nums;">R$ 0</strong>
+            </div>
+            <div class="bar-row">
+              <strong style="font-size: 16px;">Bomba B</strong>
+              <div class="bar-track" id="sim1-track-b">
+                <div class="bar-fill capex" id="sim1-b-capex" title="Investimento Inicial"></div>
+                <div class="bar-fill energy" id="sim1-b-energy" title="Energia (VP)"></div>
+                <div class="bar-fill maint" id="sim1-b-maint" title="Manutenção e Op. (VP)"></div>
+                <div class="bar-fill loss" id="sim1-b-loss" title="Perdas por Falha (VP)"></div>
+              </div>
+              <strong id="sim1-total-b" style="text-align:right; font-variant-numeric: tabular-nums;">R$ 0</strong>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:18px; font-size:13px; font-weight:700; color:#171717;">
+              <span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:14px; height:14px; background:#0a0a0a; border-radius:3px; display:inline-block;"></i> Investimento Inicial</span>
+              <span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:14px; height:14px; background:#404040; border-radius:3px; display:inline-block;"></i> Energia (VP)</span>
+              <span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:14px; height:14px; background:#737373; border-radius:3px; display:inline-block;"></i> Manutenção &amp; Op. (VP)</span>
+              <span style="display:inline-flex; align-items:center; gap:6px;"><i style="width:14px; height:14px; background:#b8b8b8; border-radius:3px; display:inline-block;"></i> Perdas por Indisponibilidade (VP)</span>
+            </div>
+          </div>
+
+          <div id="sim1-verdict" class="statement-bar animate-item delay-3">
+            Carregando simulação...
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: 3 Cartões Giratórios (Manter, Modernizar, Substituir) -->
+      <section class="slide-section" id="slide-6">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Que decisões o LCC apoia?</h3>
+          <p>Imagine que a bomba já opera há alguns anos. Discuta continuidade (Manter), modernização (Retrofit) e substituição (CAPEX). Clique em cada cartão giratório para revelar o critério econômico. Todas as alternativas devem atender aos requisitos obrigatórios de segurança, desempenho e conformidade.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header align-left">
+          <span class="body-sm-strong animate-item">DECISÕES AO LONGO DA VIDA DO ATIVO • CLIQUE NOS CARTÕES</span>
+          <h2 class="display-xl animate-item delay-1">O custo nasce antes da falha</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="flip-cards-grid animate-item delay-2" id="m1-flip-cards">
+            <!-- Cartão 1: Manter -->
+            <button type="button" class="flip-card">
+              <div class="flip-card-inner">
+                <div class="flip-card-face flip-card-front">
+                  <span class="flip-tag-pill">Decisão 01 • Run</span>
+                  <div>
+                    <svg viewBox="0 0 24 24" style="width:42px; height:42px; stroke:#0a0a0a; fill:none; stroke-width:2; margin-bottom:12px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <h3 style="font-size:clamp(28px, 2.8vw, 40px); font-weight:900; margin:0 0 8px;">Manter</h3>
+                    <p class="card-text">Continuar operando e reparando o ativo atual no regime previsto.</p>
+                  </div>
+                  <div class="flip-hint"><span>Critério LCC</span><span>Clique para girar ↻</span></div>
+                </div>
+                <div class="flip-card-face flip-card-back">
+                  <span class="flip-tag-pill">Quando Manter?</span>
+                  <div>
+                    <h3 style="font-size:clamp(22px, 2.1vw, 30px); font-weight:800; color:#ffffff; margin:0 0 10px;">Manter o ativo atual</h3>
+                    <p style="font-size:clamp(15px, 1.35vw, 19px); line-height:1.45; color:#e2e8f0; margin:0;">
+                      Quando o custo crescente de corretivas, energia degradada e risco de parada ainda é menor que reformar ou comprar um novo.
+                    </p>
+                  </div>
+                  <div class="flip-hint"><span>Requisito: segurança e conformidade em dia</span><span>↺</span></div>
+                </div>
+              </div>
+            </button>
+
+            <!-- Cartão 2: Modernizar -->
+            <button type="button" class="flip-card">
+              <div class="flip-card-inner">
+                <div class="flip-card-face flip-card-front">
+                  <span class="flip-tag-pill">Decisão 02 • Retrofit</span>
+                  <div>
+                    <svg viewBox="0 0 24 24" style="width:42px; height:42px; stroke:#0a0a0a; fill:none; stroke-width:2; margin-bottom:12px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    <h3 style="font-size:clamp(28px, 2.8vw, 40px); font-weight:900; margin:0 0 8px;">Modernizar</h3>
+                    <p class="card-text">Reforma direcionada, adequação hidráulica ou inversor de frequência.</p>
+                  </div>
+                  <div class="flip-hint"><span>Critério LCC</span><span>Clique para girar ↻</span></div>
+                </div>
+                <div class="flip-card-face flip-card-back">
+                  <span class="flip-tag-pill">Quando Modernizar?</span>
+                  <div>
+                    <h3 style="font-size:clamp(22px, 2.1vw, 30px); font-weight:800; color:#ffffff; margin:0 0 10px;">Modernizar (Retrofit)</h3>
+                    <p style="font-size:clamp(15px, 1.35vw, 19px); line-height:1.45; color:#e2e8f0; margin:0;">
+                      Quando atualizar componentes-chave recupera eficiência e confiabilidade aproveitando a infraestrutura existente por menor LCC.
+                    </p>
+                  </div>
+                  <div class="flip-hint"><span>Compara reforma vs compra integral</span><span>↺</span></div>
+                </div>
+              </div>
+            </button>
+
+            <!-- Cartão 3: Substituir -->
+            <button type="button" class="flip-card">
+              <div class="flip-card-inner">
+                <div class="flip-card-face flip-card-front">
+                  <span class="flip-tag-pill">Decisão 03 • CAPEX</span>
+                  <div>
+                    <svg viewBox="0 0 24 24" style="width:42px; height:42px; stroke:#dc2626; fill:none; stroke-width:2; margin-bottom:12px;"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                    <h3 style="font-size:clamp(28px, 2.8vw, 40px); font-weight:900; margin:0 0 8px;">Substituir</h3>
+                    <p class="card-text">Troca por ativo novo de maior eficiência e confiabilidade.</p>
+                  </div>
+                  <div class="flip-hint"><span>Critério LCC</span><span>Clique para girar ↻</span></div>
+                </div>
+                <div class="flip-card-face flip-card-back">
+                  <span class="flip-tag-pill">Quando Substituir?</span>
+                  <div>
+                    <h3 style="font-size:clamp(22px, 2.1vw, 30px); font-weight:800; color:#ffffff; margin:0 0 10px;">Substituir (CAPEX)</h3>
+                    <p style="font-size:clamp(15px, 1.35vw, 19px); line-height:1.45; color:#e2e8f0; margin:0;">
+                      Quando a economia futura de energia, manutenção e paradas paga o investimento inicial dentro do horizonte da análise.
+                    </p>
+                  </div>
+                  <div class="flip-hint"><span>Menor custo nunca compensa risco</span><span>↺</span></div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Antes de calcular, precisamos definir -->
+      <section class="slide-section" id="slide-7">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Antes de calcular, precisamos definir</h3>
+          <p>Retorne ao momento inicial da compra. Peça à turma que reformule a pergunta considerando condições de uso e horizonte. A evolução pretendida é sair da comparação de preços para uma decisão estruturada.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">CONSTRUTOR DA PERGUNTA DE ANÁLISE</span>
+          <h2 class="display-xl animate-item delay-1">Antes de calcular, precisamos definir</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-asymmetric-rev animate-item delay-1">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div class="sim-field sim-panel">
+                <label for="q-builder-need">1. Para qual necessidade?</label>
+                <select id="q-builder-need">
+                  <option value="movimentar fluido de processo na vazão e pressão requeridas">Bombear fluido de processo (P-204)</option>
+                  <option value="garantir bombeamento reserva de emergência">Sistema de bombeamento reserva</option>
+                  <option value="suprir transferência intermitente de utilidades">Transferência intermitente</option>
+                </select>
+              </div>
+              <div class="sim-field sim-panel">
+                <label for="q-builder-years">2. Por quantos anos?</label>
+                <select id="q-builder-years">
+                  <option value="8 anos">Horizonte de 8 anos</option>
+                  <option value="5 anos">Horizonte de 5 anos</option>
+                  <option value="12 anos">Horizonte de 12 anos</option>
+                </select>
+              </div>
+              <div class="sim-field sim-panel">
+                <label for="q-builder-cond">3. Sob quais condições?</label>
+                <select id="q-builder-cond">
+                  <option value="operando 6.000 h/ano sem reserva instalada">6.000 h/ano · sem reserva</option>
+                  <option value="operando 300 h/ano em regime eventual">300 h/ano · regime eventual</option>
+                  <option value="operando 6.000 h/ano com produção recuperável">6.000 h/ano · perda recuperável</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="lcc-card accent-dark accent-strip-left" style="padding: clamp(24px, 3.5vh, 42px); justify-content:center;">
+              <span class="card-kicker">Pergunta Estruturada de LCC</span>
+              <p id="q-builder-output" style="font-size: clamp(22px, 2.3vw, 34px); font-weight: 700; line-height: 1.3; margin: 12px 0 0; color: #ffffff;">
+                ...
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Quiz Oficial -->
+      <section class="slide-section quiz-slide" id="slide-8">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Quiz do Módulo 1</h3>
+          <p>Conduza os 3 cenários com a turma para consolidar a mudança de mentalidade: preço vs LCC, requisitos obrigatórios e impacto do regime de uso.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <header class="quiz-header animate-item">
+          <h2 class="quiz-title-giant">QUIZ</h2>
+          <div class="quiz-tabs-nav" id="quiz-tabs-nav"></div>
+        </header>
+
+        <div class="slide-body">
+          <div class="quiz-prompt-card animate-item delay-1">
+            <div class="quiz-prompt-tag" id="quiz-prompt-tag">DESAFIO</div>
+            <p class="quiz-prompt-text" id="quiz-prompt-text"></p>
+          </div>
+          <div class="quiz-options-grid animate-item delay-2" id="quiz-options-grid"></div>
+          <div class="quiz-feedback-banner" id="quiz-feedback-banner"></div>
+          <div class="quiz-footer-bar">
+            <span id="quiz-progress-label" style="font-weight: 700; font-size: 13px;"></span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill" id="btn-quiz-reset">Reiniciar</button>
+              <button type="button" class="tab-pill active" id="btn-quiz-next">Próximo Cenário →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Indicadores Laterais -->
+  <nav class="slide-nav-indicators" aria-label="Navegação de slides">
+    <div class="slide-indicator-dot active" data-title="Capa do Módulo 1"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-0"></div><span class="slide-preview-text">Capa do Módulo 1</span></div></div>
+    <div class="slide-indicator-dot" data-title="Qual você compraria?"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-1"></div><span class="slide-preview-text">Qual você compraria?</span></div></div>
+    <div class="slide-indicator-dot" data-title="4 pontos de vista"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-2"></div><span class="slide-preview-text">4 pontos de vista</span></div></div>
+    <div class="slide-indicator-dot" data-title="O que falta saber"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-3"></div><span class="slide-preview-text">O que falta saber</span></div></div>
+    <div class="slide-indicator-dot" data-title="Simulação de Inversão"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-4"></div><span class="slide-preview-text">Simulação de Inversão</span></div></div>
+    <div class="slide-indicator-dot" data-title="Onde o custo nasce"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-5"></div><span class="slide-preview-text">Onde o custo nasce</span></div></div>
+    <div class="slide-indicator-dot" data-title="Definir antes de calcular"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-6"></div><span class="slide-preview-text">Definir antes de calcular</span></div></div>
+    <div class="slide-indicator-dot" data-title="Quiz: A Lente do LCC"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-7"></div><span class="slide-preview-text">Quiz: A Lente do LCC</span></div></div>
+  </nav>
+
+  <script type="module" src="./001.PorQueUtilizarLCC.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

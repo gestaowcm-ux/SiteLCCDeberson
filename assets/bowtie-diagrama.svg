@@ -1,0 +1,320 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 460" width="100%" height="100%" class="bowtie-svg">
+  <defs>
+    <!-- Filtro de Brilho Neon para as Rachaduras em Vermelho -->
+    <filter id="red-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Sombras Sutis sem Bordas Rígidas -->
+    <filter id="soft-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.07" />
+    </filter>
+
+    <!-- Marcador de Seta Cinza de Precisão -->
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </marker>
+    
+    <!-- Marcador de Seta Vermelho para Evento Crítico -->
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5" fill="none" stroke="#fc413d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </marker>
+  </defs>
+
+  <style>
+    .bowtie-svg {
+      font-family: var(--font-family, system-ui, -apple-system, sans-serif);
+      user-select: none;
+      background: transparent;
+    }
+
+    /* Rótulos de Seção Superiores */
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      fill: #1e293b;
+    }
+
+    .section-title-danger {
+      fill: #fc413d;
+    }
+
+    /* Rótulos Verticais das Pontas */
+    .side-label {
+      font-size: 13px;
+      font-weight: 800;
+      fill: #475569;
+      letter-spacing: 0.05em;
+    }
+
+    /* Círculos das Causas e Consequências */
+    .node-circle {
+      fill: #ffffff;
+      stroke: #cbd5e1;
+      stroke-width: 1.5;
+      transition: all 0.3s ease;
+      filter: url(#soft-shadow);
+    }
+
+    .node-text {
+      font-size: 10px;
+      font-weight: 600;
+      fill: #334155;
+      text-anchor: middle;
+    }
+
+    /* Linhas de Fluxo */
+    .flow-line {
+      stroke: #94a3b8;
+      stroke-width: 1.5;
+      fill: none;
+      marker-end: url(#arrow-gray);
+    }
+
+    .flow-line-red {
+      stroke: #fc413d;
+      stroke-width: 1.8;
+      fill: none;
+      marker-end: url(#arrow-red);
+    }
+
+    /* Pilares/Barreiras (Sem Bordas Rígidas por Pedido do Usuário) */
+    .barrier-pillar {
+      fill: #ffffff;
+      stroke: none; /* Borda removida */
+      rx: 4px;
+      filter: url(#soft-shadow);
+      transition: fill 0.3s ease;
+    }
+
+    .barrier-pillar:hover {
+      fill: #f8fafc;
+    }
+
+    /* Rachaduras em Linhas Vermelhas em Destaque Glow */
+    .crack-red {
+      stroke: #fc413d;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      filter: url(#red-glow);
+      transition: stroke-width 0.3s ease, filter 0.3s ease;
+    }
+
+    .barrier-group:hover .crack-red {
+      stroke-width: 3px;
+      filter: drop-shadow(0 0 6px rgba(252, 65, 61, 0.9));
+    }
+
+    /* Evento Crítico Central */
+    .event-circle-outer {
+      fill: #ffffff;
+      stroke: #fc413d;
+      stroke-width: 2.5;
+      filter: url(#soft-shadow);
+    }
+
+    .event-circle-inner {
+      fill: #fff5f5;
+      stroke: #fc413d;
+      stroke-width: 1;
+      stroke-dasharray: 4 2;
+    }
+
+    .event-text-main {
+      font-size: 13px;
+      font-weight: 900;
+      fill: #1e293b;
+      text-anchor: middle;
+    }
+
+    .event-text-sub {
+      font-size: 10px;
+      font-weight: 700;
+      fill: #fc413d;
+      text-anchor: middle;
+    }
+
+    /* Textos Explicativos do Fluxo */
+    .quote-text {
+      font-size: 10.5px;
+      font-style: italic;
+      font-weight: 500;
+      fill: #475569;
+      text-anchor: middle;
+    }
+  </style>
+
+  <!-- ── 1. RÓTULOS SUPERIORES ── -->
+  <text x="130" y="28" class="section-title" text-anchor="middle">Causas Iniciais</text>
+  <text x="380" y="28" class="section-title" text-anchor="middle">Barreiras Preventivas</text>
+  <text x="820" y="28" class="section-title" text-anchor="middle">Barreiras Mitigadoras</text>
+  <text x="1070" y="28" class="section-title" text-anchor="middle">Impactos</text>
+
+  <!-- ── 2. RÓTULOS VERTICAIS DAS EXTREMIDADES ── -->
+  <g transform="translate(18, 230) rotate(-90)">
+    <text x="0" y="0" class="side-label" text-anchor="middle">Ameaças</text>
+  </g>
+
+  <g transform="translate(1182, 230) rotate(90)">
+    <text x="0" y="0" class="side-label" text-anchor="middle">Consequências</text>
+  </g>
+
+  <!-- ── 3. ESQUERDA: CAUSAS INICIAIS (5 CÍRCULOS) ── -->
+  <g class="node-group">
+    <circle cx="130" cy="70" r="22" class="node-circle" />
+    <text x="130" y="66" class="node-text">Identification is</text>
+    <text x="130" y="78" class="node-text">the first step.</text>
+
+    <circle cx="130" cy="150" r="22" class="node-circle" />
+    
+    <circle cx="130" cy="230" r="22" class="node-circle" />
+    <text x="130" y="234" class="node-text" font-weight="700">Ameaças</text>
+
+    <circle cx="130" cy="310" r="22" class="node-circle" />
+
+    <circle cx="130" cy="390" r="22" class="node-circle" />
+  </g>
+
+  <!-- LINHAS DE FLUXO DA ESQUERDA PARA O PRIMEIRO PILAR -->
+  <path d="M 152,70 L 210,70 L 210,95 L 218,95" class="flow-line" />
+  <path d="M 152,150 L 218,150" class="flow-line" />
+  <path d="M 152,230 L 218,230" class="flow-line" />
+  <path d="M 152,310 L 218,310" class="flow-line" />
+  <path d="M 152,390 L 210,390 L 210,365 L 218,365" class="flow-line" />
+
+  <!-- ── 4. BARREIRAS PREVENTIVAS (PILARES SEM BORDA COM RACHADURAS VERMELHAS) ── -->
+  <g class="barrier-group">
+    <!-- Pilar P1: Alto, Intacto -->
+    <rect x="220" y="50" width="30" height="360" class="barrier-pillar" />
+  </g>
+
+  <path d="M 250,230 L 270,230" class="flow-line" />
+
+  <g class="barrier-group">
+    <!-- Pilar P2: Alto, com rachadura no topo -->
+    <rect x="270" y="80" width="30" height="300" class="barrier-pillar" />
+    <path class="crack-red" d="M 272,130 L 285,145 L 278,160 L 295,175 L 288,190" />
+  </g>
+
+  <path d="M 300,230 L 320,230" class="flow-line" />
+
+  <g class="barrier-group">
+    <!-- Pilar P3: Médio, fraturado no centro -->
+    <rect x="320" y="110" width="30" height="240" class="barrier-pillar" />
+    <path class="crack-red" d="M 322,190 L 338,205 L 326,225 L 348,245 L 334,260 L 346,280" />
+  </g>
+
+  <path d="M 350,230 L 370,230" class="flow-line" />
+
+  <g class="barrier-group">
+    <!-- Pilar P4: Curto, com rachaduras -->
+    <rect x="370" y="140" width="30" height="180" class="barrier-pillar" />
+    <path class="crack-red" d="M 372,200 L 388,215 L 376,230 L 398,245" />
+  </g>
+
+  <!-- FRASES DE DESTAQUE DAS BARREIRAS PREVENTIVAS -->
+  <text x="380" y="82" class="quote-text">Proactive defense prevents crisis.</text>
+  <text x="380" y="390" class="quote-text">"Preventions are the walls."</text>
+
+  <!-- CONVERGÊNCIA PARA O EVENTO CRÍTICO -->
+  <path d="M 400,230 L 450,230" class="flow-line-red" />
+  <path d="M 390,160 L 445,210" class="flow-line-red" />
+  <path d="M 390,300 L 445,250" class="flow-line-red" />
+
+  <!-- ── 5. CENTRO: EVENTO CRÍTICO ── -->
+  <!-- Rótulo de Ordem e Estrutura -->
+  <text x="600" y="152" class="quote-text">Order and structure are key.</text>
+  
+  <g class="event-group">
+    <circle cx="600" cy="230" r="50" class="event-circle-outer" />
+    <circle cx="600" cy="230" r="42" class="event-circle-inner" />
+    <text x="600" y="226" class="event-text-main">Evento</text>
+    <text x="600" y="242" class="event-text-sub">Crítico</text>
+  </g>
+
+  <text x="600" y="318" class="quote-text">Order and structure are key.</text>
+
+  <!-- DIVERGÊNCIA DO EVENTO CRÍTICO PARA AS BARREIRAS MITIGADORAS -->
+  <path d="M 650,230 L 700,230" class="flow-line-red" />
+  <path d="M 645,210 L 700,160" class="flow-line-red" />
+  <path d="M 645,250 L 700,300" class="flow-line-red" />
+
+  <!-- ── 6. BARREIRAS MITIGADORAS (PILARES SEM BORDA COM RACHADURAS VERMELHAS) ── -->
+  <text x="820" y="82" class="quote-text">Mitigation limits failure impact.</text>
+
+  <g class="barrier-group">
+    <!-- Pilar M1: Curto, fraturado -->
+    <rect x="700" y="140" width="30" height="180" class="barrier-pillar" />
+    <path class="crack-red" d="M 702,170 L 718,185 L 706,200 L 728,220 L 710,240 L 726,260" />
+  </g>
+
+  <path d="M 730,230 L 750,230" class="flow-line" />
+
+  <g class="barrier-group">
+    <!-- Pilar M2: Médio, fraturado -->
+    <rect x="750" y="110" width="30" height="240" class="barrier-pillar" />
+    <path class="crack-red" d="M 752,150 L 768,170 L 756,190 L 778,215 L 762,235 L 776,260 L 758,285" />
+  </g>
+
+  <path d="M 780,230 L 800,230" class="flow-line" />
+
+  <g class="barrier-group">
+    <!-- Pilar M3: Fino e Alto, com trinca suave -->
+    <rect x="800" y="80" width="24" height="300" class="barrier-pillar" />
+    <path class="crack-red" d="M 802,210 L 818,230 L 808,255 L 820,275" />
+  </g>
+
+  <path d="M 824,230 L 844,230" class="flow-line" />
+
+  <g class="barrier-group">
+    <!-- Pilar M4: Muito Fino e Alto, com trinca leve -->
+    <rect x="844" y="90" width="18" height="280" class="barrier-pillar" />
+    <path class="crack-red" d="M 846,220 L 858,240 L 848,260" />
+  </g>
+
+  <path d="M 862,230 L 882,230" class="flow-line" />
+
+  <g class="barrier-group">
+    <!-- Pilar M5: O Pilar Shattered (Extremamente Fraturado em Vermelho) -->
+    <rect x="882" y="50" width="36" height="360" class="barrier-pillar" />
+    <!-- Rede densa de trincas vermelhas representando o pilar totalmente estilhaçado -->
+    <path class="crack-red" d="M 884,65 L 902,80 L 890,105 L 912,130 L 888,160 L 914,190 L 892,220 L 916,250 L 886,285 L 914,320 L 890,355 L 910,390" />
+    <path class="crack-red" d="M 902,80 L 916,95 L 894,125" />
+    <path class="crack-red" d="M 888,160 L 906,175 L 896,200" />
+    <path class="crack-red" d="M 892,220 L 912,235 L 888,270" />
+    <path class="crack-red" d="M 886,285 L 908,305 L 894,335" />
+  </g>
+
+  <text x="820" y="390" class="quote-text">"Mitigations are the fire escapes."</text>
+
+  <!-- LINHAS DE FLUXO DO PILAR DIREITO PARA AS CONSEQUÊNCIAS -->
+  <path d="M 918,95 L 980,95 L 980,70 L 1048,70" class="flow-line" />
+  <path d="M 918,150 L 1048,150" class="flow-line" />
+  <path d="M 918,230 L 1048,230" class="flow-line" />
+  <path d="M 918,310 L 1048,310" class="flow-line" />
+  <path d="M 918,365 L 980,365 L 980,390 L 1048,390" class="flow-line" />
+
+  <!-- ── 7. DIREITA: IMPACTOS & CONSEQUÊNCIAS (5 CÍRCULOS) ── -->
+  <g class="node-group">
+    <circle cx="1070" cy="70" r="22" class="node-circle" />
+    <text x="1070" y="66" class="node-text">Analysis defines</text>
+    <text x="1070" y="78" class="node-text">consequences.</text>
+
+    <circle cx="1070" cy="150" r="22" class="node-circle" />
+
+    <circle cx="1070" cy="230" r="22" class="node-circle" />
+    <text x="1070" y="234" class="node-text" font-weight="700">Consequências</text>
+
+    <circle cx="1070" cy="310" r="22" class="node-circle" />
+
+    <circle cx="1070" cy="390" r="22" class="node-circle" />
+  </g>
+</svg>

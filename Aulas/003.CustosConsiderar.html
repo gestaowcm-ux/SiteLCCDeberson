@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 3 — Quais custos considerar? | Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/lcc-slides.css">
+</head>
+<body>
+  <div class="slides-container">
+    <div class="slides-wrapper" id="slides-wrapper">
+
+      <!-- Slide 1: Capa -->
+      <main class="slide-section active-slide cover-slide" id="slide-1">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Módulo 3: Quais custos considerar?</h3>
+          <p>Duração sugerida: 35 min. Vamos abrir o pacote de custos do caso didático: investimento inicial completo (R$ 100k vs R$ 130k), energia (30 kW vs 25 kW), manutenção planejada (rotinas + ano 4), fim de vida e prevenção contra dupla contagem.</p>
+        </div>
+        <div class="cover-technical-grid"></div>
+        <div class="cover-content">
+          <span class="cover-badge animate-item">MÓDULO 03 • 35 MIN</span>
+          <h1 class="cover-title animate-item delay-1">Quais custos considerar?</h1>
+          <div class="cover-divider animate-item delay-2"></div>
+          <p class="cover-subtitle animate-item delay-3">O preço comercial da proposta raramente contém todos os desembolsos. Aprenda a mapear custos iniciais, recorrentes, eventuais e terminais sem omissões nem dupla contagem.</p>
+          <div class="cover-meta-row animate-item delay-4">
+            <span class="cover-pill">CAPEX Completo</span>
+            <span class="cover-pill">Calculadora de Energia</span>
+            <button type="button" class="cover-cta" data-start-lesson>Iniciar Módulo →</button>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <span>CURSO LCC — MANUTENÇÃO · CONFIABILIDADE · GESTÃO DE ATIVOS</span>
+          <span>MÓDULO 03 / 08</span>
+        </div>
+      </main>
+
+      <!-- Slide 2: Custos Iniciais (CAPEX Completo) -->
+      <section class="slide-section" id="slide-2">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Quanto custa colocar para funcionar?</h3>
+          <p>Abra os adicionais originais: engenharia R$ 5 mil, logística R$ 3 mil, instalação R$ 8 mil e comissionamento R$ 4 mil em cada alternativa. São hipóteses. Custos comuns precisam ser identificados, ainda que não alterem a diferença.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">INVESTIMENTO INICIAL (t = 0)</span>
+          <h2 class="display-xl animate-item delay-1">Colocar para funcionar custa mais que a bomba</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-asymmetric animate-item delay-1">
+            <div class="sim-panel">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="card-kicker">Edite as parcelas iniciais (R$)</span>
+                <button type="button" class="tab-pill" id="m3-capex-reset" style="padding:4px 12px; font-size:12px;">Restaurar Padrão</button>
+              </div>
+              <div class="sim-control-row">
+                <div class="sim-field"><label>Compra A (R$)</label><input type="number" id="m3-a-buy" value="80000" step="1000"></div>
+                <div class="sim-field"><label>Compra B (R$)</label><input type="number" id="m3-b-buy" value="110000" step="1000"></div>
+              </div>
+              <div class="sim-control-row">
+                <div class="sim-field"><label>Engenharia (R$)</label><input type="number" id="m3-eng" value="5000" step="500"></div>
+                <div class="sim-field"><label>Logística (R$)</label><input type="number" id="m3-log" value="3000" step="500"></div>
+              </div>
+              <div class="sim-control-row">
+                <div class="sim-field"><label>Instalação (R$)</label><input type="number" id="m3-inst" value="8000" step="500"></div>
+                <div class="sim-field"><label>Comissionamento (R$)</label><input type="number" id="m3-comm" value="4000" step="500"></div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px; justify-content:center;">
+              <div class="lcc-card accent-dark">
+                <span class="card-kicker">Investimento Inicial Total — A</span>
+                <div class="card-metric" id="m3-capex-a">R$ 100.000</div>
+                <p class="card-text">Compra + R$ 20.000 de implantação</p>
+              </div>
+              <div class="lcc-card">
+                <span class="card-kicker">Investimento Inicial Total — B</span>
+                <div class="card-metric" id="m3-capex-b">R$ 130.000</div>
+                <p class="card-text" id="m3-capex-diff">Diferença inicial: +R$ 30.000 em B</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Calculadora de Energia -->
+      <section class="slide-section" id="slide-3">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Quanto custa a energia?</h3>
+          <p>Use 30 kW e 25 kW de potência elétrica absorvida, 6.000 h e R$ 0,80/kWh. Não divida novamente por eficiência (os valores já são potência elétrica absorvida). Pergunte à turma o que muda se a bomba operar poucas horas.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">CUSTO RECORRENTE PRINCIPAL</span>
+          <h2 class="display-xl animate-item delay-1">C_energia = Potência × Horas × Tarifa</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Potência Elétrica A <strong id="m3-pa-val">30 kW</strong></label>
+                <input type="range" id="m3-pa" min="10" max="60" step="1" value="30">
+              </div>
+              <div class="sim-field">
+                <label>Potência Elétrica B <strong id="m3-pb-val">25 kW</strong></label>
+                <input type="range" id="m3-pb" min="10" max="60" step="1" value="25">
+              </div>
+              <div class="sim-field">
+                <label>Horas / ano <strong id="m3-h-val">6.000 h</strong></label>
+                <input type="range" id="m3-h" min="200" max="8760" step="100" value="6000">
+              </div>
+              <div class="sim-field">
+                <label>Tarifa (R$/kWh) <strong id="m3-t-val">R$ 0,80</strong></label>
+                <input type="range" id="m3-t" min="0.30" max="1.60" step="0.05" value="0.80">
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-3 animate-item delay-2">
+            <div class="lcc-card">
+              <span class="card-kicker">Energia Anual — Bomba A</span>
+              <div class="card-metric" id="m3-ea">R$ 144.000</div>
+              <p class="card-text">por ano de operação</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Energia Anual — Bomba B</span>
+              <div class="card-metric" id="m3-eb">R$ 120.000</div>
+              <p class="card-text">por ano de operação</p>
+            </div>
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">Economia Anual de B</span>
+              <div class="card-metric" id="m3-ediff" style="color:#16a34a;">R$ 24.000</div>
+              <p class="card-text" id="m3-payback-note">Em ~1,25 ano paga a diferença inicial de R$ 30k.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Manutenção Planejada & Intervenção Ano 4 -->
+      <section class="slide-section" id="slide-4">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Quanto custa manter?</h3>
+          <p>Organize a manutenção em duas categorias: planejada e corretiva. A planejada inclui rotinas anuais de R$ 6 mil para A e R$ 4 mil para B, mais uma intervenção prevista no ano 4 de R$ 12 mil e R$ 8 mil. Essa intervenção NÃO está incluída nas rotinas anuais. Some cada desembolso apenas uma vez, no ano correspondente.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">MANUTENÇÃO PLANEJADA &amp; INTERVENÇÃO</span>
+          <h2 class="display-xl animate-item delay-1">Rotinas anuais + Intervenção prevista no Ano 4</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2 animate-item delay-1">
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">Bomba A • Planejada</span>
+              <div class="card-metric">R$ 6.000 / ano</div>
+              <p class="card-text">+ R$ 12.000 de intervenção geral no <strong>Ano 4</strong> (selo, rolamentos, alinhamento).</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Bomba B • Planejada</span>
+              <div class="card-metric">R$ 4.000 / ano</div>
+              <p class="card-text">+ R$ 8.000 de intervenção geral no <strong>Ano 4</strong>.</p>
+            </div>
+          </div>
+
+          <div class="lcc-table-wrap animate-item delay-2">
+            <table class="lcc-table">
+              <thead>
+                <tr>
+                  <th>Desembolso Planejado (Nominal)</th>
+                  <th>Ano 1</th><th>Ano 2</th><th>Ano 3</th>
+                  <th style="background:rgba(220,38,38,0.12); color:var(--color-danger);">Ano 4 (Intervenção)</th>
+                  <th>Ano 5</th><th>Ano 6</th><th>Ano 7</th><th>Ano 8</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Bomba A</strong></td>
+                  <td>6k</td><td>6k</td><td>6k</td>
+                  <td><strong>18k</strong> (6k+12k)</td>
+                  <td>6k</td><td>6k</td><td>6k</td><td>6k</td>
+                </tr>
+                <tr>
+                  <td><strong>Bomba B</strong></td>
+                  <td>4k</td><td>4k</td><td>4k</td>
+                  <td><strong>12k</strong> (4k+8k)</td>
+                  <td>4k</td><td>4k</td><td>4k</td><td>4k</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="statement-bar animate-item delay-3">
+            Atenção: a intervenção do Ano 4 é uma parcela pontual da planejada — <strong>não</strong> está diluída nas rotinas anuais e deve ser somada apenas uma vez no ano 4.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Fim de Vida & Custos Invisíveis -->
+      <section class="slide-section" id="slide-5">
+        <div class="speaker-notes" style="display: none;">
+          <h3>O fim da vida também tem valor &amp; O que pode ficar invisível?</h3>
+          <p>Descomissionamento original de R$ 10 mil em cada alternativa; residual de R$ 5 mil e R$ 8 mil. O residual é estimado, não garantido. Discuta também estoques de sobressalentes, treinamento, interfaces e obrigações ambientais.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">ENCERRAMENTO &amp; CUSTOS INDIRETOS</span>
+          <h2 class="display-xl animate-item delay-1">Fim do horizonte (Ano 8) e itens invisíveis</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2 animate-item delay-1">
+            <div class="sim-panel">
+              <span class="card-kicker">Simulador Terminal (Ano 8)</span>
+              <div class="sim-control-row">
+                <div class="sim-field"><label>Descomissionamento (R$)</label><input type="number" id="m3-decomm" value="10000" step="1000"></div>
+                <div class="sim-field"><label>Residual A (R$)</label><input type="number" id="m3-res-a" value="5000" step="1000"></div>
+                <div class="sim-field"><label>Residual B (R$)</label><input type="number" id="m3-res-b" value="8000" step="1000"></div>
+              </div>
+              <div class="statement-bar" id="m3-term-result">
+                Líquido Ano 8: <strong>A = +R$ 5.000</strong> (custo) | <strong>B = +R$ 2.000</strong> (custo)
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="lcc-card"><span class="card-kicker">Invisível 01</span><h3 class="card-title">Interfaces</h3><p class="card-text">Tubulação, base civil e adequação elétrica.</p></div>
+              <div class="lcc-card"><span class="card-kicker">Invisível 02</span><h3 class="card-title">Sobressalentes</h3><p class="card-text">Capital imobilizado e risco de obsolescência.</p></div>
+              <div class="lcc-card"><span class="card-kicker">Invisível 03</span><h3 class="card-title">Treinamento</h3><p class="card-text">Capacitação de equipe para nova tecnologia.</p></div>
+              <div class="lcc-card"><span class="card-kicker">Invisível 04</span><h3 class="card-title">Ambiental</h3><p class="card-text">Descarte de óleo, selos e descontaminação.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Prevenção de Dupla Contagem -->
+      <section class="slide-section" id="slide-6">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Cada custo tem um lugar</h3>
+          <p>Revise pacote e componentes; rotinas anuais e intervenção prevista dentro da manutenção planejada; reparo e consequência produtiva. Cada linha precisa de unidade, recorrência e fonte.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">AUDITORIA DE ESTRUTURA</span>
+          <h2 class="display-xl animate-item delay-1">Impedindo a dupla contagem (Clique para auditar)</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2 animate-item delay-1" id="double-count-grid">
+            <div class="lcc-card interactive" data-dc="0">
+              <span class="card-kicker">Armadilha 01</span>
+              <h3 class="card-title">Pacote vs Componentes</h3>
+              <p class="card-text">Incluir "Conjunto motobomba" e também somar "Motor elétrico" à parte.</p>
+            </div>
+            <div class="lcc-card interactive" data-dc="1">
+              <span class="card-kicker">Armadilha 02</span>
+              <h3 class="card-title">Rotina vs Intervenção Ano 4</h3>
+              <p class="card-text">Diluir os R$ 12 mil no orçamento anual e somar R$ 12 mil de novo no ano 4.</p>
+            </div>
+            <div class="lcc-card interactive" data-dc="2">
+              <span class="card-kicker">Armadilha 03</span>
+              <h3 class="card-title">Reparo vs Perda Produtiva</h3>
+              <p class="card-text">Incluir lucro cessante dentro do "custo por evento de reparo" e calcular perda à parte.</p>
+            </div>
+            <div class="lcc-card interactive" data-dc="3">
+              <span class="card-kicker">Armadilha 04</span>
+              <h3 class="card-title">Crédito de Residual</h3>
+              <p class="card-text">Abater o valor residual no investimento inicial e abater novamente no ano 8.</p>
+            </div>
+          </div>
+          <div id="dc-verdict" class="statement-bar animate-item delay-2">
+            Clique em qualquer armadilha acima para ver a regra de rastreabilidade.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Quiz Oficial -->
+      <section class="slide-section quiz-slide" id="slide-7">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Quiz do Módulo 3</h3>
+          <p>Teste a turma sobre energia, intervenção no ano 4 e dupla contagem.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <header class="quiz-header animate-item">
+          <h2 class="quiz-title-giant">QUIZ</h2>
+          <div class="quiz-tabs-nav" id="quiz-tabs-nav"></div>
+        </header>
+
+        <div class="slide-body">
+          <div class="quiz-prompt-card animate-item delay-1">
+            <div class="quiz-prompt-tag" id="quiz-prompt-tag">DESAFIO</div>
+            <p class="quiz-prompt-text" id="quiz-prompt-text"></p>
+          </div>
+          <div class="quiz-options-grid animate-item delay-2" id="quiz-options-grid"></div>
+          <div class="quiz-feedback-banner" id="quiz-feedback-banner"></div>
+          <div class="quiz-footer-bar">
+            <span id="quiz-progress-label" style="font-weight: 700; font-size: 13px;"></span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill" id="btn-quiz-reset">Reiniciar</button>
+              <button type="button" class="tab-pill active" id="btn-quiz-next">Próximo Cenário →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="slide-nav-indicators" aria-label="Navegação de slides">
+    <div class="slide-indicator-dot active" data-title="Capa do Módulo 3"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-0"></div><span class="slide-preview-text">Capa do Módulo 3</span></div></div>
+    <div class="slide-indicator-dot" data-title="Investimento Inicial"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-1"></div><span class="slide-preview-text">Investimento Inicial</span></div></div>
+    <div class="slide-indicator-dot" data-title="Calculadora de Energia"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-2"></div><span class="slide-preview-text">Calculadora de Energia</span></div></div>
+    <div class="slide-indicator-dot" data-title="Manutenção Planejada"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-3"></div><span class="slide-preview-text">Manutenção Planejada</span></div></div>
+    <div class="slide-indicator-dot" data-title="Fim de Vida e Invisíveis"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-4"></div><span class="slide-preview-text">Fim de Vida e Invisíveis</span></div></div>
+    <div class="slide-indicator-dot" data-title="Prevenção Dupla Contagem"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-5"></div><span class="slide-preview-text">Prevenção Dupla Contagem</span></div></div>
+    <div class="slide-indicator-dot" data-title="Quiz: Custos no LCC"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-6"></div><span class="slide-preview-text">Quiz: Custos no LCC</span></div></div>
+  </nav>
+
+  <script type="module" src="./003.CustosConsiderar.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

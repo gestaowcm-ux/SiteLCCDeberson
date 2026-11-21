@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seção 11: Evolução Contínua de IA (Gets Smarter Every Deal) — Padrão Zig.ai</title>
+  <meta name="description" content="Linha temporal orbital de aprendizado e maturação contínua (Month 1 a 6 + CTA) com rotação radial e efeitos visuais inspirado no Zig.ai">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    :root {
+      --zig-green-500: #08906c;
+      --zig-green-400: #10a880;
+      --zig-green-300: #34bf99;
+      --zig-dark: #111518;
+      --zig-card-bg: #191f24;
+      --zig-border: rgba(255, 255, 255, 0.08);
+      --zig-gray-400: #9aa1a9;
+      --zig-gray-600: #626871;
+      --zig-white: #ffffff;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--zig-dark);
+      color: var(--zig-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 20px;
+      overflow-x: hidden;
+    }
+
+    .evolution-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .section-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .section-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(8, 144, 108, 0.15);
+      border: 1px solid rgba(8, 144, 108, 0.3);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--zig-green-300);
+    }
+
+    .title-l {
+      font-size: clamp(2rem, 3.8vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      max-width: 800px;
+    }
+
+    .text-grad {
+      background: linear-gradient(135deg, #08906c 0%, #34bf99 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle-l {
+      font-size: 1.15rem;
+      color: var(--zig-gray-400);
+      max-width: 680px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    /* Controles de Mês / Navegação Interativa */
+    .month-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .month-pill {
+      padding: 10px 20px;
+      background: var(--zig-card-bg);
+      border: 1px solid var(--zig-border);
+      border-radius: 100px;
+      color: var(--zig-gray-400);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .month-pill:hover, .month-pill.active {
+      background: var(--zig-green-500);
+      border-color: var(--zig-green-400);
+      color: var(--zig-white);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(8, 144, 108, 0.4);
+    }
+
+    /* Grid / Trilho dos Cards de Evolução */
+    .evolution-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .evolution-card {
+      background: var(--zig-card-bg);
+      border: 1px solid var(--zig-border);
+      border-radius: 20px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .evolution-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--zig-green-500), var(--zig-green-300));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .evolution-card:hover, .evolution-card.highlight {
+      transform: translateY(-6px);
+      border-color: rgba(8, 144, 108, 0.4);
+      background: #1e252c;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .evolution-card:hover::before, .evolution-card.highlight::before {
+      opacity: 1;
+    }
+
+    .card-month-tag {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--zig-green-300);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--zig-white);
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      color: var(--zig-gray-400);
+      line-height: 1.45;
+    }
+
+    /* Card CTA Final Largo */
+    .evolution-cta-card {
+      background: linear-gradient(135deg, #152721 0%, #0d1a16 100%);
+      border: 1px solid rgba(8, 144, 108, 0.35);
+      border-radius: 24px;
+      padding: 36px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-left {
+      max-width: 650px;
+    }
+
+    .cta-title {
+      font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+      font-weight: 800;
+      color: var(--zig-white);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .cta-sub {
+      font-size: 0.95rem;
+      color: var(--zig-green-300);
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      padding: 14px 24px;
+      background: var(--zig-green-500);
+      color: var(--zig-white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      background: var(--zig-green-400);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(8, 144, 108, 0.4);
+    }
+
+    .btn-outline {
+      padding: 14px 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--zig-white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Responsividade */
+    @media (max-width: 1024px) {
+      .evolution-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .evolution-cta-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .evolution-grid {
+        grid-template-columns: 1fr;
+      }
+      .cta-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      .btn-primary, .btn-outline {
+        text-align: center;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="evolution-container">
+    
+    <!-- Cabeçalho -->
+    <header class="section-header">
+      <div class="section-chip">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        <span>Gets smarter every deal</span>
+      </div>
+      <h2 class="title-l"><span class="text-grad">The only sales team</span> that gets better the longer it works for you</h2>
+      <p class="subtitle-l">Most tools forget everything the moment you log out. Zig remembers every call, every deal, every signal — and uses it to make the next move sharper.</p>
+    </header>
+
+    <!-- Pílulas de Navegação por Mês -->
+    <nav class="month-nav">
+      <button class="month-pill active" onclick="selectMonth(0)">Todos os Meses</button>
+      <button class="month-pill" onclick="selectMonth(1)">Mês 1</button>
+      <button class="month-pill" onclick="selectMonth(2)">Mês 3</button>
+      <button class="month-pill" onclick="selectMonth(3)">Mês 4</button>
+      <button class="month-pill" onclick="selectMonth(4)">Mês 6</button>
+    </nav>
+
+    <!-- Grid de Cards de Evolução -->
+    <div class="evolution-grid">
+      
+      <!-- Month 1 -->
+      <article class="evolution-card" id="card-m1">
+        <span class="card-month-tag">Month 1</span>
+        <h3 class="card-title">Learns how you sell</h3>
+        <p class="card-desc">Your CRM, deals, and ICPs. Absorbs historical win-patterns from day one.</p>
+      </article>
+
+      <!-- Month 3 -->
+      <article class="evolution-card" id="card-m3">
+        <span class="card-month-tag">Month 3</span>
+        <h3 class="card-title">Spots what closes</h3>
+        <p class="card-desc">Recognizes subtle objection patterns across your best reps, automatically.</p>
+      </article>
+
+      <!-- Month 4 -->
+      <article class="evolution-card" id="card-m4">
+        <span class="card-month-tag">Month 4</span>
+        <h3 class="card-title">Flags risk before you feel it</h3>
+        <p class="card-desc">Stalled deals surfaced before they are gone. Proactive rescue playbooks.</p>
+      </article>
+
+      <!-- Month 6 -->
+      <article class="evolution-card" id="card-m6">
+        <span class="card-month-tag">Month 6</span>
+        <h3 class="card-title">Knows more than any new hire</h3>
+        <p class="card-desc">Zero ramp time. Total institutional memory preserved across the team.</p>
+      </article>
+
+    </div>
+
+    <!-- CTA Card Final -->
+    <aside class="evolution-cta-card">
+      <div class="cta-left">
+        <h3 class="cta-title">Start today. Because in 6 months, today is what you'll wish you'd done.</h3>
+        <p class="cta-sub">Join forward-thinking sales teams scaling with AI executions.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="#start" class="btn-primary">Start Now</a>
+        <a href="#team-demo" class="btn-outline">Book a demo for a Team</a>
+      </div>
+    </aside>
+
+  </main>
+
+  <script>
+    function selectMonth(index) {
+      const pills = document.querySelectorAll('.month-pill');
+      pills.forEach((p, i) => {
+        p.classList.toggle('active', i === index);
+      });
+
+      const cards = [
+        document.getElementById('card-m1'),
+        document.getElementById('card-m3'),
+        document.getElementById('card-m4'),
+        document.getElementById('card-m6')
+      ];
+
+      cards.forEach((card, i) => {
+        if (index === 0) {
+          card.classList.remove('highlight');
+          card.style.opacity = '1';
+        } else {
+          const isSelected = (i + 1) === index;
+          card.classList.toggle('highlight', isSelected);
+          card.style.opacity = isSelected ? '1' : '0.35';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

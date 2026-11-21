@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Limelight - Mentoria de Confiabilidade</title>
+  <meta name="description" content="Menu de navegação com efeito holofote deslizante inteligente (Limelight), adaptado com o design system do projeto e alta performance.">
+  <link rel="stylesheet" href="./style.css">
+  
+  <style>
+    /* 1. Reset e Base da Página */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    body {
+      background-color: var(--color-canvas-soft);
+      color: var(--color-ink);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 120px 20px 40px 20px; /* Margem superior para a nav-bar */
+    }
+
+    /* Contêiner de Layout do Menu */
+    .menu-section {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header-area {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .header-area h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      color: var(--color-ink);
+    }
+
+    .header-area p {
+      color: var(--color-body);
+      font-size: 0.95rem;
+    }
+
+    /* 2. Container do Menu Limelight */
+    .limelight-nav {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: 64px;
+      background-color: var(--color-canvas);
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-xl);
+      padding: 0 var(--spacing-sm);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      overflow: hidden; /* Mantém o feixe de luz dentro dos limites laterais */
+    }
+
+    /* Itens de Navegação (Abas) */
+    .nav-item {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0 var(--spacing-2xl);
+      color: var(--color-ink);
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Estilo dos Ícones svg */
+    .nav-item svg {
+      width: 24px;
+      height: 24px;
+      opacity: 0.4;
+      transition: opacity 0.25s ease, transform 0.2s ease;
+      stroke: currentColor;
+    }
+
+    /* Efeito de escala leve no clique */
+    .nav-item:active svg {
+      transform: scale(0.92);
+    }
+
+    /* Ícone ativo ou sob hover fica totalmente opaco */
+    .nav-item.active svg,
+    .nav-item.hovered svg {
+      opacity: 1;
+    }
+
+    /* 3. Indicador Limelight (Foco de Luz) */
+    .limelight-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 44px; /* Largura padrão da barra superior */
+      height: 4px;
+      background-color: var(--color-primary);
+      border-radius: 0 0 4px 4px;
+      transform: translateX(-100px); /* Fora da tela inicialmente */
+      will-change: transform;
+      /* Transição de alta fidelidade baseada em GPU */
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s;
+      pointer-events: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Feixe de Luz Cônico (Spotlight Beam) */
+    .limelight-beam {
+      position: absolute;
+      top: 4px;
+      left: -30%; /* Ligeiramente expandido nas laterais para suavizar */
+      width: 160%;
+      height: 60px;
+      /* Gradiente vertical que atenua a luz */
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0) 100%);
+      /* Corte trapezoidal simulando projeção de lanterna */
+      clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+      pointer-events: none;
+    }
+
+    /* Suporte a Modo Escuro (se aplicável ao body) */
+    @media (prefers-color-scheme: dark) {
+      .limelight-nav {
+        background-color: #121212;
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      .limelight-indicator {
+        background-color: #ffffff;
+        box-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
+      }
+      .limelight-beam {
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu-section">
+    <div class="header-area">
+      <h1>Menu Limelight</h1>
+      <p>Menu conceitual com iluminação focada e transição responsiva.</p>
+    </div>
+
+    <!-- Componente Limelight Nav -->
+    <nav class="limelight-nav" id="limelightNav">
+      
+      <button class="nav-item active" aria-label="Início">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      </button>
+      
+      <button class="nav-item" aria-label="Favoritos">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+      </button>
+      
+      <button class="nav-item" aria-label="Novo Item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      </button>
+      
+      <button class="nav-item" aria-label="Perfil">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      
+      <button class="nav-item" aria-label="Configurações">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+
+      <!-- Elemento do Holofote -->
+      <div class="limelight-indicator" id="limelightIndicator">
+        <div class="limelight-beam"></div>
+      </div>
+
+    </nav>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const nav = document.getElementById('limelightNav');
+      const indicator = document.getElementById('limelightIndicator');
+      const items = nav.querySelectorAll('.nav-item');
+      
+      let activeIndex = 0;
+      let cachedPositions = [];
+
+      // 1. Mapeia e cacheia as posições X absolutas dos itens para evitar gargalo de layout (Reflow)
+      function cachePositions() {
+        cachedPositions = Array.from(items).map(item => {
+          // Calcula o centro relativo do item e centraliza o indicador de largura fixa nele
+          const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
+          const indicatorWidth = indicator.offsetWidth;
+          const leftPosition = itemCenter - (indicatorWidth / 2);
+          return {
+            left: leftPosition
+          };
+        });
+        
+        // Ajusta a posição inicial sem atraso
+        updateIndicator(activeIndex);
+      }
+
+      // 2. Transiciona o indicador usando transformadas de GPU
+      function updateIndicator(index) {
+        if (cachedPositions[index]) {
+          indicator.style.transform = `translateX(${cachedPositions[index].left}px)`;
+          indicator.style.opacity = '1';
+        }
+      }
+
+      // 3. Aplica eventos de entrada (mouseenter) e seleção definitiva (click)
+      items.forEach((item, index) => {
+        item.addEventListener('mouseenter', () => {
+          items.forEach(i => i.classList.remove('hovered'));
+          item.classList.add('hovered');
+          updateIndicator(index);
+        });
+
+        item.addEventListener('click', () => {
+          items.forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          activeIndex = index;
+          updateIndicator(index);
+        });
+      });
+
+      // Retorna o holofote para a aba ativa ao retirar o cursor da barra
+      nav.addEventListener('mouseleave', () => {
+        items.forEach(i => i.classList.remove('hovered'));
+        updateIndicator(activeIndex);
+      });
+
+      // Inicializa as medições e remapeia em redimensionamentos
+      cachePositions();
+      window.addEventListener('resize', cachePositions);
+    });
+  </script>
+<script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

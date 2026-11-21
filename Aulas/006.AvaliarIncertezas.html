@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 6 — Como avaliar as incertezas? | Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/lcc-slides.css">
+</head>
+<body>
+  <div class="slides-container">
+    <div class="slides-wrapper" id="slides-wrapper">
+
+      <!-- Slide 1: Capa -->
+      <main class="slide-section active-slide cover-slide" id="slide-1">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Módulo 6: Como avaliar as incertezas?</h3>
+          <p>Duração sugerida: 25 min. Vamos desafiar a conclusão de R$ 164.200 com Gráfico Tornado, Curva de Decisão, Cenários Combinados e Ponto de Indiferença.</p>
+        </div>
+        <div class="cover-technical-grid"></div>
+        <div class="cover-content">
+          <span class="cover-badge animate-item">MÓDULO 06 • 25 MIN</span>
+          <h1 class="cover-title animate-item delay-1">Como avaliar as incertezas?</h1>
+          <div class="cover-divider animate-item delay-2"></div>
+          <p class="cover-subtitle animate-item delay-3">Muitos decimais não eliminam incerteza. Descubra quais premissas realmente podem inverter a decisão e onde vale a pena investir esforço para melhorar os dados.</p>
+          <div class="cover-meta-row animate-item delay-4">
+            <span class="cover-pill">Gráfico Tornado</span>
+            <span class="cover-pill">Ponto de Indiferença</span>
+            <button type="button" class="cover-cta" data-start-lesson>Iniciar Módulo →</button>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <span>CURSO LCC — MANUTENÇÃO · CONFIABILIDADE · GESTÃO DE ATIVOS</span>
+          <span>MÓDULO 06 / 08</span>
+        </div>
+      </main>
+
+      <!-- Slide 2: Fontes de Incerteza & Priorização -->
+      <section class="slide-section" id="slide-2">
+        <div class="speaker-notes" style="display: none;">
+          <h3>O que pode estar errado? &amp; Qual dado vale a pena melhorar?</h3>
+          <p>Peça as maiores dúvidas da turma. Não dedique o mesmo esforço a todas as entradas: priorize variáveis de alto impacto na decisão e baixa confiança no dado.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header align-left">
+          <span class="body-sm-strong animate-item">PRIORIZAÇÃO DE ESFORÇO</span>
+          <h2 class="display-xl animate-item delay-1">Precisão aparente não elimina incerteza</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="stagger-4 animate-item delay-1">
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">Alta Influência</span>
+              <h3 class="card-title">Horas de Uso</h3>
+              <p class="card-text">Define exposição a energia, falhas e perdas. Pode inverter a decisão.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Alta Influência</span>
+              <h3 class="card-title">Tarifa &amp; Potência</h3>
+              <p class="card-text">Maior peso absoluto no LCC em regime contínuo (6.000 h/ano).</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Baixa Confiança</span>
+              <h3 class="card-title">Perda Líquida/h</h3>
+              <p class="card-text">Depende de redundância, estoque pulmão e recuperação produtiva.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Baixa Confiança</span>
+              <h3 class="card-title">MTBF Real</h3>
+              <p class="card-text">Histórico de campo frequentemente diverge do catálogo do fabricante.</p>
+            </div>
+          </div>
+
+          <div class="statement-bar animate-item delay-2">
+            Regra prática: concentre a coleta e validação de campo em variáveis com <strong>alto impacto no Δ (LCC_A − LCC_B)</strong> e <strong>baixa confiança inicial</strong>.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Gráfico Tornado Interativo -->
+      <section class="slide-section" id="slide-3">
+        <div class="speaker-notes" style="display: none;">
+          <h3>O que mais influencia a escolha? (Tornado)</h3>
+          <p>O tornado varia uma entrada por vez (de ±10% a ±50%, padrão ±20%), mantendo as demais constantes. Δ = LCC_A − LCC_B: positivo favorece B, negativo favorece A.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">ANÁLISE DE SENSIBILIDADE UNIVARIADA</span>
+          <h2 class="display-xl animate-item delay-1">Gráfico Tornado: impacto sobre Δ = LCC_A − LCC_B</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Amplitude de variação nos parâmetros <strong id="m6-spread-val">±20%</strong></label>
+                <input type="range" id="m6-spread" min="10" max="50" step="5" value="20">
+              </div>
+              <div id="m6-tornado-note" style="font-size:13px; color:var(--color-body); max-width:460px;">
+                Δ &gt; 0 favorece <strong>B</strong> · Δ &lt; 0 favorece <strong>A</strong>. Base atual: +R$ 164.200.
+              </div>
+            </div>
+          </div>
+
+          <div class="lcc-card animate-item delay-2" style="padding: 16px 20px;">
+            <svg id="m6-tornado-svg" viewBox="0 0 920 280" style="width:100%; max-height:46vh; display:block;"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Curva de Decisão & Ponto de Indiferença -->
+      <section class="slide-section" id="slide-4">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Curva de Decisão &amp; Onde a decisão se inverte?</h3>
+          <p>Alterne entre Tarifa de Energia e Horas de Operação. No caso original, a tarifa não inverte a escolha em valores não negativos, enquanto o regime de horas inverte perto de 470 h/ano.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">PONTO DE INDIFERENÇA (LCC_A = LCC_B)</span>
+          <h2 class="display-xl animate-item delay-1">Curva de decisão por regime de uso ou tarifa</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="tabs-row animate-item delay-1" style="justify-content:space-between;">
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill active" id="m6-curve-hours">Variar Horas/ano (0 a 1.200 h)</button>
+              <button type="button" class="tab-pill" id="m6-curve-tariff">Variar Tarifa (R$ 0 a R$ 2,00/kWh)</button>
+            </div>
+            <span id="m6-curve-indiff" style="font-weight:800; color:var(--color-danger); font-size:14px;"></span>
+          </div>
+
+          <div class="lcc-card animate-item delay-2" style="padding: 14px 20px;">
+            <svg id="m6-curve-svg" viewBox="0 0 860 270" style="width:100%; max-height:46vh; display:block;"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Cenários Combinados -->
+      <section class="slide-section" id="slide-5">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Quais cenários mudam a decisão? &amp; Sem perda produtiva</h3>
+          <p>Compare condições plausíveis: Base (6.000h), Uso Intermediário (3.000h), Sem Perda Produtiva (R$ 0/h) e Uso Reduzido (300h = 5% de 6.000h). Observe onde a escolha muda.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">TESTE DE ESTRESSE EM CENÁRIOS</span>
+          <h2 class="display-xl animate-item delay-1">A recomendação resiste a condições plausíveis?</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="lcc-table-wrap animate-item delay-1">
+            <table class="lcc-table">
+              <thead>
+                <tr>
+                  <th>Cenário Plausível</th>
+                  <th>Premissas Alteradas</th>
+                  <th>LCC A</th>
+                  <th>LCC B</th>
+                  <th>Δ (A − B)</th>
+                  <th>Vencedora</th>
+                </tr>
+              </thead>
+              <tbody id="m6-scenarios-tbody"></tbody>
+            </table>
+          </div>
+          <div class="statement-bar animate-item delay-2">
+            Mesmo com <strong>perda produtiva zero</strong> ou <strong>metade das horas (3.000 h)</strong>, a Bomba B vence. A escolha só se inverte em regimes muito baixos (ex.: <strong>300 h/ano</strong>, bomba reserva).
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Decisão Robusta vs Condicional -->
+      <section class="slide-section" id="slide-6">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Decisão robusta ou condicional?</h3>
+          <p>Uma recomendação pode ser condicionada à confirmação de dados. Defina responsável, prazo e gatilho. Não transforme ausência de evidência em certeza.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">GOVERNANÇA DA RECOMENDAÇÃO</span>
+          <h2 class="display-xl animate-item delay-1">Toda recomendação informa seus limites</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="stagger-cards animate-item delay-1">
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">Postura 01</span>
+              <h3 class="card-title">Escolher (Robusta)</h3>
+              <p class="card-text">Quando a vencedora mantém vantagem em toda a faixa operacional plausível.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Postura 02</span>
+              <h3 class="card-title">Validar Antes</h3>
+              <p class="card-text">Se a operação está próxima ao ponto de indiferença, confirmar horas e potência antes da compra.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Postura 03</span>
+              <h3 class="card-title">Reavaliar se Mudar</h3>
+              <p class="card-text">Registrar gatilhos claros: mudança de turno, tarifa ou instalação de redundância.</p>
+            </div>
+          </div>
+
+          <div class="statement-bar animate-item delay-2">
+            No próximo módulo, a turma vai resolver na prática uma <strong>mudança operacional real</strong>: o que acontece quando a bomba passa a operar apenas <strong>300 h/ano</strong>?
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Quiz Oficial -->
+      <section class="slide-section quiz-slide" id="slide-7">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Quiz do Módulo 6</h3>
+          <p>Avalie interpretação de Tornado, ponto de indiferença e decisão condicional.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <header class="quiz-header animate-item">
+          <h2 class="quiz-title-giant">QUIZ</h2>
+          <div class="quiz-tabs-nav" id="quiz-tabs-nav"></div>
+        </header>
+
+        <div class="slide-body">
+          <div class="quiz-prompt-card animate-item delay-1">
+            <div class="quiz-prompt-tag" id="quiz-prompt-tag">DESAFIO</div>
+            <p class="quiz-prompt-text" id="quiz-prompt-text"></p>
+          </div>
+          <div class="quiz-options-grid animate-item delay-2" id="quiz-options-grid"></div>
+          <div class="quiz-feedback-banner" id="quiz-feedback-banner"></div>
+          <div class="quiz-footer-bar">
+            <span id="quiz-progress-label" style="font-weight: 700; font-size: 13px;"></span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill" id="btn-quiz-reset">Reiniciar</button>
+              <button type="button" class="tab-pill active" id="btn-quiz-next">Próximo Cenário →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="slide-nav-indicators" aria-label="Navegação de slides">
+    <div class="slide-indicator-dot active" data-title="Capa do Módulo 6"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-0"></div><span class="slide-preview-text">Capa do Módulo 6</span></div></div>
+    <div class="slide-indicator-dot" data-title="Fontes de Incerteza"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-1"></div><span class="slide-preview-text">Fontes de Incerteza</span></div></div>
+    <div class="slide-indicator-dot" data-title="Gráfico Tornado"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-2"></div><span class="slide-preview-text">Gráfico Tornado</span></div></div>
+    <div class="slide-indicator-dot" data-title="Curva de Decisão"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-3"></div><span class="slide-preview-text">Curva de Decisão</span></div></div>
+    <div class="slide-indicator-dot" data-title="Cenários Combinados"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-4"></div><span class="slide-preview-text">Cenários Combinados</span></div></div>
+    <div class="slide-indicator-dot" data-title="Decisão Condicional"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-5"></div><span class="slide-preview-text">Decisão Condicional</span></div></div>
+    <div class="slide-indicator-dot" data-title="Quiz: Sensibilidade"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-6"></div><span class="slide-preview-text">Quiz: Sensibilidade</span></div></div>
+  </nav>
+
+  <script type="module" src="./006.AvaliarIncertezas.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

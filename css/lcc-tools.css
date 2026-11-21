@@ -1,0 +1,397 @@
+/* css/lcc-tools.css — Estilos das ferramentas LCC na aba Opcionais (DESIGN.md) */
+
+.lcc-tool-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px clamp(18px, 4vw, 48px) 56px;
+}
+
+.lcc-tool-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--color-border, #e2e2e2);
+}
+
+.lcc-tool-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-body, #5e5e5e);
+  margin-bottom: 6px;
+}
+
+.lcc-tool-kicker::before {
+  content: "";
+  width: 18px;
+  height: 3px;
+  background: var(--color-danger, #dc2626);
+  border-radius: 2px;
+}
+
+.lcc-tool-title {
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-ink, #000);
+}
+
+.lcc-tool-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.lcc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: var(--rounded-pill, 999px);
+  border: 1px solid var(--color-border, #e2e2e2);
+  background: var(--color-canvas, #fff);
+  color: var(--color-ink, #000);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.lcc-btn:hover {
+  background: var(--color-canvas-soft, #efefef);
+  border-color: var(--color-ink, #000);
+  transform: translateY(-1px);
+}
+
+.lcc-btn-primary {
+  background: var(--color-primary, #000);
+  color: var(--color-on-primary, #fff);
+  border-color: var(--color-primary, #000);
+}
+
+.lcc-btn-primary:hover {
+  background: var(--color-black-elevated, #282828);
+  border-color: var(--color-black-elevated, #282828);
+}
+
+.lcc-notice {
+  background: var(--color-canvas-softer, #f3f3f3);
+  border-left: 3px solid var(--color-ink, #000);
+  border-radius: 0 var(--rounded-md, 8px) var(--rounded-md, 8px) 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-body, #5e5e5e);
+  margin-bottom: 22px;
+}
+
+.lcc-small {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-body, #5e5e5e);
+  margin-bottom: 16px;
+}
+
+.lcc-micro {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-body, #5e5e5e);
+  margin-top: 14px;
+}
+
+.lcc-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 26px 0 12px;
+  color: var(--color-ink, #000);
+}
+
+.lcc-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 22px;
+  margin: 18px 0 22px;
+}
+
+.lcc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink, #000);
+}
+
+.lcc-field input,
+.lcc-field select,
+.lcc-field textarea,
+.lcc-table input,
+.lcc-check-row select,
+.lcc-check-row textarea,
+.lcc-audit-head select,
+.lcc-audit-item textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-ink, #000);
+  background: var(--color-canvas, #fff);
+  border: 1px solid #d0d5dd;
+  border-radius: var(--rounded-md, 8px);
+  padding: 9px 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lcc-field textarea,
+.lcc-check-row textarea,
+.lcc-audit-item textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+
+.lcc-field input:focus,
+.lcc-field select:focus,
+.lcc-field textarea:focus,
+.lcc-table input:focus,
+.lcc-check-row select:focus,
+.lcc-check-row textarea:focus,
+.lcc-audit-head select:focus,
+.lcc-audit-item textarea:focus {
+  outline: none;
+  border-color: var(--color-ink, #000);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+
+.lcc-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border, #e2e2e2);
+  border-radius: var(--rounded-lg, 12px);
+  margin: 16px 0 22px;
+  background: var(--color-canvas, #fff);
+}
+
+.lcc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.lcc-table th,
+.lcc-table td {
+  padding: 11px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border, #e2e2e2);
+}
+
+.lcc-table th {
+  background: var(--color-canvas-softer, #f3f3f3);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-body, #5e5e5e);
+}
+
+.lcc-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.lcc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.lcc-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.lcc-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 22px;
+}
+
+.lcc-summary-card {
+  background: var(--color-canvas-softer, #f3f3f3);
+  border: 1px solid var(--color-border, #e2e2e2);
+  border-radius: var(--rounded-lg, 12px);
+  padding: 16px 18px;
+}
+
+.lcc-summary-card.dark {
+  background: var(--color-primary, #000);
+  color: var(--color-on-primary, #fff);
+  border-color: var(--color-primary, #000);
+}
+
+.lcc-summary-card small {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+
+.lcc-summary-card strong {
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.lcc-error {
+  color: var(--color-danger, #dc2626);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.lcc-check-group {
+  border-top: 2px solid var(--color-ink, #000);
+  padding: 18px 0 8px;
+  margin-top: 18px;
+}
+
+.lcc-check-group h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.lcc-check-row {
+  display: grid;
+  grid-template-columns: 2fr 180px 2fr;
+  gap: 14px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border, #e2e2e2);
+  font-size: 14px;
+}
+
+.lcc-audit-warn {
+  background: var(--color-accent-soft, rgba(220, 38, 38, 0.08));
+  border: 1px solid var(--color-accent-border, rgba(220, 38, 38, 0.28));
+  color: var(--color-ink, #000);
+  border-radius: var(--rounded-md, 8px);
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 22px;
+}
+
+.lcc-audit-item {
+  border-top: 2px solid var(--color-ink, #000);
+  padding: 18px 0 10px;
+  margin-top: 18px;
+}
+
+.lcc-audit-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.lcc-audit-head h3 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.lcc-audit-head select {
+  width: 190px;
+  flex-shrink: 0;
+}
+
+.lcc-ref-list {
+  padding-left: 20px;
+  margin: 10px 0 20px;
+}
+
+.lcc-ref-list li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-body, #5e5e5e);
+}
+
+.lcc-ref-card {
+  background: var(--color-canvas-softer, #f3f3f3);
+  border: 1px solid var(--color-border, #e2e2e2);
+  border-radius: var(--rounded-lg, 12px);
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+
+.lcc-ref-card a {
+  font-weight: 700;
+  color: var(--color-ink, #000);
+}
+
+.lcc-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--color-primary, #000);
+  color: var(--color-on-primary, #fff);
+  padding: 10px 18px;
+  border-radius: var(--rounded-pill, 999px);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+}
+
+.lcc-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 760px) {
+  .lcc-fields,
+  .lcc-summary-cards,
+  .lcc-check-row {
+    grid-template-columns: 1fr;
+  }
+
+  .lcc-audit-head {
+    flex-direction: column;
+  }
+
+  .lcc-audit-head select {
+    width: 100%;
+  }
+}
+
+@media print {
+  .lcc-tool-actions,
+  .lcc-btn,
+  .lcc-toast {
+    display: none !important;
+  }
+
+  .lcc-tool-shell {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .lcc-table-wrap {
+    border: 1px solid #000;
+  }
+}

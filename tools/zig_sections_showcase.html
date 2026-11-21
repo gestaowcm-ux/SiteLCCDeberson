@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Showcase das Seções 8 a 12 — Inspiração Zig.ai</title>
+  <meta name="description" content="Showcase unificado reunindo as seções 8, 9, 10, 11 e 12 inspiradas no Zig.ai">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --zig-green-500: #08906c;
+      --zig-green-400: #10a880;
+      --zig-green-300: #34bf99;
+      --zig-dark: #0d1114;
+      --zig-gray-100: #f4f6f8;
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--zig-dark);
+      color: #ffffff;
+    }
+
+    /* Top Sticky Nav */
+    .showcase-nav {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(13, 17, 20, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #ffffff;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--zig-green-500);
+      box-shadow: 0 0 10px var(--zig-green-500);
+    }
+
+    .nav-links-menu {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 100px;
+      color: #d1d5db;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--zig-green-500);
+      border-color: var(--zig-green-400);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Frame Viewers para os componentes */
+    .section-block {
+      width: 100%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 40px 0;
+    }
+
+    .section-block-header {
+      max-width: 1200px;
+      margin: 0 auto 20px auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-label {
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--zig-green-300);
+    }
+
+    .open-raw-btn {
+      font-size: 0.85rem;
+      color: #9aa1a9;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .open-raw-btn:hover {
+      color: var(--zig-white);
+    }
+
+    .frame-container {
+      width: 100%;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    iframe {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      background: #000;
+      min-height: 650px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Superior -->
+  <header class="showcase-nav">
+    <div class="brand-title">
+      <div class="brand-dot"></div>
+      <span>Zig.ai Sections Collection</span>
+    </div>
+    <nav class="nav-links-menu">
+      <a href="#sec8" class="nav-btn">Seção 8 (Métricas)</a>
+      <a href="#sec9" class="nav-btn">Seção 9 (Dupla Perspectiva)</a>
+      <a href="#sec10" class="nav-btn">Seção 10 (Processos)</a>
+      <a href="#sec11" class="nav-btn">Seção 11 (Evolução IA)</a>
+      <a href="#sec12" class="nav-btn">Seção 12 (Depoimentos)</a>
+    </nav>
+  </header>
+
+  <!-- Seção 8 -->
+  <section id="sec8" class="section-block">
+    <div class="section-block-header">
+      <span class="section-label">Seção 08 — Métricas de Impacto (The Impact)</span>
+      <a href="./metricas_impacto_zig.html" target="_blank" class="open-raw-btn">Abrir arquivo individual ↗</a>
+    </div>
+    <div class="frame-container">
+      <iframe src="./metricas_impacto_zig.html" title="Métricas de Impacto" style="min-height: 680px;"></iframe>
+    </div>
+  </section>
+
+  <!-- Seção 9 -->
+  <section id="sec9" class="section-block">
+    <div class="section-block-header">
+      <span class="section-label">Seção 09 — Dupla Perspectiva / Two Wins (Rep vs Leader)</span>
+      <a href="./dupla_perspectiva_two_wins.html" target="_blank" class="open-raw-btn">Abrir arquivo individual ↗</a>
+    </div>
+    <div class="frame-container">
+      <iframe src="./dupla_perspectiva_two_wins.html" title="Dupla Perspectiva" style="min-height: 750px;"></iframe>
+    </div>
+  </section>
+
+  <!-- Seção 10 -->
+  <section id="sec10" class="section-block">
+    <div class="section-block-header">
+      <span class="section-label">Seção 10 — Linha do Tempo de Processos (Every Workflow)</span>
+      <a href="./timeline_processo_steps.html" target="_blank" class="open-raw-btn">Abrir arquivo individual ↗</a>
+    </div>
+    <div class="frame-container">
+      <iframe src="./timeline_processo_steps.html" title="Linha do Tempo de Processos" style="min-height: 820px;"></iframe>
+    </div>
+  </section>
+
+  <!-- Seção 11 -->
+  <section id="sec11" class="section-block">
+    <div class="section-block-header">
+      <span class="section-label">Seção 11 — Evolução Contínua de IA (Gets Smarter Every Deal)</span>
+      <a href="./evolucao_orbital_timeline.html" target="_blank" class="open-raw-btn">Abrir arquivo individual ↗</a>
+    </div>
+    <div class="frame-container">
+      <iframe src="./evolucao_orbital_timeline.html" title="Evolução Contínua de IA" style="min-height: 740px;"></iframe>
+    </div>
+  </section>
+
+  <!-- Seção 12 -->
+  <section id="sec12" class="section-block">
+    <div class="section-block-header">
+      <span class="section-label">Seção 12 — Depoimentos de Clientes (Testimonials Slider)</span>
+      <a href="./depoimentos_slider_splide.html" target="_blank" class="open-raw-btn">Abrir arquivo individual ↗</a>
+    </div>
+    <div class="frame-container">
+      <iframe src="./depoimentos_slider_splide.html" title="Depoimentos de Clientes" style="min-height: 650px;"></iframe>
+    </div>
+  </section>
+
+</body>
+</html>

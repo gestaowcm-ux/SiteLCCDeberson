@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 4 — Como a confiabilidade influencia os custos? | Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/lcc-slides.css">
+</head>
+<body>
+  <div class="slides-container">
+    <div class="slides-wrapper" id="slides-wrapper">
+
+      <!-- Slide 1: Capa -->
+      <main class="slide-section active-slide cover-slide" id="slide-1">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Módulo 4: Confiabilidade e Custos</h3>
+          <p>Duração sugerida: 25 min. Vamos traduzir MTBF e tempo de reparo/restauração (D) em frequência esperada de falhas, horas de indisponibilidade, custo corretivo direto e perda econômica líquida.</p>
+        </div>
+        <div class="cover-technical-grid"></div>
+        <div class="cover-content">
+          <span class="cover-badge animate-item">MÓDULO 04 • 25 MIN</span>
+          <h1 class="cover-title animate-item delay-1">Como a confiabilidade influencia os custos?</h1>
+          <div class="cover-divider animate-item delay-2"></div>
+          <p class="cover-subtitle animate-item delay-3">Falhar custa muito mais que a ordem de serviço do reparo. Entenda como MTBF, duração da parada e redundância impactam o resultado econômico anual.</p>
+          <div class="cover-meta-row animate-item delay-4">
+            <span class="cover-pill">MTBF &amp; Indisponibilidade</span>
+            <span class="cover-pill">Perda Líquida vs Faturamento</span>
+            <button type="button" class="cover-cta" data-start-lesson>Iniciar Módulo →</button>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <span>CURSO LCC — MANUTENÇÃO · CONFIABILIDADE · GESTÃO DE ATIVOS</span>
+          <span>MÓDULO 04 / 08</span>
+        </div>
+      </main>
+
+      <!-- Slide 2: Falhar custa mais que reparar? -->
+      <section class="slide-section" id="slide-2">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Falhar custa mais que reparar?</h3>
+          <p>Diferencie desembolso de reparo e oportunidade econômica perdida. Nem toda parada impede produção. Antes de monetizar, entenda o sistema, a redundância e a possibilidade de recuperar produção.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header-bar">
+          <div class="slide-header">
+            <span class="body-sm-strong">ANATOMIA DA FALHA</span>
+            <h2 class="display-xl">Uma falha gera custos diretos e consequências</h2>
+          </div>
+          <div class="step-controls-inline">
+            <span class="step-pill-label" data-step-label>Etapa 1/3</span>
+            <div class="step-dots-mini" data-step-dots></div>
+            <button type="button" class="btn-step-next" data-step-next>Avançar ▸</button>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div style="display:flex; gap:18px; align-items:stretch;" class="animate-item delay-1">
+            <div class="vertical-rail-type" style="color:rgba(0,0,0,0.22);">CONFIABILIDADE</div>
+            <div class="stagger-cards" style="flex:1;">
+              <div class="lcc-card accent-dark" data-step-item="0">
+                <span class="card-kicker">Camada 01 • Desembolso</span>
+                <h3 class="card-title">1. Reparo Direto</h3>
+                <p class="card-text">Peças, mão de obra corretiva, ferramental e serviços externos (R$ 4.000/evento no caso).</p>
+              </div>
+              <div class="lcc-card" data-step-item="1">
+                <span class="card-kicker">Camada 02 • Tempo</span>
+                <h3 class="card-title">2. Interrupção Total</h3>
+                <p class="card-text">Não é só o reparo ativo: inclui diagnóstico, espera logística, montagem e partida (8h vs 6h).</p>
+              </div>
+              <div class="lcc-card editorial-red-frame" data-step-item="2">
+                <span class="card-kicker" style="color:var(--color-danger);">Camada 03 • Negócio</span>
+                <h3 class="card-title">3. Consequência</h3>
+                <p class="card-text">Se não há reserva, estoque pulmão ou recuperação, gera perda líquida (R$ 1.000/h).</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="statement-bar animate-item delay-2">
+            Pergunta-chave para a turma: na sua operação atual, o maior impacto financeiro está no <strong>custo do reparo</strong> ou na <strong>consequência da parada</strong>?
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Simulador de Falhas & Indisponibilidade -->
+      <section class="slide-section" id="slide-3">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Quantas falhas esperar? &amp; Quanto tempo ficamos indisponíveis?</h3>
+          <p>Use MTBF de 6.000 h para A e 12.000 h para B. Uma expectativa de 0,5 evento/ano não é meia falha física, é média esperada. D é a duração total considerada: 8 h em A e 6 h em B por falha.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">SIMULADOR • N_falhas ≈ H / MTBF | H_indisp = N_falhas × D</span>
+          <h2 class="display-xl animate-item delay-1">Frequência esperada e horas indisponíveis</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Horas/ano (H) <strong id="m4-h-val">6.000 h</strong></label>
+                <input type="range" id="m4-h" min="300" max="8760" step="100" value="6000">
+              </div>
+              <div class="sim-field">
+                <label>MTBF A (h) <strong id="m4-mtbfa-val">6.000 h</strong></label>
+                <input type="range" id="m4-mtbfa" min="2000" max="24000" step="1000" value="6000">
+              </div>
+              <div class="sim-field">
+                <label>MTBF B (h) <strong id="m4-mtbfb-val">12.000 h</strong></label>
+                <input type="range" id="m4-mtbfb" min="2000" max="24000" step="1000" value="12000">
+              </div>
+              <div class="sim-field">
+                <label>Duração D (A / B)</label>
+                <div style="display:flex; gap:6px;">
+                  <input type="number" id="m4-da" value="8" min="1" max="100" style="width:70px;">
+                  <input type="number" id="m4-db" value="6" min="1" max="100" style="width:70px;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2 animate-item delay-2">
+            <div class="lcc-card">
+              <span class="card-kicker">Bomba A • Confiabilidade</span>
+              <div class="card-metric" id="m4-res-a">1,00 falha/ano</div>
+              <p class="card-text" id="m4-down-a">Indisponibilidade esperada: <strong>8,0 h/ano</strong></p>
+            </div>
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">Bomba B • Confiabilidade</span>
+              <div class="card-metric" id="m4-res-b">0,50 falha/ano</div>
+              <p class="card-text" id="m4-down-b">Indisponibilidade esperada: <strong>3,0 h/ano</strong></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Calculadora de Corretivo & Perda Produtiva -->
+      <section class="slide-section" id="slide-4">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Quanto custa o reparo? &amp; Qual é a perda econômica?</h3>
+          <p>Use R$ 4 mil por evento em ambas (recursos diretos, sem perda produtiva). Adote R$ 1.000/h de contribuição líquida não recuperável. Não use faturamento bruto! Teste com a turma o efeito de haver bomba reserva ou produção recuperável.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">MONETIZAÇÃO DE FALHAS • USAR PERDA LÍQUIDA</span>
+          <h2 class="display-xl animate-item delay-1">Custo corretivo direto vs perda econômica</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Custo por Reparo (R$/evento)</label>
+                <input type="number" id="m4-rep" value="4000" step="500">
+              </div>
+              <div class="sim-field">
+                <label>Perda Líquida (R$/hora parada)</label>
+                <input type="number" id="m4-loss" value="1000" step="100">
+              </div>
+              <div class="sim-field">
+                <label>Contexto do Sistema</label>
+                <div class="tabs-row">
+                  <button type="button" class="tab-pill active" id="m4-ctx-nored">Sem Reserva (Perda integral)</button>
+                  <button type="button" class="tab-pill" id="m4-ctx-rec">Produção Recuperável (Perda = 0)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2 animate-item delay-2">
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">Bomba A (1,0 falha/ano · 8h)</span>
+              <div class="card-metric" id="m4-cost-a">R$ 12.000 / ano</div>
+              <p class="card-text" id="m4-break-a">Corretivo: R$ 4.000 + Perda: R$ 8.000</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Bomba B (0,5 falha/ano · 3h)</span>
+              <div class="card-metric" id="m4-cost-b">R$ 5.000 / ano</div>
+              <p class="card-text" id="m4-break-b">Corretivo: R$ 2.000 + Perda: R$ 3.000</p>
+            </div>
+          </div>
+
+          <div class="statement-bar animate-item delay-3">
+            Regra financeira: use sempre <strong>margem de contribuição líquida não recuperável</strong> (evitando custos variáveis poupados), nunca o faturamento bruto.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Limites da Média -->
+      <section class="slide-section" id="slide-5">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Uma média não conta toda a história</h3>
+          <p>MTBF não é vida útil. Verifique representatividade e contexto. Eventos raros graves exigem tratamento próprio de risco: baixo valor esperado não os torna automaticamente aceitáveis.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header align-left">
+          <span class="body-sm-strong animate-item">LIMITES DO MODELO</span>
+          <h2 class="display-xl animate-item delay-1">Por que uma média não conta toda a história?</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="bento-hero-left animate-item delay-1">
+            <div class="lcc-card accent-strip-left" style="justify-content:center;">
+              <span class="card-kicker">Cuidado 01 • Conceito Crítico</span>
+              <h3 class="card-title" style="font-size:clamp(22px, 2.3vw, 34px); margin: 8px 0;">MTBF ≠ Vida Útil</h3>
+              <p class="card-text">Um ativo pode ter MTBF de 12.000 h entre reparos e vida útil econômica de 8 anos. Confundir os dois distorce o horizonte.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Cuidado 02</span>
+              <h3 class="card-title">Aplicação</h3>
+              <p class="card-text">Catálogo em água limpa não representa fluido abrasivo ou corrosivo.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Cuidado 03</span>
+              <h3 class="card-title">Envelhecimento</h3>
+              <p class="card-text">Taxa constante é simplificação didática; desgaste severo exige taxa crescente.</p>
+            </div>
+            <div class="lcc-card" style="grid-column: span 2;">
+              <span class="card-kicker">Cuidado 04 • Risco Extremo</span>
+              <h3 class="card-title">Eventos Raros Graves</h3>
+              <p class="card-text">Baixo valor esperado não torna aceitável um evento com impacto grave de segurança ou ambiental.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Consolidação Anual -->
+      <section class="slide-section" id="slide-6">
+        <div class="speaker-notes" style="display: none;">
+          <h3>A confiabilidade entrou na conta</h3>
+          <p>Revise energia, operação, planejada, corretiva e perdas (R$ 164.000/ano vs R$ 131.000/ano em 6.000 h). Ainda não use soma simples como conclusão econômica: os custos ocorrem em momentos diferentes. Faça o intervalo antes do tópico 5.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">CONSOLIDAÇÃO ANUAL (6.000 h/ano)</span>
+          <h2 class="display-xl animate-item delay-1">Operação + Manutenção + Consequências das falhas</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="lcc-table-wrap animate-item delay-1">
+            <table class="lcc-table">
+              <thead>
+                <tr>
+                  <th>Parcela Anual Recorrente</th>
+                  <th>Bomba A</th>
+                  <th>Bomba B</th>
+                  <th>Diferença (A − B)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Energia Elétrica (30 vs 25 kW)</td><td>R$ 144.000</td><td>R$ 120.000</td><td>+R$ 24.000</td></tr>
+                <tr><td>Outros Custos Operacionais</td><td>R$ 2.000</td><td>R$ 2.000</td><td>R$ 0</td></tr>
+                <tr><td>Manutenção Planejada (rotina)</td><td>R$ 6.000</td><td>R$ 4.000</td><td>+R$ 2.000</td></tr>
+                <tr><td>Manutenção Corretiva Direta</td><td>R$ 4.000</td><td>R$ 2.000</td><td>+R$ 2.000</td></tr>
+                <tr><td>Perda Produtiva (R$ 1.000/h)</td><td>R$ 8.000</td><td>R$ 3.000</td><td>+R$ 5.000</td></tr>
+                <tr style="background:var(--color-canvas-soft); font-weight:800;">
+                  <td>Total Anual Recorrente</td>
+                  <td>R$ 164.000 / ano</td>
+                  <td>R$ 131.000 / ano</td>
+                  <td style="color:#16a34a;">+R$ 33.000 / ano</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="statement-bar animate-item delay-2">
+            Basta multiplicar por 8 anos? <strong>Não!</strong> Além da intervenção do Ano 4 e do encerramento no Ano 8, os custos ocorrem em datas diferentes (próximo módulo).
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Quiz Oficial -->
+      <section class="slide-section quiz-slide" id="slide-7">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Quiz do Módulo 4</h3>
+          <p>Consolide MTBF, duração da indisponibilidade e valoração de perda líquida.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <header class="quiz-header animate-item">
+          <h2 class="quiz-title-giant">QUIZ</h2>
+          <div class="quiz-tabs-nav" id="quiz-tabs-nav"></div>
+        </header>
+
+        <div class="slide-body">
+          <div class="quiz-prompt-card animate-item delay-1">
+            <div class="quiz-prompt-tag" id="quiz-prompt-tag">DESAFIO</div>
+            <p class="quiz-prompt-text" id="quiz-prompt-text"></p>
+          </div>
+          <div class="quiz-options-grid animate-item delay-2" id="quiz-options-grid"></div>
+          <div class="quiz-feedback-banner" id="quiz-feedback-banner"></div>
+          <div class="quiz-footer-bar">
+            <span id="quiz-progress-label" style="font-weight: 700; font-size: 13px;"></span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill" id="btn-quiz-reset">Reiniciar</button>
+              <button type="button" class="tab-pill active" id="btn-quiz-next">Próximo Cenário →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="slide-nav-indicators" aria-label="Navegação de slides">
+    <div class="slide-indicator-dot active" data-title="Capa do Módulo 4"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-0"></div><span class="slide-preview-text">Capa do Módulo 4</span></div></div>
+    <div class="slide-indicator-dot" data-title="Anatomia da Falha"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-1"></div><span class="slide-preview-text">Anatomia da Falha</span></div></div>
+    <div class="slide-indicator-dot" data-title="Simulador de Falhas"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-2"></div><span class="slide-preview-text">Simulador de Falhas</span></div></div>
+    <div class="slide-indicator-dot" data-title="Corretivo e Perda"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-3"></div><span class="slide-preview-text">Corretivo e Perda</span></div></div>
+    <div class="slide-indicator-dot" data-title="Limites da Média"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-4"></div><span class="slide-preview-text">Limites da Média</span></div></div>
+    <div class="slide-indicator-dot" data-title="Consolidação Anual"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-5"></div><span class="slide-preview-text">Consolidação Anual</span></div></div>
+    <div class="slide-indicator-dot" data-title="Quiz: Confiabilidade"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-6"></div><span class="slide-preview-text">Quiz: Confiabilidade</span></div></div>
+  </nav>
+
+  <script type="module" src="./004.ConfiabilidadeCustos.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

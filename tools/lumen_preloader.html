@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumen — Preloader & Loader Interativo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #080808;
+      --text-white: #f5f5f5;
+      --text-muted: rgba(255, 255, 255, 0.4);
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-title: 'Syne', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Container de Controle / Demonstração */
+    .demo-controls {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(20, 20, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 100px;
+      padding: 8px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .demo-btn {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .demo-btn:hover {
+      opacity: 0.85;
+      transform: scale(1.02);
+    }
+
+    .demo-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* PRELOADER LUMEN */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background-color: var(--bg-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px 48px;
+      transition: opacity 0.8s cubic-bezier(0.77, 0, 0.175, 1), visibility 0.8s;
+    }
+
+    #loader.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Topo do Loader */
+    .loader_top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .loader_status {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .loader_dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffffff;
+      animation: pulseDot 1.2s infinite ease-in-out alternate;
+    }
+
+    @keyframes pulseDot {
+      from { opacity: 0.2; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1.2); }
+    }
+
+    .loader_tag {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    /* Centro do Loader */
+    .loader_mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 16px;
+    }
+
+    .loader_logo_text {
+      font-family: var(--font-title);
+      font-size: clamp(2.5rem, 8vw, 6.5rem);
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #ffffff;
+      line-height: 1;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .loader_logo_text.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .loader_subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      max-width: 420px;
+    }
+
+    /* Rodapé do Loader */
+    .loader_bottom {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .loader_percent_wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .loader_percent {
+      font-size: clamp(1.2rem, 3vw, 2.2rem);
+      font-family: var(--font-title);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .loader_bar_wrap {
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loader_bar_front {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background: #ffffff;
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 0.15s ease-out;
+    }
+
+    /* Conteúdo Revelado Após o Loader */
+    .main_page_content {
+      padding: 120px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease 0.3s, transform 1s ease 0.3s;
+    }
+
+    .main_page_content.is-loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .page_header {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    .page_desc {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 650px;
+    }
+
+    @media (max-width: 768px) {
+      #loader {
+        padding: 24px;
+      }
+      .main_page_content {
+        padding: 80px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div id="loader">
+    <div class="loader_top">
+      <div class="loader_status">
+        <span class="loader_dot"></span>
+        <span id="status-text">Connecting</span>
+      </div>
+      <div class="loader_tag">OBSCURA® / LUMEN</div>
+    </div>
+
+    <div class="loader_mid">
+      <div class="loader_logo_text" id="loader-logo">LUMEN</div>
+      <p class="loader_subtitle">Contemporary Art Space — Visual Identity System</p>
+    </div>
+
+    <div class="loader_bottom">
+      <div class="loader_percent_wrap">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em;">Loading assets</span>
+        <div class="loader_percent" id="loader-percent">0%</div>
+      </div>
+      <div class="loader_bar_wrap">
+        <div class="loader_bar_front" id="loader-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL (EXEMPLO DE TRANSIÇÃO) -->
+  <main class="main_page_content" id="main-content">
+    <h1 class="page_header">LUMEN ARCHIVE</h1>
+    <p class="page_desc">
+      O pré-carregador concluiu a renderização com sucesso. Este componente simula a entrada teatral e carregamento progressivo de ativos com precisão estética e alto contraste.
+    </p>
+  </main>
+
+  <!-- CONTROLES FLUTUANTES DE DEMONSTRAÇÃO -->
+  <div class="demo-controls">
+    <span class="demo-label">Simulador:</span>
+    <button class="demo-btn" onclick="startLoaderAnimation()">Reiniciar Loader</button>
+  </div>
+
+  <script>
+    function startLoaderAnimation() {
+      const loader = document.getElementById('loader');
+      const percentEl = document.getElementById('loader-percent');
+      const barEl = document.getElementById('loader-bar');
+      const logoEl = document.getElementById('loader-logo');
+      const mainContent = document.getElementById('main-content');
+      const statusText = document.getElementById('status-text');
+
+      // Reset
+      loader.classList.remove('is-hidden');
+      mainContent.classList.remove('is-loaded');
+      logoEl.classList.remove('is-revealed');
+      percentEl.textContent = '0%';
+      barEl.style.transform = 'scaleX(0)';
+      statusText.textContent = 'Connecting';
+
+      setTimeout(() => {
+        logoEl.classList.add('is-revealed');
+      }, 200);
+
+      let currentPercent = 0;
+      const duration = 1800; // 1.8 segundos
+      const startTime = performance.now();
+
+      function updateLoader(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing cúbico suave
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        currentPercent = Math.round(easeProgress * 100);
+
+        percentEl.textContent = `${currentPercent}%`;
+        barEl.style.transform = `scaleX(${easeProgress})`;
+
+        if (currentPercent > 40 && currentPercent < 85) {
+          statusText.textContent = 'Curating Works';
+        } else if (currentPercent >= 85 && currentPercent < 100) {
+          statusText.textContent = 'Preparing Space';
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(updateLoader);
+        } else {
+          percentEl.textContent = '100%';
+          statusText.textContent = 'Ready';
+          setTimeout(() => {
+            loader.classList.add('is-hidden');
+            mainContent.classList.add('is-loaded');
+          }, 350);
+        }
+      }
+
+      requestAnimationFrame(updateLoader);
+    }
+
+    // Inicia ao carregar a página
+    window.addEventListener('DOMContentLoaded', () => {
+      startLoaderAnimation();
+    });
+  </script>
+</body>
+</html>

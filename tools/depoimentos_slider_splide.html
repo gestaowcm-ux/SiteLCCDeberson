@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seção 12: Depoimentos de Clientes (Testimonials Slider) — Padrão Zig.ai</title>
+  <meta name="description" content="Carrossel de depoimentos com citações, avatares, logotipos de clientes, controles de setas e paginação por pílulas inspirado no Zig.ai">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --zig-green-500: #08906c;
+      --zig-green-400: #10a880;
+      --zig-green-300: #34bf99;
+      --zig-dark: #0f1316;
+      --zig-card-bg: #161b20;
+      --zig-border: rgba(255, 255, 255, 0.08);
+      --zig-gray-400: #9aa1a9;
+      --zig-gray-600: #626871;
+      --zig-white: #ffffff;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--zig-dark);
+      color: var(--zig-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+    }
+
+    .testimonials-container {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Header */
+    .section-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 50px;
+    }
+
+    .section-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--zig-border);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--zig-green-300);
+    }
+
+    .title-l {
+      font-size: clamp(2rem, 3.8vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    /* Slider Container */
+    .slider-wrapper {
+      position: relative;
+      background: var(--zig-card-bg);
+      border: 1px solid var(--zig-border);
+      border-radius: 28px;
+      padding: 56px 64px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .slider-wrapper::before {
+      content: '“';
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      font-size: 160px;
+      line-height: 1;
+      font-family: Georgia, serif;
+      color: rgba(255, 255, 255, 0.03);
+      pointer-events: none;
+    }
+
+    .testimonial-slide {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .testimonial-slide.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 40px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .testimonial-quote {
+      font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+      font-weight: 600;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.95);
+      letter-spacing: -0.01em;
+    }
+
+    .author-and-logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 28px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .author-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .author-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #242c33;
+      border: 2px solid var(--zig-green-500);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--zig-green-300);
+      font-size: 1.1rem;
+    }
+
+    .author-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .author-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--zig-white);
+    }
+
+    .author-role {
+      font-size: 0.9rem;
+      color: var(--zig-gray-400);
+    }
+
+    .company-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      border: 1px solid var(--zig-border);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--zig-white);
+    }
+
+    /* Controles do Slider */
+    .slider-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 28px;
+      padding: 0 10px;
+    }
+
+    .pagination-pills {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .pill-dot {
+      width: 32px;
+      height: 4px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pill-dot.active {
+      width: 48px;
+      background: var(--zig-green-500);
+      box-shadow: 0 0 12px rgba(8, 144, 108, 0.6);
+    }
+
+    .arrow-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .slider-arrow-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--zig-card-bg);
+      border: 1px solid var(--zig-border);
+      color: var(--zig-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .slider-arrow-btn:hover {
+      background: var(--zig-green-500);
+      border-color: var(--zig-green-400);
+      transform: translateY(-2px);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .slider-wrapper {
+        padding: 36px 24px;
+      }
+      .testimonial-quote {
+        font-size: 1.15rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="testimonials-container">
+    
+    <!-- Cabeçalho -->
+    <header class="section-header">
+      <div class="section-chip">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+        <span>Testimonials</span>
+      </div>
+      <h2 class="title-l">What Our Clients Say</h2>
+    </header>
+
+    <!-- Caixa do Slider -->
+    <section class="slider-wrapper">
+      
+      <!-- Slide 1: Sara Uy -->
+      <article class="testimonial-slide active" id="slide-0">
+        <blockquote class="testimonial-quote">
+          “As someone who’s constantly prospecting, Zig.ai has been a game changer. I can quickly build lists, find verified phone numbers and emails, and use the phone app to create personalized emails in seconds, which means I spend less time researching and more time actually selling.”
+        </blockquote>
+        <div class="author-and-logo-row">
+          <div class="author-info">
+            <div class="author-avatar">SU</div>
+            <div class="author-details">
+              <span class="author-name">Sara Uy</span>
+              <span class="author-role">Founder, SellingSara</span>
+            </div>
+          </div>
+          <div class="company-badge">SellingSara</div>
+        </div>
+      </article>
+
+      <!-- Slide 2: Stéphane Le Mentec -->
+      <article class="testimonial-slide" id="slide-1">
+        <blockquote class="testimonial-quote">
+          “Zig.ai has significantly increased our outbound success. It helps us identify our ideal customers, enrich our data, deliver the right message, and reach prospects through the right channels all within one unified platform.”
+        </blockquote>
+        <div class="author-and-logo-row">
+          <div class="author-info">
+            <div class="author-avatar">SL</div>
+            <div class="author-details">
+              <span class="author-name">Stéphane Le Mentec</span>
+              <span class="author-role">Director of Demand Generation, Ketch</span>
+            </div>
+          </div>
+          <div class="company-badge">Ketch</div>
+        </div>
+      </article>
+
+      <!-- Slide 3: Anthony Argenziano -->
+      <article class="testimonial-slide" id="slide-2">
+        <blockquote class="testimonial-quote">
+          “Best-in-Class AI GTM Assistant with Clean UI and Smart Prompts. It eliminated hours of administrative overhead and allowed our reps to double their customer conversation volume.”
+        </blockquote>
+        <div class="author-and-logo-row">
+          <div class="author-info">
+            <div class="author-avatar">AA</div>
+            <div class="author-details">
+              <span class="author-name">Anthony Argenziano</span>
+              <span class="author-role">Founder & CEO, Velociti</span>
+            </div>
+          </div>
+          <div class="company-badge">Velociti</div>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Controles Inferiores (Pílulas + Setas) -->
+    <div class="slider-controls">
+      <div class="pagination-pills">
+        <div class="pill-dot active" onclick="goToSlide(0)"></div>
+        <div class="pill-dot" onclick="goToSlide(1)"></div>
+        <div class="pill-dot" onclick="goToSlide(2)"></div>
+      </div>
+
+      <div class="arrow-buttons">
+        <button class="slider-arrow-btn" onclick="prevSlide()" aria-label="Anterior">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <button class="slider-arrow-btn" onclick="nextSlide()" aria-label="Próximo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 3;
+
+    function updateSlider() {
+      for (let i = 0; i < totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        const pill = document.querySelectorAll('.pill-dot')[i];
+        if (slide) slide.classList.toggle('active', i === currentSlide);
+        if (pill) pill.classList.toggle('active', i === currentSlide);
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlider();
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateSlider();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateSlider();
+    }
+
+    // Auto Play suave a cada 7 segundos
+    let timer = setInterval(nextSlide, 7000);
+    document.querySelector('.slider-wrapper').addEventListener('mouseenter', () => clearInterval(timer));
+    document.querySelector('.slider-wrapper').addEventListener('mouseleave', () => {
+      timer = setInterval(nextSlide, 7000);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notas de Aula — Mentoria em Gestão de Ativos</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-canvas-soft, #f4f4f4);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .notes-container {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    /* Left Sidebar: Notes list */
+    .notes-sidebar {
+      width: 340px;
+      border-right: 1px solid var(--color-border, #e2e2e2);
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .sidebar-header {
+      padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+      border-bottom: 1px solid var(--color-border, #e2e2e2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sidebar-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-ink, #000);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-new-note {
+      background-color: var(--color-primary, #000);
+      color: var(--color-on-primary, #fff);
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--rounded-pill, 9999px);
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-new-note:hover {
+      background-color: var(--color-danger, #dc2626);
+      transform: translateY(-1px);
+    }
+
+    .search-filter-box {
+      padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+      border-bottom: 1px solid var(--color-border, #e2e2e2);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm, 12px);
+    }
+
+    .search-input {
+      width: 100%;
+      border: 1px solid var(--color-border, #e2e2e2);
+      border-radius: var(--rounded-md, 8px);
+      padding: 10px 14px;
+      font-size: 13px;
+      font-family: inherit;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--color-primary, #000);
+    }
+
+    .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filter-tag {
+      background-color: var(--color-canvas-soft, #f4f4f4);
+      color: var(--color-ink-light, #666);
+      border: 1px solid transparent;
+      padding: 4px 10px;
+      border-radius: var(--rounded-pill, 9999px);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tag:hover {
+      background-color: var(--color-canvas-softer, #eaeaea);
+    }
+
+    .filter-tag.active {
+      background-color: var(--color-primary, #000);
+      color: var(--color-on-primary, #fff);
+    }
+
+    .notes-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm, 12px);
+    }
+
+    .note-card {
+      background-color: var(--color-canvas, #ffffff);
+      border: 1px solid var(--color-border, #e2e2e2);
+      border-radius: var(--rounded-md, 8px);
+      padding: var(--spacing-md, 16px);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs, 8px);
+      position: relative;
+    }
+
+    .note-card:hover {
+      border-color: var(--color-ink-light, #666);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .note-card.active {
+      border-color: var(--color-primary, #000);
+      background-color: var(--color-canvas-soft, #fafafa);
+      outline: 1.5px solid var(--color-primary, #000);
+    }
+
+    .note-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-ink, #000);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .note-card-snippet {
+      font-size: 12px;
+      color: var(--color-ink-light, #666);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .note-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .note-card-tag {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background-color: var(--color-canvas-soft, #f4f4f4);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--color-body, #666);
+    }
+
+    .note-card-date {
+      font-size: 10px;
+      color: var(--color-mute, #999);
+    }
+
+    /* Right Main Editor workspace */
+    .editor-workspace {
+      flex: 1;
+      height: 100%;
+      background-color: var(--color-canvas, #ffffff);
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* Top Horizontal Actions Toolbar */
+    .whiteboard-toolbar {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      background-color: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--color-border, #e2e2e2);
+      border-radius: var(--rounded-lg, 12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      padding: var(--spacing-xs, 8px);
+      gap: var(--spacing-xxs, 4px);
+      align-items: center;
+    }
+
+    .toolbar-btn {
+      background: transparent;
+      border: none;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-ink-light, #666);
+      border-radius: var(--rounded-md, 8px);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .toolbar-btn:hover {
+      background-color: var(--color-canvas-softer, #eaeaea);
+      color: var(--color-ink, #000);
+    }
+
+    .toolbar-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      top: 50px;
+      transform: translateX(-50%) translateY(-5px);
+      background-color: var(--color-black-elevated, #1a1a1a);
+      color: var(--color-canvas, #fff);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: var(--rounded-sm, 4px);
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.15s ease-out;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .toolbar-btn:hover::after {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toolbar-menu-wrap {
+      position: relative;
+      display: flex;
+    }
+
+    .toolbar-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      min-width: 190px;
+      padding: 6px;
+      background-color: var(--color-canvas, #fff);
+      border: 1px solid var(--color-border, #e2e2e2);
+      border-radius: var(--rounded-md, 8px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+      display: none;
+      flex-direction: column;
+      z-index: 150;
+    }
+
+    .toolbar-menu.open {
+      display: flex;
+    }
+
+    .toolbar-menu-item {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--color-ink, #000);
+      border-radius: var(--rounded-sm, 4px);
+      padding: 9px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 650;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .toolbar-menu-item:hover {
+      background-color: var(--color-canvas-soft, #f4f4f4);
+    }
+
+    .toolbar-divider {
+      width: 1px;
+      height: 24px;
+      background-color: var(--color-border, #e2e2e2);
+      margin: 0 var(--spacing-xxs, 4px);
+    }
+
+    /* Editor body */
+    .editor-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 90px var(--spacing-2xl, 32px) var(--spacing-lg, 24px) var(--spacing-2xl, 32px); /* Offsets from top toolbar (80px + margin) */
+      box-sizing: border-box;
+      overflow: hidden;
+      gap: var(--spacing-md, 16px);
+      height: 100%;
+    }
+
+    .note-meta-inputs {
+      display: flex;
+      gap: var(--spacing-md, 16px);
+      align-items: center;
+    }
+
+    .note-title-input {
+      font-size: 24px;
+      font-weight: 800;
+      border: none;
+      outline: none;
+      color: var(--color-ink, #000);
+      width: 100%;
+      font-family: inherit;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .note-title-input:focus {
+      border-color: var(--color-border, #e2e2e2);
+    }
+
+    .note-tag-select {
+      border: 1px solid var(--color-border, #e2e2e2);
+      border-radius: var(--rounded-pill, 9999px);
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      color: var(--color-body, #666);
+      background-color: var(--color-canvas, #fff);
+      cursor: pointer;
+    }
+
+    /* Split text area & live preview */
+    .split-editor {
+      flex: 1;
+      display: flex;
+      gap: var(--spacing-xl, 32px);
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+
+    .editor-pane {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .markdown-textarea {
+      width: 100%;
+      height: 100%;
+      resize: none;
+      border: 1px solid var(--color-border, #e2e2e2);
+      border-radius: var(--rounded-md, 8px);
+      padding: var(--spacing-md, 16px);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+      background-color: #fafafa;
+    }
+
+    .markdown-textarea:focus {
+      border-color: var(--color-primary, #000);
+      background-color: #ffffff;
+    }
+
+    .preview-pane {
+      flex: 1;
+      height: 100%;
+      border: 1px solid var(--color-border, #e2e2e2);
+      border-radius: var(--rounded-md, 8px);
+      padding: var(--spacing-md, 16px);
+      overflow-y: auto;
+      background-color: var(--color-canvas, #fff);
+      box-sizing: border-box;
+    }
+
+    /* Rendered Markdown Styling */
+    .preview-content {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--color-body, #333);
+    }
+
+    .preview-content h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--color-ink, #000);
+      border-bottom: 2px solid var(--color-primary, #000);
+      padding-bottom: 4px;
+      margin-top: 0;
+      margin-bottom: var(--spacing-md);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .preview-content h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-ink, #000);
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .preview-content h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink, #000);
+      margin-top: var(--spacing-md);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .preview-content blockquote {
+      border-left: 4px solid var(--color-danger, #dc2626);
+      background-color: var(--color-canvas-soft, #f4f4f4);
+      margin: 12px 0;
+      padding: var(--spacing-xs, 8px) var(--spacing-md, 16px);
+      font-style: italic;
+      color: var(--color-ink-light, #555);
+    }
+
+    .preview-content code {
+      font-family: monospace;
+      background-color: var(--color-canvas-soft, #f4f4f4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .preview-content pre {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: var(--spacing-md, 16px);
+      border-radius: var(--rounded-md, 8px);
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    .preview-content pre code {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .preview-content ul, .preview-content ol {
+      margin: 10px 0;
+      padding-left: 24px;
+    }
+
+    .preview-content li {
+      margin-bottom: 6px;
+    }
+
+    .preview-content strong {
+      font-weight: 700;
+      color: var(--color-ink, #000);
+    }
+
+    .preview-content p {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    /* Placeholder screen when no notes are active */
+    .empty-state {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-mute, #999);
+      background-color: var(--color-canvas-soft, #f4f4f4);
+      gap: var(--spacing-sm, 12px);
+    }
+  </style>
+</head>
+<body>
+  <div class="notes-container">
+    <!-- Sidebar: Notes List -->
+    <div class="notes-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Notas de Aula</span>
+        <button class="btn-new-note" id="btn-add-note">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Nova Nota
+        </button>
+      </div>
+
+      <div class="search-filter-box">
+        <input type="text" class="search-input" id="search-input" placeholder="Pesquisar notas...">
+        <div class="tag-filters" id="tag-filters">
+          <button class="filter-tag active" data-tag="Todos">Todos</button>
+          <button class="filter-tag" data-tag="RCA">RCA</button>
+          <button class="filter-tag" data-tag="Análise">Análise</button>
+          <button class="filter-tag" data-tag="Exercícios">Exercícios</button>
+          <button class="filter-tag" data-tag="Importante">Importante</button>
+        </div>
+      </div>
+
+      <!-- Notes cards container -->
+      <div class="notes-list" id="notes-list">
+        <!-- Populated via Javascript -->
+      </div>
+    </div>
+
+    <!-- Main Workspace: Editor & Live Preview -->
+    <div class="editor-workspace">
+      <!-- Top Actions Toolbar (Global) -->
+      <div class="whiteboard-toolbar">
+        <div class="toolbar-menu-wrap">
+          <button class="toolbar-btn" id="btn-save" data-tooltip="Descarregar notas" aria-haspopup="true" aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+          <div class="toolbar-menu" id="save-menu">
+            <button class="toolbar-menu-item" data-save-mode="active">Descarregar nota ativa</button>
+            <button class="toolbar-menu-item" data-save-mode="all">Descarregar todas da pasta</button>
+          </div>
+        </div>
+
+        <div class="toolbar-menu-wrap">
+          <button class="toolbar-btn" id="btn-load" data-tooltip="Carregar notas" aria-haspopup="true" aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </button>
+          <div class="toolbar-menu" id="load-menu">
+            <button class="toolbar-menu-item" data-load-mode="single">Carregar uma nota</button>
+            <button class="toolbar-menu-item" data-load-mode="multiple">Carregar todas da pasta</button>
+          </div>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <button class="toolbar-btn" id="btn-delete" data-tooltip="Excluir Nota Ativa">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+      </div>
+
+      <input type="file" id="file-input" accept=".json" style="display: none;">
+
+      <!-- Active Editor Container -->
+      <div class="editor-body" id="editor-body" style="display: none;">
+        <div class="note-meta-inputs">
+          <input type="text" class="note-title-input" id="note-title" placeholder="Título da Nota">
+          <select class="note-tag-select" id="note-tag">
+            <option value="RCA">RCA</option>
+            <option value="Análise">Análise</option>
+            <option value="Exercícios">Exercícios</option>
+            <option value="Importante">Importante</option>
+          </select>
+        </div>
+
+        <div class="split-editor">
+          <!-- Monospace Markdown editor -->
+          <div class="editor-pane">
+            <textarea class="markdown-textarea" id="markdown-editor" placeholder="Escreva suas notas de aula usando Markdown...&#10;&#10;# Título Principal&#10;## Subtítulo&#10;**texto em negrito**&#10;> Anotações de observações do professor."></textarea>
+          </div>
+
+          <!-- Live HTML formatted preview -->
+          <div class="preview-pane">
+            <div class="preview-content" id="markdown-preview"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty Workspace state -->
+      <div class="empty-state" id="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-mute, #bbb);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Selecione uma nota ou crie uma nova anotação.</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./NotasAula.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

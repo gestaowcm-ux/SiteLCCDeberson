@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perguntas Frequentes (Grid Parallax) — Mentoria de Confiabilidade</title>
+  <meta name="description" content="FAQ interativo sobre a mentoria em confiabilidade e gestão de ativos com Deberson Luis. Layout editorial parallax com sanfona de vidro.">
+  <link rel="stylesheet" href="./style.css">
+  
+  <!-- CDNs do GSAP e ScrollTrigger para o Efeito Parallax -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* Estilos Customizados para FAQ Opção 3: Grid Editorial Parallax com Glass Accordions */
+
+    .faq2-section {
+      background-color: var(--color-canvas-softer);
+      padding-top: 140px; /* Espaço para a nav-bar */
+      padding-bottom: var(--spacing-5xl);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .faq2-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-xl);
+    }
+
+    .faq2-intro {
+      text-align: center;
+      max-width: 750px;
+      margin: 0 auto var(--spacing-5xl) auto;
+    }
+
+    .faq2-intro .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--color-mute);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .faq2-intro h1 {
+      margin-bottom: var(--spacing-md);
+      letter-spacing: -0.02em;
+    }
+
+    .faq2-intro p {
+      color: var(--color-body);
+      font-size: 18px;
+    }
+
+    /* --- Grid Editorial Parallax (Asymmetric Collage Grid) --- */
+    .faq2-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      row-gap: 120px;
+      column-gap: var(--spacing-3xl);
+      position: relative;
+    }
+
+    /* Card Base */
+    .faq2-card {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: var(--rounded-xl);
+      padding: var(--spacing-2xl);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      will-change: transform;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .faq2-card:hover {
+      border-color: rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Posições Assimétricas dos Cards */
+    .faq2-card-left-1 {
+      grid-column: 1 / 7;
+    }
+
+    .faq2-card-right-1 {
+      grid-column: 7 / 13;
+      margin-top: 80px; /* Offset vertical inicial */
+    }
+
+    .faq2-card-left-2 {
+      grid-column: 1 / 7;
+      margin-top: -40px; /* Compensação de altura */
+    }
+
+    .faq2-card-right-2 {
+      grid-column: 7 / 13;
+      margin-top: 60px;
+    }
+
+    /* Cabeçalho da Categoria do Card */
+    .faq2-card-header {
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .faq2-category-num {
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-mute);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: var(--spacing-xxs);
+    }
+
+    .faq2-category-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-ink);
+      letter-spacing: -0.01em;
+    }
+
+    /* --- Glassmorphic Accordion (Sanfona) --- */
+    .faq2-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .faq2-acc-item {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding-bottom: var(--spacing-sm);
+    }
+
+    .faq2-acc-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    /* Botão de Pergunta */
+    .faq2-acc-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: var(--spacing-md) 0;
+      text-align: left;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-ink);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-md);
+      transition: color 0.2s;
+    }
+
+    .faq2-acc-question:hover {
+      color: var(--color-body);
+    }
+
+    /* Ícone de Expansão (Chevron) */
+    .faq2-acc-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .faq2-acc-icon::before,
+    .faq2-acc-icon::after {
+      content: '';
+      position: absolute;
+      background-color: var(--color-ink);
+      transition: transform 0.3s ease;
+    }
+
+    /* Transforma um "+" em um "-" */
+    .faq2-acc-icon::before {
+      width: 12px;
+      height: 2px;
+    }
+
+    .faq2-acc-icon::after {
+      width: 2px;
+      height: 12px;
+    }
+
+    .faq2-acc-item.is-expanded .faq2-acc-icon::after {
+      transform: rotate(90deg);
+      opacity: 0;
+    }
+
+    .faq2-acc-item.is-expanded .faq2-acc-icon::before {
+      transform: rotate(180deg);
+    }
+
+    /* Painel de Resposta Oculto */
+    .faq2-acc-answer {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+
+    .faq2-acc-answer-inner {
+      padding: var(--spacing-sm) 0 var(--spacing-md) 0;
+    }
+
+    .faq2-acc-answer-inner p {
+      font-size: 15px;
+      color: var(--color-body);
+      line-height: 1.6;
+    }
+
+    /* --- Rodapé / Call to Action --- */
+    .faq2-footer {
+      text-align: center;
+      margin-top: 100px;
+      padding-top: var(--spacing-3xl);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .faq2-footer h2 {
+      margin-bottom: var(--spacing-md);
+    }
+
+    /* --- Responsividade Mobile --- */
+    @media (max-width: 768px) {
+      .faq2-grid {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-2xl);
+      }
+
+      .faq2-card {
+        grid-column: span 12 !important;
+        margin-top: 0 !important; /* Remove offsets verticais no mobile */
+        padding: var(--spacing-lg);
+      }
+
+      .faq2-category-title {
+        font-size: 19px;
+      }
+
+      .faq2-acc-question {
+        font-size: 15px;
+      }
+
+      .faq2-intro h1 {
+        font-size: 28px;
+      }
+
+      .faq2-intro p {
+        font-size: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .faq2-card {
+        transform: none !important;
+        will-change: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Navegação Superior (nav-bar) -->
+  
+
+  <!-- Corpo do FAQ em Grid -->
+  <main class="faq2-section">
+    <div class="faq2-container">
+      
+      <!-- Introdução -->
+      <div class="faq2-intro">
+        <span class="tag">Layout Parallax</span>
+        <h1 class="display-xl">Perguntas sobre a Mentoria</h1>
+        <p class="body-lg">Explore as dúvidas separadas por categorias abaixo. Ao rolar a página, note o sutil deslocamento vertical independente de cada categoria, criando camadas tridimensionais.</p>
+      </div>
+
+      <!-- Grid Editorial Assimétrico -->
+      <div class="faq2-grid">
+        
+        <!-- Bloco 1: Formato & Acesso (Esquerda, Lento: speed 0.08) -->
+        <article class="faq2-card faq2-card-left-1" data-speed="0.08">
+          <div class="faq2-card-header">
+            <span class="faq2-category-num">Categoria 01</span>
+            <h2 class="faq2-category-title">Formato & Acesso</h2>
+          </div>
+          <div class="faq2-accordion">
+            
+            <div class="faq2-acc-item">
+              <button class="faq2-acc-question">
+                <span>Qual é a duração da mentoria?</span>
+                <span class="faq2-acc-icon"></span>
+              </button>
+              <div class="faq2-acc-answer">
+                <div class="faq2-acc-answer-inner">
+                  <p>O programa de mentoria ativa dura 12 semanas (3 meses). Durante este período, acontecem as aulas on-line ao vivo semanais via Zoom e as revisões de plano de ação, proporcionando tempo hábil para implementar melhorias reais no seu trabalho.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq2-acc-item">
+              <button class="faq2-acc-question">
+                <span>Por quanto tempo terei acesso?</span>
+                <span class="faq2-acc-icon"></span>
+              </button>
+              <div class="faq2-acc-answer">
+                <div class="faq2-acc-answer-inner">
+                  <p>Você terá acesso garantido à plataforma de membros, às gravações dos encontros ao vivo, planilhas para download e laboratórios de simulação por 1 ano completo a partir da data de matrícula.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- Bloco 2: Sem Slides (Direita, Rápido: speed 0.2) -->
+        <article class="faq2-card faq2-card-right-1" data-speed="0.2">
+          <div class="faq2-card-header">
+            <span class="faq2-category-num">Categoria 02</span>
+            <h2 class="faq2-category-title">Simuladores Web</h2>
+          </div>
+          <div class="faq2-accordion">
+            
+            <div class="faq2-acc-item">
+              <button class="faq2-acc-question">
+                <span>O que são os simuladores interativos?</span>
+                <span class="faq2-acc-icon"></span>
+              </button>
+              <div class="faq2-acc-answer">
+                <div class="faq2-acc-answer-inner">
+                  <p>São ferramentas web interativas (como o laboratório da Curva Banheira, Matriz RCM e RBD) que substituem as tradicionais telas estáticas de slides. Você altera dados, move botões e vê na hora o impacto dos riscos e da confiabilidade das suas escolhas de engenharia.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq2-acc-item">
+              <button class="faq2-acc-question">
+                <span>A mentoria é baseada em livros?</span>
+                <span class="faq2-acc-icon"></span>
+              </button>
+              <div class="faq2-acc-answer">
+                <div class="faq2-acc-answer-inner">
+                  <p>Sim. Os conceitos, tabelas e ferramentas práticas aplicadas são extraídos e refinados diretamente dos dois livros de autoria de Deberson Luis: "Auditoria de Manutenção" e "Análise de Causa Raiz (RCA)".</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- Bloco 3: Suporte & Fábrica (Esquerda, Lento: speed 0.05) -->
+        <article class="faq2-card faq2-card-left-2" data-speed="0.05">
+          <div class="faq2-card-header">
+            <span class="faq2-category-num">Categoria 03</span>
+            <h2 class="faq2-category-title">Apoio & Consultoria</h2>
+          </div>
+          <div class="faq2-accordion">
+            
+            <div class="faq2-acc-item">
+              <button class="faq2-acc-question">
+                <span>Posso tirar dúvidas sobre a minha fábrica?</span>
+                <span class="faq2-acc-icon"></span>
+              </button>
+              <div class="faq2-acc-answer">
+                <div class="faq2-acc-answer-inner">
+                  <p>Sim. O foco da mentoria é a aplicação prática. Você poderá compartilhar a sua planilha ou histórico de falhas de equipamentos críticos para obter a análise e sugestão de planos de ação reais do mentor Deberson Luis.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq2-acc-item">
+              <button class="faq2-acc-question">
+                <span>Como funciona o canal de suporte?</span>
+                <span class="faq2-acc-icon"></span>
+              </button>
+              <div class="faq2-acc-answer">
+                <div class="faq2-acc-answer-inner">
+                  <p>Além do suporte direto na plataforma de ensino, os alunos contam com um grupo restrito para tirar dúvidas rápidas e fazer contatos profissionais (networking) com outros especialistas de diversas plantas industriais do país.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- Bloco 4: Inscrição & Garantia (Direita, Rápido: speed 0.25) -->
+        <article class="faq2-card faq2-card-right-2" data-speed="0.25">
+          <div class="faq2-card-header">
+            <span class="faq2-category-num">Categoria 04</span>
+            <h2 class="faq2-category-title">Matrícula & Garantia</h2>
+          </div>
+          <div class="faq2-accordion">
+            
+            <div class="faq2-acc-item">
+              <button class="faq2-acc-question">
+                <span>Qual é a garantia de satisfação?</span>
+                <span class="faq2-acc-icon"></span>
+              </button>
+              <div class="faq2-acc-answer">
+                <div class="faq2-acc-answer-inner">
+                  <p>Nós oferecemos 14 dias de garantia incondicional. Você pode se matricular, participar dos primeiros encontros ao vivo, testar os simuladores e baixar os materiais. Se decidir sair nesse período por qualquer motivo, reembolsamos 100% do seu dinheiro.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq2-acc-item">
+              <button class="faq2-acc-question">
+                <span>Como funciona a Nota Fiscal para empresas?</span>
+                <span class="faq2-acc-icon"></span>
+              </button>
+              <div class="faq2-acc-answer">
+                <div class="faq2-acc-answer-inner">
+                  <p>A nota fiscal de serviços educacionais é emitida automaticamente em seu nome ou em nome da empresa contratante (CNPJ). Isso facilita a aprovação de reembolso ou custeio direto pelos departamentos de RH/T&D corporativos.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Rodapé / CTA -->
+      <footer class="faq2-footer">
+        <h2 class="display-md">Ainda tem alguma dúvida?</h2>
+        <p class="body-md" style="margin-bottom: var(--spacing-lg);">Fale com a nossa equipe de suporte ou garanta sua vaga diretamente na lista prioritária.</p>
+        <button class="btn btn-primary" data-modal="mentoria" id="btn-faq2-cta">
+          Entrar na Fila de Espera
+        </button>
+        <div style="margin-top: var(--spacing-xl);">
+          <a href="./index.html" class="body-sm-strong" style="text-decoration: underline; color: var(--color-ink);">
+            Voltar para a página inicial
+          </a>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+  <script src="/mentoria-modal.js"></script>
+
+  <script>
+    // --- LÓGICA DO ACCORDION (SANFONA) ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const questions = document.querySelectorAll('.faq2-acc-question');
+
+      questions.forEach(question => {
+        question.addEventListener('click', () => {
+          const item = question.parentElement;
+          const answer = item.querySelector('.faq2-acc-answer');
+          const isExpanded = item.classList.contains('is-expanded');
+
+          // Fecha outros accordions da mesma categoria para manter a organização visual
+          const card = item.closest('.faq2-card');
+          const siblingItems = card.querySelectorAll('.faq2-acc-item');
+          siblingItems.forEach(sibling => {
+            if (sibling !== item) {
+              sibling.classList.remove('is-expanded');
+              sibling.querySelector('.faq2-acc-answer').style.maxHeight = null;
+              sibling.querySelector('.faq2-acc-answer').style.opacity = '0';
+            }
+          });
+
+          // Toggle no item clicado
+          if (!isExpanded) {
+            item.classList.add('is-expanded');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            answer.style.opacity = '1';
+          } else {
+            item.classList.remove('is-expanded');
+            answer.style.maxHeight = null;
+            answer.style.opacity = '0';
+          }
+
+          // Atualiza as posições de gatilho do ScrollTrigger, pois a altura da página mudou
+          setTimeout(() => {
+            if (typeof ScrollTrigger !== 'undefined') {
+              ScrollTrigger.refresh();
+            }
+          }, 450); // Aguarda a conclusão da transição CSS do accordion
+        });
+      });
+    });
+
+    // --- LÓGICA DO EFEITO PARALLAX (GSAP + SCROLLTRIGGER) ---
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Executa a animação de scroll apenas se a tela for maior que 768px (Desktop/Tablet) e sem prefers-reduced-motion
+        if (!prefersReducedMotion && window.innerWidth > 768) {
+          gsap.utils.toArray('.faq2-card').forEach(card => {
+            const speed = parseFloat(card.getAttribute('data-speed')) || 0.1;
+            
+            // Fator de deslocamento vertical (speed * 150px)
+            const yTranslation = speed * 150;
+
+            gsap.fromTo(card, 
+              { 
+                y: -yTranslation 
+              }, 
+              {
+                y: yTranslation,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: card,
+                  start: 'top bottom', // Inicia quando o topo do card cruza o final da tela
+                  end: 'bottom top',   // Termina quando o rodapé do card sai pelo topo da tela
+                  scrub: true,         // Sincroniza o arraste com a rolagem física
+                  invalidateOnRefresh: true
+                }
+              }
+            );
+          });
+        }
+      }
+    });
+  </script>
+<script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

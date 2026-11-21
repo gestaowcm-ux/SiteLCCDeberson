@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumen — Navbar & Fullscreen Drawer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #090909;
+      --text-white: #ffffff;
+      --text-gray: rgba(255, 255, 255, 0.45);
+      --border-subtle: rgba(255, 255, 255, 0.1);
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --font-title: 'Syne', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: var(--font-main);
+      min-height: 200vh; /* Scroll para teste */
+      position: relative;
+    }
+
+    /* NAVBAR CONTAINER */
+    .navbar_container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 900;
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(9, 9, 9, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    /* LOGO */
+    .nav_logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-white);
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      overflow: hidden;
+      height: 28px;
+    }
+
+    .nav_logo_inner {
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav_logo:hover .nav_logo_inner {
+      transform: translateY(-28px);
+    }
+
+    .nav_logo_item {
+      height: 28px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* LINKS DESKTOP COM :HAS() HOVER */
+    .nav_links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav_link {
+      color: var(--text-white);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      position: relative;
+      padding: 4px 0;
+      transition: color 0.35s ease, opacity 0.35s ease;
+    }
+
+    /* Efeito Lumen :has() - ao passar o mouse em um link, os outros ficam esmaecidos */
+    .nav_links:has(.nav_link:hover) .nav_link {
+      opacity: 0.35;
+      color: var(--text-gray);
+    }
+
+    .nav_links:has(.nav_link:hover) .nav_link:hover {
+      opacity: 1;
+      color: var(--text-white);
+    }
+
+    .nav_link.is-active {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .nav_link.is-active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: #ffffff;
+    }
+
+    /* BOTÃO INTERATIVO COM LINHAS DUPLAS (ESTILO LUMEN) */
+    .btn_btn {
+      position: relative;
+      background: transparent;
+      border: none;
+      color: var(--text-white);
+      font-family: var(--font-main);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 18px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .btn_text {
+      position: relative;
+      z-index: 2;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn_btn:hover .btn_text {
+      transform: translateY(-2px);
+    }
+
+    .btn_line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.4);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+      transform-origin: left;
+    }
+
+    .btn_line.is-2 {
+      bottom: -4px;
+      height: 1px;
+      background: #ffffff;
+      transform: scaleX(0);
+      transform-origin: right;
+    }
+
+    .btn_btn:hover .btn_line {
+      transform: scaleX(0);
+      transform-origin: right;
+    }
+
+    .btn_btn:hover .btn_line.is-2 {
+      bottom: 0px;
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    /* CONTROLES MOBILE */
+    .mobile_nav_toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* FULLSCREEN DRAWER MENU */
+    .nav_drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 850;
+      background: #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 48px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-20px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav_drawer.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .drawer_links {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .drawer_link {
+      font-family: var(--font-title);
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      display: inline-block;
+    }
+
+    .drawer_links:has(.drawer_link:hover) .drawer_link {
+      opacity: 0.25;
+    }
+
+    .drawer_links:has(.drawer_link:hover) .drawer_link:hover {
+      opacity: 1;
+      transform: translateX(12px);
+    }
+
+    /* CONTEÚDO DE DEMONSTRAÇÃO DO CORPO */
+    .demo_content {
+      padding: 180px 48px 80px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .demo_title {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    .demo_text {
+      color: var(--text-gray);
+      font-size: 1.1rem;
+      line-height: 1.7;
+      max-width: 700px;
+    }
+
+    @media (max-width: 768px) {
+      .navbar_container {
+        padding: 16px 24px;
+      }
+      .nav_links, .btn_btn.desktop-only {
+        display: none;
+      }
+      .mobile_nav_toggle {
+        display: block;
+      }
+      .demo_content {
+        padding: 140px 24px 60px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar_container">
+    <a href="#" class="nav_logo">
+      <div class="nav_logo_inner">
+        <span class="nav_logo_item">OBSCURA®</span>
+        <span class="nav_logo_item">STUDIO</span>
+      </div>
+    </a>
+
+    <nav class="nav_links">
+      <a href="#work" class="nav_link is-active">Work</a>
+      <a href="#services" class="nav_link">Services</a>
+      <a href="#about" class="nav_link">About</a>
+      <a href="#contact" class="nav_link">Contact</a>
+    </nav>
+
+    <button class="btn_btn desktop-only" onclick="alert('CTA Let\'s Talk disparado!')">
+      <span class="btn_text">Let's talk</span>
+      <span class="btn_line"></span>
+      <span class="btn_line is-2"></span>
+    </button>
+
+    <button class="mobile_nav_toggle" id="menu-btn" onclick="toggleMenu()">Menu</button>
+  </header>
+
+  <!-- FULLSCREEN DRAWER MENU (MOBILE / OVERLAY) -->
+  <div class="nav_drawer" id="nav-drawer">
+    <div class="drawer_links">
+      <a href="#home" class="drawer_link" onclick="toggleMenu()">Home</a>
+      <a href="#work" class="drawer_link" onclick="toggleMenu()">Work</a>
+      <a href="#services" class="drawer_link" onclick="toggleMenu()">Services</a>
+      <a href="#about" class="drawer_link" onclick="toggleMenu()">About</a>
+      <a href="#contact" class="drawer_link" onclick="toggleMenu()">Contact</a>
+    </div>
+  </div>
+
+  <!-- DEMONSTRAÇÃO DE ROLAGEM -->
+  <main class="demo_content">
+    <h1 class="demo_title">LUMEN NAVIGATION</h1>
+    <p class="demo_text">
+      Experimente passar o cursor sobre os links de navegação no menu superior: note o comportamento inteligente via CSS <code>:has()</code> que diminui a opacidade dos itens não selecionados, e observe a animação do botão <em>"Let's talk"</em> com linhas duplas de micro-interação.
+    </p>
+  </main>
+
+  <script>
+    function toggleMenu() {
+      const drawer = document.getElementById('nav-drawer');
+      const menuBtn = document.getElementById('menu-btn');
+      const isOpen = drawer.classList.toggle('is-open');
+      menuBtn.textContent = isOpen ? 'Close' : 'Menu';
+    }
+  </script>
+</body>
+</html>

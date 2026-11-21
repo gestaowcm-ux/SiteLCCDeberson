@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apresentação &amp; Capa do Curso LCC — Life Cycle Costing</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      overflow: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-canvas);
+      font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+    }
+    .slides-container {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      overflow: clip;
+      position: relative;
+    }
+    .slides-wrapper {
+      height: 900vh; /* 9 slides (7 CV + 1 Capa + 1 Roadmap) */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide-section {
+      height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background-color: #ffffff;
+      padding: clamp(8px, 1.2vh, 14px) clamp(46px, 3.4vw, 58px) clamp(8px, 1.2vh, 14px) clamp(16px, 1.6vw, 26px);
+      overflow: hidden;
+    }
+    #slide-8 {
+      background-color: var(--color-canvas);
+      overflow: hidden;
+      padding: clamp(20px, 2.8vh, 34px) clamp(56px, 4vw, 74px) clamp(18px, 2.5vh, 30px) clamp(28px, 2.8vw, 48px);
+    }
+    #slide-9 {
+      background-color: #0b0f17;
+      color: #f8fafc;
+      overflow: hidden;
+      padding: clamp(20px, 2.8vh, 34px) clamp(56px, 4vw, 74px) clamp(18px, 2.5vh, 30px) clamp(28px, 2.8vw, 48px);
+    }
+    .roadmap-container {
+      max-width: none;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: clamp(12px, 1.8vh, 20px);
+      box-sizing: border-box;
+      position: relative;
+    }
+    .roadmap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      width: 100%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: clamp(8px, 1.3vh, 14px);
+      flex-shrink: 0;
+    }
+    .roadmap-header-left {
+      text-align: left;
+    }
+    .roadmap-eyebrow {
+      font-size: clamp(12px, 0.92vw, 14.5px);
+      font-weight: 800;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .roadmap-title {
+      font-size: clamp(26px, 2.6vw, 42px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: #ffffff;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .roadmap-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .roadmap-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 9999px;
+      padding: 6px 15px;
+      font-size: clamp(12px, 0.9vw, 14px);
+      font-weight: 700;
+      color: #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .roadmap-badge.highlight {
+      background: rgba(239, 68, 68, 0.16);
+      border-color: rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+    }
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: clamp(12px, 1.25vw, 20px);
+      width: 100%;
+      flex-grow: 1;
+      min-height: 0;
+    }
+    .milestone-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: clamp(14px, 2vh, 24px) clamp(16px, 1.4vw, 24px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    .milestone-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: #38bdf8;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .milestone-card:hover {
+      background: rgba(255, 255, 255, 0.075);
+      border-color: rgba(56, 189, 248, 0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5), 0 0 12px rgba(56, 189, 248, 0.15);
+    }
+    .milestone-card:hover::before {
+      opacity: 1;
+    }
+    .milestone-card.special-card {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.14), rgba(239, 68, 68, 0.04));
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+    .milestone-card.special-card::before {
+      background: #ef4444;
+      opacity: 1;
+    }
+    .milestone-card.special-card:hover {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.22), rgba(239, 68, 68, 0.08));
+      border-color: #ef4444;
+      box-shadow: 0 8px 24px -6px rgba(220, 38, 38, 0.4), 0 0 16px rgba(239, 68, 68, 0.25);
+    }
+    .milestone-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .milestone-badge {
+      font-size: clamp(11px, min(0.92vw, 1.55vh), 16px);
+      font-weight: 800;
+      color: #cbd5e1;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .milestone-badge .num {
+      background: rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: clamp(10.5px, min(0.88vw, 1.5vh), 15px);
+      font-weight: 900;
+    }
+    .milestone-card.special-card .milestone-badge .num {
+      background: #ef4444;
+      color: #ffffff;
+    }
+    .milestone-icon {
+      width: clamp(20px, 2.4vh, 26px);
+      height: clamp(20px, 2.4vh, 26px);
+      color: #38bdf8;
+      opacity: 0.88;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      flex-shrink: 0;
+    }
+    .milestone-card:hover .milestone-icon {
+      transform: scale(1.15);
+      opacity: 1;
+      color: #7dd3fc;
+    }
+    .milestone-card.special-card .milestone-icon {
+      color: #f87171;
+    }
+    .milestone-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .milestone-title {
+      font-size: clamp(15px, min(1.48vw, 2.5vh), 26px);
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0 0 8px 0;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+    .milestone-desc {
+      font-size: clamp(12.5px, min(1.16vw, 1.96vh), 20px);
+      color: #cbd5e1;
+      line-height: 1.42;
+      margin: 0;
+    }
+    .milestone-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .milestone-action {
+      font-size: clamp(12px, min(1vw, 1.7vh), 17.5px);
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s ease;
+    }
+    .milestone-card:hover .milestone-action {
+      gap: 7px;
+      color: #7dd3fc;
+    }
+    .milestone-card.special-card .milestone-action {
+      color: #f87171;
+    }
+    .milestone-card.special-card:hover .milestone-action {
+      color: #fca5a5;
+    }
+    .milestone-tag {
+      font-size: clamp(10.5px, min(0.86vw, 1.48vh), 15px);
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .pdf-slide-frame {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      background-color: #ffffff;
+    }
+    .pdf-slide-img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide-section.active-slide .pdf-slide-img {
+      animation: zoomInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes zoomInSlide {
+      from { opacity: 0.92; transform: scale(0.995); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .cover-container {
+      max-width: none;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(12px, 1.8vh, 22px);
+    }
+    .cover-title {
+      font-size: clamp(36px, min(4.2vw, 6.8vh), 62px);
+      font-weight: 900;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      color: var(--color-ink);
+      margin: 0 0 4px 0;
+      text-transform: uppercase;
+    }
+    .cover-subtitle {
+      font-size: clamp(16px, min(1.4vw, 2.4vh), 23px);
+      font-weight: 500;
+      color: var(--color-body);
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .cover-badge-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-top: 8px;
+      justify-content: center;
+    }
+    .cover-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--color-canvas-soft);
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-pill);
+      padding: 5px 15px;
+      font-size: clamp(12px, 0.92vw, 14px);
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .cover-pill-badge.active-count {
+      background-color: rgba(220, 38, 38, 0.08);
+      border-color: var(--color-danger);
+      color: var(--color-danger);
+    }
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: clamp(12px, 1.25vw, 20px);
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+    }
+    .module-card {
+      background-color: var(--color-canvas-soft);
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-xl);
+      padding: clamp(14px, 2vh, 22px) clamp(16px, 1.4vw, 22px);
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .module-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--color-primary);
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+    }
+    .module-card.case-card {
+      background-color: rgba(220, 38, 38, 0.04);
+      border-color: rgba(220, 38, 38, 0.25);
+    }
+    .module-card.case-card:hover {
+      border-color: var(--color-danger);
+    }
+    .module-number {
+      font-size: clamp(11px, min(0.92vw, 1.55vh), 16px);
+      font-weight: 800;
+      color: var(--color-body);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+    .module-card-title {
+      font-size: clamp(15px, min(1.48vw, 2.5vh), 26px);
+      font-weight: 800;
+      color: var(--color-ink);
+      margin: 0 0 8px 0;
+      line-height: 1.2;
+    }
+    .module-card-description {
+      font-size: clamp(12.5px, min(1.16vw, 1.96vh), 20px);
+      line-height: 1.42;
+      color: var(--color-body);
+      flex-grow: 1;
+      margin-bottom: 8px;
+    }
+    .module-card-action {
+      font-size: clamp(12px, min(1.04vw, 1.75vh), 18px);
+      font-weight: 700;
+      color: var(--color-ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: auto;
+      transition: color 0.2s ease;
+    }
+    .slide-nav-indicators {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1005;
+    }
+    .slide-indicator-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 2px solid transparent;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+    .slide-indicator-dot.active {
+      background-color: #000000;
+      transform: scale(1.4);
+      border-color: #ffffff;
+      box-shadow: 0 0 0 2px #000000;
+    }
+    .slide-indicator-dot:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Slide Indicators na Barra Direita -->
+  <div class="slide-nav-indicators" id="slide-nav-indicators">
+    <div class="slide-indicator-dot active" data-slide="0" data-title="Apresentação Pessoal 1">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-0"></div>
+        <div class="slide-preview-text">Apresentação 1</div>
+      </div>
+    </div>
+    <div class="slide-indicator-dot" data-slide="1" data-title="Apresentação Pessoal 2">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-1"></div>
+        <div class="slide-preview-text">Apresentação 2</div>
+      </div>
+    </div>
+    <div class="slide-indicator-dot" data-slide="2" data-title="Apresentação Pessoal 3">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-2"></div>
+        <div class="slide-preview-text">Apresentação 3</div>
+      </div>
+    </div>
+    <div class="slide-indicator-dot" data-slide="3" data-title="Apresentação Pessoal 4">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-3"></div>
+        <div class="slide-preview-text">Apresentação 4</div>
+      </div>
+    </div>
+    <div class="slide-indicator-dot" data-slide="4" data-title="Apresentação Pessoal 5">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-4"></div>
+        <div class="slide-preview-text">Apresentação 5</div>
+      </div>
+    </div>
+    <div class="slide-indicator-dot" data-slide="5" data-title="Apresentação Pessoal 6">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-5"></div>
+        <div class="slide-preview-text">Apresentação 6</div>
+      </div>
+    </div>
+    <div class="slide-indicator-dot" data-slide="6" data-title="Apresentação Pessoal 7">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-6"></div>
+        <div class="slide-preview-text">Apresentação 7</div>
+      </div>
+    </div>
+    <div class="slide-indicator-dot" data-slide="7" data-title="Capa do Curso LCC">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-7"></div>
+        <div class="slide-preview-text">Capa do Curso LCC</div>
+      </div>
+    </div>
+    <div class="slide-indicator-dot" data-slide="8" data-title="Roadmap das Aulas">
+      <div class="slide-preview-tooltip">
+        <div class="iframe-wrapper" id="preview-wrapper-8"></div>
+        <div class="slide-preview-text">Roadmap LCC</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slides-container">
+    <div class="slides-wrapper" id="slides-wrapper">
+      <!-- Apresentação Pessoal 1 -->
+      <section class="slide-section active-slide" id="slide-1">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Apresentação Pessoal 1</h3>
+          <p>Apresentação do Professor e Currículo</p>
+        </div>
+        <div class="pdf-slide-frame">
+          <img src="/assets/cases/cv/slide_01.png" alt="Apresentação Pessoal 1" class="pdf-slide-img" loading="eager" />
+        </div>
+      </section>
+
+      <!-- Apresentação Pessoal 2 -->
+      <section class="slide-section" id="slide-2">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Apresentação Pessoal 2</h3>
+          <p>Apresentação do Professor e Currículo</p>
+        </div>
+        <div class="pdf-slide-frame">
+          <img src="/assets/cases/cv/slide_02.png" alt="Apresentação Pessoal 2" class="pdf-slide-img" loading="lazy" />
+        </div>
+      </section>
+
+      <!-- Apresentação Pessoal 3 -->
+      <section class="slide-section" id="slide-3">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Apresentação Pessoal 3</h3>
+          <p>Apresentação do Professor e Currículo</p>
+        </div>
+        <div class="pdf-slide-frame">
+          <img src="/assets/cases/cv/slide_03.png" alt="Apresentação Pessoal 3" class="pdf-slide-img" loading="lazy" />
+        </div>
+      </section>
+
+      <!-- Apresentação Pessoal 4 -->
+      <section class="slide-section" id="slide-4">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Apresentação Pessoal 4</h3>
+          <p>Apresentação do Professor e Currículo</p>
+        </div>
+        <div class="pdf-slide-frame">
+          <img src="/assets/cases/cv/slide_04.png" alt="Apresentação Pessoal 4" class="pdf-slide-img" loading="lazy" />
+        </div>
+      </section>
+
+      <!-- Apresentação Pessoal 5 -->
+      <section class="slide-section" id="slide-5">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Apresentação Pessoal 5</h3>
+          <p>Apresentação do Professor e Currículo</p>
+        </div>
+        <div class="pdf-slide-frame">
+          <img src="/assets/cases/cv/slide_05.png" alt="Apresentação Pessoal 5" class="pdf-slide-img" loading="lazy" />
+        </div>
+      </section>
+
+      <!-- Apresentação Pessoal 6 -->
+      <section class="slide-section" id="slide-6">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Apresentação Pessoal 6</h3>
+          <p>Apresentação do Professor e Currículo</p>
+        </div>
+        <div class="pdf-slide-frame">
+          <img src="/assets/cases/cv/slide_06.png" alt="Apresentação Pessoal 6" class="pdf-slide-img" loading="lazy" />
+        </div>
+      </section>
+
+      <!-- Apresentação Pessoal 7 -->
+      <section class="slide-section" id="slide-7">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Apresentação Pessoal 7</h3>
+          <p>Apresentação do Professor e Currículo</p>
+        </div>
+        <div class="pdf-slide-frame">
+          <img src="/assets/cases/cv/slide_07.png" alt="Apresentação Pessoal 7" class="pdf-slide-img" loading="lazy" />
+        </div>
+      </section>
+
+      <!-- Capa do Curso LCC -->
+      <section class="slide-section" id="slide-8">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Capa do Curso LCC — Life Cycle Costing</h3>
+          <p>Apresente o Curso de LCC (Life Cycle Costing / Custeio do Ciclo de Vida). Destaque a integração entre Gestão de Ativos (ISO 55000 / ISO 15663), Engenharia Econômica e Engenharia de Confiabilidade para decisões ótimas de CAPEX, OPEX, disponibilidade e substituição de ativos.</p>
+        </div>
+        <div class="cover-container">
+          <div class="cover-header">
+            <h1 class="cover-title">Curso LCC</h1>
+            <p class="cover-subtitle">Life Cycle Costing • Gestão de Ativos &amp; Confiabilidade</p>
+            <div class="cover-badge-row">
+              <span class="cover-pill-badge active-count">● Base do Curso Pronta</span>
+              <span class="cover-pill-badge">ISO 55000 &amp; ISO 15663</span>
+            </div>
+          </div>
+          
+          <div class="modules-grid">
+            <!-- Eixo 1 -->
+            <div class="module-card" onclick="window.parent.postMessage({type:'GOTO_MODULE', module: 1}, '*')">
+              <div>
+                <div class="module-number">Eixo 1 • Fundamentos</div>
+                <h3 class="module-card-title">Conceitos de LCC &amp; ISO 55000</h3>
+                <p class="module-card-description">Visão sistêmica do ciclo de vida de ativos físicos, efeito iceberg (CAPEX vs. OPEX) e alinhamento entre custo, risco e desempenho.</p>
+              </div>
+              <div class="module-card-action">
+                Em breve
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Eixo 2 -->
+            <div class="module-card" onclick="window.parent.postMessage({type:'GOTO_MODULE', module: 2}, '*')">
+              <div>
+                <div class="module-number">Eixo 2 • Engenharia Econômica</div>
+                <h3 class="module-card-title">Matemática Financeira &amp; VPL</h3>
+                <p class="module-card-description">Valor do dinheiro no tempo, TMA/WACC, inflação, VPL (NPV), Custo Anual Uniforme Equivalente (CAUE/EAC) e fluxo de caixa.</p>
+              </div>
+              <div class="module-card-action">
+                Em breve
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Eixo 3 -->
+            <div class="module-card" onclick="window.parent.postMessage({type:'GOTO_MODULE', module: 3}, '*')">
+              <div>
+                <div class="module-number">Eixo 3 • Estrutura de Custos</div>
+                <h3 class="module-card-title">CBS, CAPEX, OPEX &amp; Descarte</h3>
+                <p class="module-card-description">Cost Breakdown Structure (ISO 15663), aquisição, comissionamento, energia, manutenção, descomissionamento e valor residual.</p>
+              </div>
+              <div class="module-card-action">
+                Em breve
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Eixo 4 -->
+            <div class="module-card" onclick="window.parent.postMessage({type:'GOTO_MODULE', module: 4}, '*')">
+              <div>
+                <div class="module-number">Eixo 4 • Confiabilidade &amp; RAM</div>
+                <h3 class="module-card-title">Custo da Falha &amp; Indisponibilidade</h3>
+                <p class="module-card-description">Modelagem probabilística de falhas (MTBF, MTTR, Weibull), penalidade por downtime e impacto da confiabilidade no LCC.</p>
+              </div>
+              <div class="module-card-action">
+                Em breve
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Eixo 5 -->
+            <div class="module-card" onclick="window.parent.postMessage({type:'GOTO_MODULE', module: 5}, '*')">
+              <div>
+                <div class="module-number">Eixo 5 • Tomada de Decisão</div>
+                <h3 class="module-card-title">Seleção de Projetos &amp; Fornecedores</h3>
+                <p class="module-card-description">Comparação técnico-econômica de alternativas de equipamentos, redundância (standby) e eficiência energética na compra.</p>
+              </div>
+              <div class="module-card-action">
+                Em breve
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Eixo 6 -->
+            <div class="module-card" onclick="window.parent.postMessage({type:'GOTO_MODULE', module: 6}, '*')">
+              <div>
+                <div class="module-number">Eixo 6 • Vida Econômica</div>
+                <h3 class="module-card-title">Substituição vs. Reforma</h3>
+                <p class="module-card-description">Cálculo da Vida Econômica Ótima (ponto mínimo de CAUE), análise Defensor vs. Desafiante, overhaul e modernização.</p>
+              </div>
+              <div class="module-card-action">
+                Em breve
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Eixo 7 -->
+            <div class="module-card" onclick="window.parent.postMessage({type:'GOTO_MODULE', module: 7}, '*')">
+              <div>
+                <div class="module-number">Eixo 7 • Risco &amp; Incerteza</div>
+                <h3 class="module-card-title">Sensibilidade &amp; Monte Carlo</h3>
+                <p class="module-card-description">Gráfico de Tornado, cenários determinísticos vs. estocásticos e análise de sensibilidade das variáveis críticas do LCC.</p>
+              </div>
+              <div class="module-card-action">
+                Em breve
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Eixo 8: Cases Práticos -->
+            <div class="module-card case-card" onclick="window.parent.postMessage({type:'GOTO_MODULE', module: 8}, '*')">
+              <div>
+                <div class="module-number">Aplicação Prática</div>
+                <h3 class="module-card-title">Cases Industriais de LCC</h3>
+                <p class="module-card-description">Estudos de caso reais em frotas móveis, bombeamento, motores elétricos, subestações e plantas de processo contínuo.</p>
+              </div>
+              <div class="module-card-action">
+                Em breve
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Roadmap das Aulas Principais -->
+      <section class="slide-section" id="slide-9">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Roadmap Pedagógico — Curso LCC</h3>
+          <p>Apresente a estrutura programática planejada para o Curso de Life Cycle Costing (LCC). Este roadmap será expandido dinamicamente conforme as novas aulas e cases forem criados no diretório Aulas/.</p>
+        </div>
+
+        <div class="roadmap-container">
+          <div class="roadmap-header">
+            <div class="roadmap-header-left">
+              <div class="roadmap-eyebrow">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                TRILHA PEDAGÓGICA DO CURSO LCC • VISÃO PANORÂMICA
+              </div>
+              <h2 class="roadmap-title">Roadmap — Life Cycle Costing</h2>
+            </div>
+            <div class="roadmap-badge-group">
+              <span class="roadmap-badge">Gestão de Ativos</span>
+              <span class="roadmap-badge highlight">Engenharia de Confiabilidade</span>
+            </div>
+          </div>
+
+          <div class="roadmap-grid">
+            <div class="milestone-card">
+              <div class="milestone-top-row">
+                <span class="milestone-badge"><span class="num">01</span> Pilar</span>
+                <svg class="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+              </div>
+              <div class="milestone-content">
+                <h3 class="milestone-title">Fundamentos &amp; Normas (ISO 55000 / 15663)</h3>
+                <p class="milestone-desc">O Iceberg de Custos, fases do ciclo de vida do ativo e governança entre engenharia, suprimentos e finanças.</p>
+              </div>
+              <div class="milestone-footer">
+                <span class="milestone-tag">Gestão de Ativos</span>
+                <span class="milestone-action">Estrutura Base</span>
+              </div>
+            </div>
+
+            <div class="milestone-card">
+              <div class="milestone-top-row">
+                <span class="milestone-badge"><span class="num">02</span> Pilar</span>
+                <svg class="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </div>
+              <div class="milestone-content">
+                <h3 class="milestone-title">Engenharia Econômica Aplicada</h3>
+                <p class="milestone-desc">Fluxo de caixa descontado, VPL, TIR, Payback Descontado, CAUE (EAC), inflação, depreciação e impostos.</p>
+              </div>
+              <div class="milestone-footer">
+                <span class="milestone-tag">Finanças</span>
+                <span class="milestone-action">Estrutura Base</span>
+              </div>
+            </div>
+
+            <div class="milestone-card">
+              <div class="milestone-top-row">
+                <span class="milestone-badge"><span class="num">03</span> Pilar</span>
+                <svg class="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+                </svg>
+              </div>
+              <div class="milestone-content">
+                <h3 class="milestone-title">Decomposição de Custos (CBS)</h3>
+                <p class="milestone-desc">Modelagem detalhada de CAPEX, OPEX (energia, mão de obra, sobressalentes, preventiva/corretiva) e descomissionamento.</p>
+              </div>
+              <div class="milestone-footer">
+                <span class="milestone-tag">Modelagem</span>
+                <span class="milestone-action">Estrutura Base</span>
+              </div>
+            </div>
+
+            <div class="milestone-card">
+              <div class="milestone-top-row">
+                <span class="milestone-badge"><span class="num">04</span> Pilar</span>
+                <svg class="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </div>
+              <div class="milestone-content">
+                <h3 class="milestone-title">Confiabilidade, RAM &amp; Custo da Falha</h3>
+                <p class="milestone-desc">Integração de taxa de falhas, Weibull, MTBF, MTTR e lucro cessante por indisponibilidade no cálculo do LCC.</p>
+              </div>
+              <div class="milestone-footer">
+                <span class="milestone-tag">Confiabilidade</span>
+                <span class="milestone-action">Estrutura Base</span>
+              </div>
+            </div>
+
+            <div class="milestone-card">
+              <div class="milestone-top-row">
+                <span class="milestone-badge"><span class="num">05</span> Pilar</span>
+                <svg class="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <div class="milestone-content">
+                <h3 class="milestone-title">Vida Econômica Ótima &amp; Substituição</h3>
+                <p class="milestone-desc">Determinação do momento ótimo de giro de frota ou ativo industrial, Defensor vs. Desafiante e viabilidade de retrofit.</p>
+              </div>
+              <div class="milestone-footer">
+                <span class="milestone-tag">Otimização</span>
+                <span class="milestone-action">Estrutura Base</span>
+              </div>
+            </div>
+
+            <div class="milestone-card">
+              <div class="milestone-top-row">
+                <span class="milestone-badge"><span class="num">06</span> Pilar</span>
+                <svg class="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+                </svg>
+              </div>
+              <div class="milestone-content">
+                <h3 class="milestone-title">Trade-offs de Projeto &amp; CAPEX</h3>
+                <p class="milestone-desc">Seleção de fornecedores pelo menor custo global (TCO/LCC), dimensionamento de redundâncias e sobressalentes críticos.</p>
+              </div>
+              <div class="milestone-footer">
+                <span class="milestone-tag">Engenharia</span>
+                <span class="milestone-action">Estrutura Base</span>
+              </div>
+            </div>
+
+            <div class="milestone-card">
+              <div class="milestone-top-row">
+                <span class="milestone-badge"><span class="num">07</span> Pilar</span>
+                <svg class="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20V10M18 20V4M6 20v-4"/>
+                </svg>
+              </div>
+              <div class="milestone-content">
+                <h3 class="milestone-title">Análise de Risco &amp; Sensibilidade</h3>
+                <p class="milestone-desc">Diagramas de Tornado, elasticidade à taxa de desconto/energia e tratamento de incertezas via Simulação de Monte Carlo.</p>
+              </div>
+              <div class="milestone-footer">
+                <span class="milestone-tag">Risco</span>
+                <span class="milestone-action">Estrutura Base</span>
+              </div>
+            </div>
+
+            <div class="milestone-card special-card">
+              <div class="milestone-top-row">
+                <span class="milestone-badge"><span class="num">★</span> Prática</span>
+                <svg class="milestone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+              </div>
+              <div class="milestone-content">
+                <h3 class="milestone-title">Simuladores &amp; Cases Reais de LCC</h3>
+                <p class="milestone-desc">Espaço dedicado às simulações interativas e estudos de caso práticos que serão incorporados às aulas.</p>
+              </div>
+              <div class="milestone-footer">
+                <span class="milestone-tag" style="color: #f87171;">Aplicação Real</span>
+                <span class="milestone-action">Pronto p/ Novas Aulas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="./000.CapaCurso.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

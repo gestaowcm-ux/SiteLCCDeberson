@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Apresentações - Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      background-color: var(--color-canvas);
+      color: var(--color-ink);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* Sidebar - Painel Lateral */
+    .sidebar {
+      width: 320px;
+      min-width: 320px;
+      background-color: var(--color-canvas-softer);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      z-index: 10;
+      transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-right-color 0.3s;
+      margin-left: 0;
+    }
+
+    /* Estado recolhido da Sidebar */
+    .sidebar.collapsed {
+      margin-left: -320px;
+      border-right-color: transparent;
+    }
+
+    .sidebar-header {
+      padding: var(--spacing-2xl) var(--spacing-xl);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .sidebar-header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-ink);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar-header p {
+      font-size: 12px;
+      color: var(--color-ink);
+      margin-top: var(--spacing-xxs);
+    }
+
+    .menu-section {
+      padding: var(--spacing-lg) var(--spacing-md);
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .menu-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxs);
+    }
+
+    .menu-group-header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--rounded-md);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s ease;
+    }
+
+    .menu-group-header:hover {
+      background-color: var(--color-canvas-soft);
+    }
+
+    .menu-group-chevron {
+      color: var(--color-body);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+
+    .menu-group-folder {
+      color: var(--color-body);
+      flex-shrink: 0;
+      transition: color 0.2s ease;
+    }
+
+    .menu-group-header:hover .menu-group-folder,
+    .menu-group-header:hover .menu-group-chevron {
+      color: var(--color-ink);
+    }
+
+    .menu-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-ink);
+      margin: 0;
+      flex: 1;
+    }
+
+    .menu-group-count {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-body);
+      background-color: var(--color-canvas-soft);
+      padding: 2px 7px;
+      border-radius: var(--rounded-pill);
+      border: 1px solid var(--color-border);
+      line-height: 1;
+    }
+
+    /* Estado Recolhido da Seção na Árvore */
+    .menu-group.collapsed .menu-list {
+      display: none !important;
+    }
+
+    .menu-group.collapsed .menu-group-chevron {
+      transform: rotate(-90deg);
+    }
+
+    .menu-group.collapsed .menu-group-folder {
+      opacity: 0.6;
+    }
+
+    .menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxs);
+      list-style: none;
+    }
+
+    .menu-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxs);
+    }
+
+    /* Botão Principal */
+    .menu-item button.menu-item-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--color-ink);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--rounded-pill-tab);
+      text-align: left;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .menu-item button.menu-item-btn:hover {
+      background-color: var(--color-canvas-soft);
+      color: var(--color-ink);
+    }
+
+    /* Ativo - Inverte a Dupla Black & White */
+    .menu-item.active button.menu-item-btn {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+
+    .menu-item-label {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .menu-item-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-body);
+      background-color: var(--color-canvas-soft);
+      padding: 1px 6px;
+      border-radius: var(--rounded-pill);
+      border: 1px solid var(--color-border);
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    .menu-item.active .menu-item-badge {
+      color: var(--color-on-primary);
+      background-color: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .menu-item-chevron-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: var(--rounded-full);
+      color: var(--color-body);
+      transition: background-color 0.2s, color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .menu-item-chevron-btn:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+      color: var(--color-ink);
+    }
+
+    .menu-item.active .menu-item-chevron-btn {
+      color: var(--color-on-primary);
+    }
+
+    .menu-item.active .menu-item-chevron-btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .menu-item-chevron {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Sub-menu de Slides */
+    .sub-menu-list {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      list-style: none;
+      padding-left: 36px;
+      margin-top: var(--spacing-xs);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* Mostra a sub-lista quando o módulo estiver ativo ou explicitamente expandido, a menos que recolhido */
+    .menu-item.active:not(.sub-collapsed) .sub-menu-list,
+    .menu-item.sub-expanded:not(.sub-collapsed) .sub-menu-list {
+      display: flex;
+    }
+
+    .menu-item.sub-collapsed .sub-menu-list {
+      display: none !important;
+    }
+
+    .menu-item.sub-collapsed .menu-item-chevron {
+      transform: rotate(-90deg);
+    }
+
+    .sub-menu-item {
+      font-size: 12.5px;
+      color: var(--color-ink);
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--rounded-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .sub-menu-item:hover {
+      background-color: var(--color-canvas-soft);
+      color: var(--color-ink);
+    }
+
+    .sub-menu-item.active {
+      color: var(--color-on-primary);
+      background-color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .sidebar-footer {
+      padding: var(--spacing-xl);
+      border-top: 1px solid var(--color-border);
+      background-color: var(--color-canvas-softer);
+    }
+
+    /* Painel de Controles Flutuantes do Rodapé */
+    .controls-panel {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    /* Botão Principal Uber - Pill Shape */
+    .btn-action {
+      background-color: var(--color-canvas);
+      color: var(--color-ink);
+      border: 1px solid var(--color-border);
+      padding: var(--spacing-md) var(--spacing-xl);
+      border-radius: var(--rounded-pill);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+    }
+
+    .btn-action:hover {
+      background-color: var(--color-canvas-soft);
+    }
+
+    .btn-primary-action {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary-action:hover {
+      background-color: var(--color-black-elevated);
+    }
+
+    /* Viewport de Exibição Principal */
+    .main-viewport {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      background-color: var(--color-canvas);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .viewport-header {
+      background-color: var(--color-canvas);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--spacing-md) var(--spacing-2xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 56px;
+      position: relative;
+    }
+
+    .viewport-title-group {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .btn-toggle-sidebar {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--color-ink);
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      border-radius: var(--rounded-md);
+      transition: background-color 0.2s;
+    }
+
+    .btn-toggle-sidebar:hover {
+      background-color: var(--color-canvas-softer);
+    }
+
+    .viewport-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-ink);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: clamp(140px, 22vw, 320px);
+    }
+
+    .viewport-timer {
+      font-size: 13px;
+      color: var(--color-body);
+      font-family: monospace;
+      background: var(--color-canvas-softer);
+      padding: var(--spacing-xxs) var(--spacing-sm);
+      border-radius: var(--rounded-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .viewport-iframe {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background-color: var(--color-canvas);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar Navigation (Retractable) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>Curso de LCC</h1>
+      <p>Life Cycle Costing • Gestão de Ativos &amp; Confiabilidade</p>
+    </div>
+
+    <!-- Gerenciador de Turmas e Progresso -->
+    <div class="turma-manager">
+      <div class="turma-selector-wrapper">
+        <label for="turma-select" class="turma-label">Turma Ativa</label>
+        <div class="turma-select-container">
+          <select id="turma-select" class="turma-select">
+            <!-- Populado dinamicamente -->
+          </select>
+          <button id="btn-manage-turmas" class="btn-turma-action" title="Gerenciar Turmas">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="turma-progress-bar-container">
+        <div id="turma-progress-fill" class="turma-progress-fill" style="width: 0%;"></div>
+      </div>
+      <div class="turma-progress-text">
+        <span id="turma-progress-percent">0% concluído</span>
+        <span id="turma-folder-display" style="display:block; font-size:10px; color:var(--color-ink); margin-top:4px;">📂 Sem pasta vinculada</span>
+      </div>
+    </div>
+
+    <nav class="menu-section">
+      <div class="menu-group collapsed" data-section="aulas-principais">
+        <div class="menu-group-header" role="button" tabindex="0" title="Clique para recolher/expandir seções">
+          <svg class="menu-group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <svg class="menu-group-folder" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <h3 class="menu-title">Aulas Principais</h3>
+          <span class="menu-group-count">10</span>
+        </div>
+        <ul class="menu-list">
+          <li class="menu-item active sub-collapsed" data-src="./Aulas/000.CapaCurso.html" data-title="Capa do Curso" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Capa do Curso
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Apresentação Pessoal 1</li>
+              <li class="sub-menu-item" data-slide="1">Apresentação Pessoal 2</li>
+              <li class="sub-menu-item" data-slide="2">Apresentação Pessoal 3</li>
+              <li class="sub-menu-item" data-slide="3">Apresentação Pessoal 4</li>
+              <li class="sub-menu-item" data-slide="4">Apresentação Pessoal 5</li>
+              <li class="sub-menu-item" data-slide="5">Apresentação Pessoal 6</li>
+              <li class="sub-menu-item" data-slide="6">Apresentação Pessoal 7</li>
+              <li class="sub-menu-item" data-slide="7">Capa do Curso LCC</li>
+              <li class="sub-menu-item" data-slide="8">Roadmap das Aulas</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/001.PorQueUtilizarLCC.html" data-title="1. Por que utilizar o LCC?" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              1. Por que utilizar o LCC?
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Capa do Módulo 1</li>
+              <li class="sub-menu-item" data-slide="1">Qual você compraria?</li>
+              <li class="sub-menu-item" data-slide="2">4 pontos de vista</li>
+              <li class="sub-menu-item" data-slide="3">O que falta saber</li>
+              <li class="sub-menu-item" data-slide="4">Simulação de Inversão</li>
+              <li class="sub-menu-item" data-slide="5">Onde o custo nasce</li>
+              <li class="sub-menu-item" data-slide="6">Definir antes de calcular</li>
+              <li class="sub-menu-item" data-slide="7">Quiz: A Lente do LCC</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/002.EstruturarAnalise.html" data-title="2. Como estruturar a análise?" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+              2. Como estruturar a análise?
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Capa do Módulo 2</li>
+              <li class="sub-menu-item" data-slide="1">Decisão e Necessidade</li>
+              <li class="sub-menu-item" data-slide="2">Requisitos Obrigatórios</li>
+              <li class="sub-menu-item" data-slide="3">Fronteiras da Análise</li>
+              <li class="sub-menu-item" data-slide="4">Horizonte vs Vida Útil</li>
+              <li class="sub-menu-item" data-slide="5">Premissas e Fontes</li>
+              <li class="sub-menu-item" data-slide="6">Quiz: Estruturação</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/003.CustosConsiderar.html" data-title="3. Quais custos considerar?" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              3. Quais custos considerar?
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Capa do Módulo 3</li>
+              <li class="sub-menu-item" data-slide="1">Investimento Inicial</li>
+              <li class="sub-menu-item" data-slide="2">Calculadora de Energia</li>
+              <li class="sub-menu-item" data-slide="3">Manutenção Planejada</li>
+              <li class="sub-menu-item" data-slide="4">Fim de Vida e Invisíveis</li>
+              <li class="sub-menu-item" data-slide="5">Prevenção Dupla Contagem</li>
+              <li class="sub-menu-item" data-slide="6">Quiz: Custos no LCC</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/004.ConfiabilidadeCustos.html" data-title="4. Confiabilidade e custos" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              4. Confiabilidade e custos
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Capa do Módulo 4</li>
+              <li class="sub-menu-item" data-slide="1">Anatomia da Falha</li>
+              <li class="sub-menu-item" data-slide="2">Simulador de Falhas</li>
+              <li class="sub-menu-item" data-slide="3">Corretivo e Perda</li>
+              <li class="sub-menu-item" data-slide="4">Limites da Média</li>
+              <li class="sub-menu-item" data-slide="5">Consolidação Anual</li>
+              <li class="sub-menu-item" data-slide="6">Quiz: Confiabilidade</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/005.ComparacaoEconomica.html" data-title="5. Comparação econômica" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              5. Comparação econômica
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Capa do Módulo 5</li>
+              <li class="sub-menu-item" data-slide="1">Fluxo no Tempo</li>
+              <li class="sub-menu-item" data-slide="2">Valor Presente e Fator F</li>
+              <li class="sub-menu-item" data-slide="3">Fluxo Horizontal e VPL</li>
+              <li class="sub-menu-item" data-slide="4">TIR e Payback</li>
+              <li class="sub-menu-item" data-slide="5">Resultado Base (6.000 h)</li>
+              <li class="sub-menu-item" data-slide="6">LCC vs Payback</li>
+              <li class="sub-menu-item" data-slide="7">Quiz: Economia do LCC</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/006.AvaliarIncertezas.html" data-title="6. Como avaliar as incertezas?" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+              6. Como avaliar as incertezas?
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Capa do Módulo 6</li>
+              <li class="sub-menu-item" data-slide="1">Fontes de Incerteza</li>
+              <li class="sub-menu-item" data-slide="2">Gráfico Tornado</li>
+              <li class="sub-menu-item" data-slide="3">Curva de Decisão</li>
+              <li class="sub-menu-item" data-slide="4">Cenários Combinados</li>
+              <li class="sub-menu-item" data-slide="5">Decisão Condicional</li>
+              <li class="sub-menu-item" data-slide="6">Quiz: Sensibilidade</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/007.AplicacaoPratica.html" data-title="7. Aplicação prática (300 h)" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              7. Aplicação prática (300 h)
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Capa do Módulo 7</li>
+              <li class="sub-menu-item" data-slide="1">Novo Regime: 300 h/ano</li>
+              <li class="sub-menu-item" data-slide="2">Oficina: Custos Anuais</li>
+              <li class="sub-menu-item" data-slide="3">Oficina: Cálculo do LCC</li>
+              <li class="sub-menu-item" data-slide="4">Resultado e Inversão</li>
+              <li class="sub-menu-item" data-slide="5">Defesa ao Comitê</li>
+              <li class="sub-menu-item" data-slide="6">Quiz: Estudo de Caso</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/008.IncorporarGestao.html" data-title="8. Incorporar o LCC à gestão" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              8. Incorporar o LCC à gestão
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Capa do Módulo 8</li>
+              <li class="sub-menu-item" data-slide="1">Gatilhos e Papéis</li>
+              <li class="sub-menu-item" data-slide="2">Checklist de Qualidade</li>
+              <li class="sub-menu-item" data-slide="3">Maturidade em LCC</li>
+              <li class="sub-menu-item" data-slide="4">Previsto vs Realizado</li>
+              <li class="sub-menu-item" data-slide="5">Simulador Livre Final</li>
+              <li class="sub-menu-item" data-slide="6">Quiz Final Integrador</li>
+            </ul>
+          </li>
+          <li class="menu-item sub-collapsed" data-src="./Aulas/009.Encerramento.html" data-title="9. Encerramento" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              9. Encerramento
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">Encerramento</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="menu-group collapsed" data-section="cases">
+        <div class="menu-group-header" role="button" tabindex="0" title="Clique para recolher/expandir seções">
+          <svg class="menu-group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <svg class="menu-group-folder" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <h3 class="menu-title">Cases</h3>
+          <span class="menu-group-count">0</span>
+        </div>
+        <ul class="menu-list">
+        </ul>
+      </div>
+
+      <div class="menu-group collapsed" data-section="opcionais">
+        <div class="menu-group-header" role="button" tabindex="0" title="Clique para recolher/expandir seções">
+          <svg class="menu-group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <svg class="menu-group-folder" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <h3 class="menu-title">Opcionais</h3>
+          <span class="menu-group-count">14</span>
+        </div>
+        <ul class="menu-list">
+          <li class="menu-item sub-collapsed" data-src="./Aulas/001.DecisaoLCC.html" data-title="A decisão que o LCC ajuda a tomar" data-progression="true">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              A decisão que o LCC ajuda a tomar
+            </button>
+            <ul class="sub-menu-list">
+              <li class="sub-menu-item" data-slide="0">A decisão que o LCC ajuda a tomar</li>
+              <li class="sub-menu-item" data-slide="1">O dilema da motobomba P-204</li>
+              <li class="sub-menu-item" data-slide="2">Preço de compra, orçamento anual e LCC</li>
+              <li class="sub-menu-item" data-slide="3">Fronteiras importam mais que siglas</li>
+              <li class="sub-menu-item" data-slide="4">Onde o LCC atua ao longo da vida do ativo</li>
+              <li class="sub-menu-item" data-slide="5">Valor, risco, desempenho e a pergunta de partida</li>
+              <li class="sub-menu-item" data-slide="6">Quiz de fixação: a lente do LCC</li>
+            </ul>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_FichaAbertura.html" data-title="Ficha de abertura da análise">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Ficha de abertura
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_DadosPremissas.html" data-title="Registro de dados e premissas">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+              Dados e premissas
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_EstruturaCustos.html" data-title="Estrutura de custos">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              Estrutura de custos
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_FluxoAnual.html" data-title="Fluxo anual econômico">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+              Fluxo anual
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_Simulador.html" data-title="Simulador do caso">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
+              Simulador
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_ExercicioTurma.html" data-title="Exercício da turma (300 h/ano)">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Exercício da turma
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_GabaritoInstrutor.html" data-title="Gabarito do instrutor">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Gabarito do instrutor
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_Checklist.html" data-title="Checklist da análise">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Checklist (34 itens)
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_Auditoria.html" data-title="Auditoria de uso do LCC (1 a 5)">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Auditoria 1 a 5
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_RegistroDecisao.html" data-title="Registro da decisão">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Registro da decisão
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_PrevistoRealizado.html" data-title="Previsto versus realizado">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              Previsto vs realizado
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_Glossario.html" data-title="Glossário LCC">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              Glossário
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LCC_Referencias.html" data-title="Referências e convenções">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Referências e convenções
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="menu-group collapsed" data-section="tools">
+        <div class="menu-group-header" role="button" tabindex="0" title="Clique para recolher/expandir seções">
+          <svg class="menu-group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <svg class="menu-group-folder" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <h3 class="menu-title">TOOLS</h3>
+          <span class="menu-group-count">7</span>
+        </div>
+        <ul class="menu-list">
+          <li class="menu-item" data-src="./Ferramentas/Ishikawa.html" data-title="Diagrama de Ishikawa (6M)">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Diagrama de Ishikawa (6M)
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/CincoPorques.html" data-title="Análise dos 5 Porquês">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Análise dos 5 Porquês
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/ArvoreDeCausas.html" data-title="Árvore de Causas (FTA)">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              Árvore de Causas (FTA)
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/LousaDinamica.html" data-title="Lousa Dinâmica">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Lousa Dinâmica
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/NotasAula.html" data-title="Notas de Aula">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Notas de Aula
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/Grafo.html" data-title="Grafo de Conceitos">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Grafo de Conceitos
+            </button>
+          </li>
+          <li class="menu-item" data-src="./Ferramentas/BowtieFerramenta.html" data-title="Bowtie">
+            <button class="menu-item-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              Bowtie
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="controls-panel">
+        <button class="btn-action btn-primary-action" id="btn-presenter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          Modo Apresentador
+        </button>
+        <button class="btn-action" id="btn-fullscreen">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          Tela Cheia (F11)
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Viewport containing the Active Presentation Slide -->
+  <main class="main-viewport">
+    <header class="viewport-header">
+      <div class="viewport-title-group">
+        <button class="btn-toggle-sidebar" id="btn-sidebar-toggle" title="Recolher/Expandir Barra Lateral">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="viewport-title" id="viewport-title-text">Capa do Curso</span>
+      </div>
+      <span class="viewport-timer" id="session-timer">00:00:00</span>
+    </header>
+    
+    <iframe class="viewport-iframe" id="view-frame" src="./Aulas/000.CapaCurso.html"></iframe>
+  </main>
+
+  <!-- Modal de Gerenciamento de Turmas -->
+  <div id="turma-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Gerenciar Turmas</h2>
+        <button id="btn-close-turma-modal" class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="turma-action-row">
+          <input type="text" id="new-turma-name" placeholder="Nome da nova turma (ex: LCC 2026 - Engenharia)" class="modal-input">
+          <button id="btn-create-turma" class="btn-modal-primary">Criar</button>
+        </div>
+        
+        <div class="turma-list-container">
+          <h3>Lista de Turmas</h3>
+          <div id="turmas-manager-list" class="turma-manager-list">
+            <!-- Populado dinamicamente -->
+          </div>
+        </div>
+
+        <div class="turma-io-row">
+          <button id="btn-export-progresso" class="btn-modal-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Exportar (.json)
+          </button>
+          <button id="btn-import-progresso" class="btn-modal-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Importar (.json)
+          </button>
+          <input type="file" id="import-progresso-file" style="display: none;" accept=".json">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

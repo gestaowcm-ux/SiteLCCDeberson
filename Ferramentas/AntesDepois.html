@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antes e Depois Interativo — Ferramentas RCA</title>
+  <meta name="description" content="Ferramenta interativa de análise e comparação de falhas em componentes mecânicos (Antes e Depois) com múltiplos modos de visualização.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #121212;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-family);
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    .aspect-frame {
+      width: min(100vw, calc(100vh * (16 / 9)));
+      height: min(100vh, calc(100vw * (9 / 16)));
+      aspect-ratio: 16 / 9;
+      position: relative;
+      background-color: var(--color-canvas);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    .tech-grid-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* Header HUD */
+    .rca-header {
+      position: relative;
+      z-index: 20;
+      background-color: var(--color-canvas);
+      border-bottom: 1px solid var(--color-border);
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      height: 56px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: var(--rounded-md);
+      letter-spacing: 0.08em;
+    }
+
+    .header-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--color-ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-title span {
+      color: var(--color-body);
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .case-selector {
+      background: var(--color-canvas-soft);
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-pill);
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-ink);
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      max-width: 250px;
+    }
+
+    .case-selector:hover {
+      background: var(--color-canvas-softer);
+      border-color: var(--color-ink);
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--color-canvas-soft);
+      padding: 3px;
+      border-radius: var(--rounded-pill);
+      border: 1px solid var(--color-border);
+    }
+
+    .mode-tab {
+      background: transparent;
+      border: none;
+      padding: 4px 12px;
+      border-radius: var(--rounded-pill);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-body);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .mode-tab:hover {
+      color: var(--color-ink);
+    }
+
+    .mode-tab.active {
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .mode-badge {
+      font-size: 9px;
+      opacity: 0.7;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      padding: 0 4px;
+      line-height: 1.2;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-pill {
+      background: var(--color-canvas);
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-pill);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-ink);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn-pill:hover {
+      background: var(--color-canvas-soft);
+      border-color: var(--color-ink);
+    }
+
+    .btn-pill.active {
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      border-color: var(--color-primary);
+    }
+
+    /* Subheader Info Bar */
+    .case-subbar {
+      position: relative;
+      z-index: 15;
+      background: rgba(248, 248, 246, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--color-border);
+      padding: 6px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--color-body);
+      flex-shrink: 0;
+    }
+
+    .case-info-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--color-ink);
+    }
+
+    .case-info-tag .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--color-danger);
+    }
+
+    .case-details-text {
+      font-size: 11px;
+      color: #666;
+    }
+
+    /* Main Viewport */
+    .rca-viewport {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: #161616;
+      overflow: hidden;
+    }
+
+    /* Comparison Stage */
+    .comparison-stage {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+    }
+
+    .pan-zoom-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-origin: center center;
+      will-change: transform;
+      transition: transform 0.05s linear;
+    }
+
+    /* Base Slide Frame */
+    .comparison-frame {
+      position: relative;
+      width: min(88%, 940px);
+      height: min(82%, 520px);
+      aspect-ratio: 16 / 9.3;
+      background: #242424;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      user-select: none;
+      touch-action: none;
+      border-radius: 4px;
+    }
+
+    /* Imagens */
+    .comp-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* Filtros */
+    .filter-grayscale .comp-img { filter: grayscale(1); }
+    .filter-contrast .comp-img { filter: contrast(1.35) brightness(0.96); }
+    .filter-edges .comp-img { filter: contrast(2.2) grayscale(1) invert(0.08); }
+
+    /* Camadas de Comparação */
+    .split-layer-before {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .split-layer-after {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    /* Divisor */
+    .split-divider {
+      position: absolute;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .orient-horizontal .split-divider {
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateX(-50%);
+    }
+
+    .orient-vertical .split-divider {
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateY(-50%);
+    }
+
+    /* Handle Circular */
+    .split-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(15, 15, 15, 0.88);
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .orient-horizontal .split-handle {
+      cursor: ew-resize;
+      flex-direction: row;
+    }
+
+    .orient-vertical .split-handle {
+      cursor: ns-resize;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .comparison-frame:hover .split-handle,
+    .comparison-frame.is-dragging .split-handle {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: #000000;
+    }
+
+    .split-handle span {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .split-handle i {
+      width: 1px;
+      height: 12px;
+      background: rgba(255,255,255,0.6);
+    }
+
+    .orient-vertical .split-handle i {
+      width: 12px;
+      height: 1px;
+    }
+
+    /* Labels Flutuantes */
+    .comp-label {
+      position: absolute;
+      z-index: 6;
+      padding: 6px 10px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      border-radius: 4px;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+
+    .label-left-top {
+      top: 14px;
+      left: 14px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .label-right-top {
+      top: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.88);
+      color: #111111;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* MODO 3: Side by Side */
+    .mode-side-view {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      background: #000;
+    }
+
+    .mode-side-view .split-layer-before,
+    .mode-side-view .split-layer-after {
+      position: relative !important;
+      inset: auto !important;
+      width: 100% !important;
+      height: 100% !important;
+      clip-path: none !important;
+      opacity: 1 !important;
+      mix-blend-mode: normal !important;
+    }
+
+    /* HUD Inferior de Controle do Slider */
+    .slider-hud-bottom {
+      position: relative;
+      z-index: 10;
+      background: var(--color-canvas);
+      border-top: 1px solid var(--color-border);
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      height: 48px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .slider-track-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider-track-wrap span {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--color-body);
+      min-width: 80px;
+    }
+
+    .slider-track-wrap span.right-label {
+      text-align: right;
+    }
+
+    .custom-range {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--color-canvas-soft);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .custom-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform 0.1s ease;
+    }
+
+    .custom-range::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .slider-percentage {
+      font-size: 11px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-ink);
+      min-width: 42px;
+      text-align: center;
+    }
+
+    /* Floating Zoom Controls */
+    .floating-toolbox {
+      position: absolute;
+      bottom: 60px;
+      right: 18px;
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 6px;
+      border-radius: var(--rounded-lg);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      border: 1px solid var(--color-border);
+    }
+
+    .tool-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--rounded-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-canvas);
+      color: var(--color-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.15s ease;
+    }
+
+    .tool-btn:hover {
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+
+    .tool-btn.active {
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+
+    /* Modal de Atalhos */
+    .shortcuts-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shortcuts-modal.open {
+      display: flex;
+    }
+
+    .shortcuts-card {
+      background: var(--color-canvas);
+      border-radius: var(--rounded-xl);
+      padding: 24px;
+      width: min(90%, 480px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      border: 1px solid var(--color-border);
+    }
+
+    .shortcuts-card h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .shortcut-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 18px;
+      font-size: 12px;
+    }
+
+    .shortcut-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--color-canvas-soft);
+    }
+
+    .kbd {
+      background: var(--color-canvas-soft);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: monospace;
+      color: var(--color-ink);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="aspect-frame" id="app-frame">
+    <div class="tech-grid-bg"></div>
+
+    <!-- Header Principal -->
+    <header class="rca-header">
+      <div class="header-left">
+        <span class="brand-badge">RCA LAB</span>
+        <div class="header-title">
+          ESTUDO DE CONDIÇÃO
+          <span>/ ANTES &amp; DEPOIS</span>
+        </div>
+        <select id="case-select" class="case-selector" aria-label="Seletor de Estudo de Caso"></select>
+      </div>
+
+      <!-- Modos de Visualização -->
+      <div class="header-center" role="tablist" aria-label="Modos de Comparação">
+        <button class="mode-tab active" data-mode="split" role="tab" aria-selected="true" title="Divisor Interativo (Tecla 1)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><rect x="2" y="2" width="20" height="20" rx="2"/></svg>
+          Split <span class="mode-badge">1</span>
+        </button>
+        <button class="mode-tab" data-mode="fade" role="tab" aria-selected="false" title="Fade / Opacidade (Tecla 2)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z"/></svg>
+          Fade <span class="mode-badge">2</span>
+        </button>
+        <button class="mode-tab" data-mode="side" role="tab" aria-selected="false" title="Lado a Lado (Tecla 3)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="9" height="18" rx="1"/><rect x="13" y="3" width="9" height="18" rx="1"/></svg>
+          Lado a Lado <span class="mode-badge">3</span>
+        </button>
+        <button class="mode-tab" data-mode="diff" role="tab" aria-selected="false" title="Diferença / Realce de Desgaste (Tecla 4)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Diff <span class="mode-badge">4</span>
+        </button>
+      </div>
+
+      <!-- Ações Rápidas -->
+      <div class="header-right">
+        <button class="btn-pill" id="btn-orientation" title="Alternar Orientação Horizontal/Vertical (Tecla H/V)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          <span id="orientation-label">Horizontal</span>
+        </button>
+        <button class="btn-pill" id="btn-invert" title="Inverter Ordem Antes / Depois (Tecla I)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+          Inverter
+        </button>
+        <button class="btn-pill" id="btn-filter" title="Alternar Filtros Técnicos: Cor / P&B / Alto Contraste (Tecla F)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+          <span id="filter-label">Cor Real</span>
+        </button>
+        <button class="btn-pill" id="btn-shortcuts" title="Ver Atalhos de Teclado (?)">?</button>
+      </div>
+    </header>
+
+    <!-- Sub-Barra Informativa do Caso -->
+    <div class="case-subbar">
+      <div class="case-info-tag">
+        <span class="dot"></span>
+        <span id="case-title-text">Caso 01: Rolamento com Falha por Fadiga e Pitting</span>
+      </div>
+      <div class="case-details-text" id="case-desc-text">
+        Arraste o divisor para correlacionar o estágio de desgaste com a condição nominal saudável.
+      </div>
+    </div>
+
+    <!-- Viewport Principal -->
+    <main class="rca-viewport" id="viewport">
+      <div class="comparison-stage" id="stage" tabindex="0">
+        <div class="pan-zoom-container" id="pan-zoom-target">
+          
+          <!-- Quadro Principal de Comparação -->
+          <div class="comparison-frame orient-horizontal" id="comparison-frame">
+            
+            <!-- Camada Base (Antes / Falha) -->
+            <div class="split-layer-before" id="layer-before">
+              <img id="img-before" class="comp-img" src="../assets/img/comparador/antes_rolamento.png" alt="Condição de Falha" draggable="false">
+            </div>
+
+            <!-- Camada Superior (Depois / Nominal) -->
+            <div class="split-layer-after" id="layer-after">
+              <img id="img-after" class="comp-img" src="../assets/img/comparador/depois_rolamento.png" alt="Condição Nominal" draggable="false">
+            </div>
+
+            <!-- Rótulos -->
+            <span class="comp-label label-left-top" id="label-after-tag">NOMINAL (DEPOIS)</span>
+            <span class="comp-label label-right-top" id="label-before-tag">FALHA (ANTES)</span>
+
+            <!-- Divisor do Slider -->
+            <div class="split-divider" id="split-divider">
+              <div class="split-handle" id="split-handle">
+                <span id="handle-arrow-left">‹</span>
+                <i id="handle-bar"></i>
+                <span id="handle-arrow-right">›</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Ferramentas Flutuantes (Zoom & Pan) -->
+        <div class="floating-toolbox">
+          <button class="tool-btn" id="btn-zoom-in" title="Aumentar Zoom (+)">+</button>
+          <button class="tool-btn" id="btn-zoom-reset" title="Resetar Zoom (100% justo / Tecla 0)">1x</button>
+          <button class="tool-btn" id="btn-zoom-out" title="Diminuir Zoom (-)">−</button>
+          <button class="tool-btn" id="btn-pan-toggle" title="Modo Mão / Pan (Barra de Espaço)">🖐️</button>
+        </div>
+      </div>
+
+      <!-- Barra de Controle Inferior -->
+      <footer class="slider-hud-bottom">
+        <div class="slider-track-wrap">
+          <span id="track-left-label">0% DEPOIS</span>
+          <input type="range" id="position-range" class="custom-range" min="0" max="100" value="50" step="0.5" aria-label="Posição do divisor de comparação">
+          <span id="track-right-label" class="right-label">100% ANTES</span>
+        </div>
+        <div class="slider-percentage" id="percentage-display">50%</div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Modal de Atalhos de Teclado -->
+  <div class="shortcuts-modal" id="shortcuts-modal">
+    <div class="shortcuts-card">
+      <h3>
+        <span>Atalhos de Teclado</span>
+        <button class="btn-pill" id="btn-close-modal">✕ Fechar</button>
+      </h3>
+      <div class="shortcut-list">
+        <div class="shortcut-item">
+          <span>Modos de Exibição</span>
+          <div><span class="kbd">1</span> <span class="kbd">2</span> <span class="kbd">3</span> <span class="kbd">4</span></div>
+        </div>
+        <div class="shortcut-item">
+          <span>Mover Divisor</span>
+          <div><span class="kbd">←</span> <span class="kbd">→</span> / <span class="kbd">↑</span> <span class="kbd">↓</span></div>
+        </div>
+        <div class="shortcut-item">
+          <span>Extremos (0% / 100%)</span>
+          <div><span class="kbd">Home</span> / <span class="kbd">End</span></div>
+        </div>
+        <div class="shortcut-item">
+          <span>Orientação (H/V)</span>
+          <div><span class="kbd">H</span> ou <span class="kbd">V</span></div>
+        </div>
+        <div class="shortcut-item">
+          <span>Inverter Ordem</span>
+          <div><span class="kbd">I</span></div>
+        </div>
+        <div class="shortcut-item">
+          <span>Filtros de Imagem</span>
+          <div><span class="kbd">F</span></div>
+        </div>
+        <div class="shortcut-item">
+          <span>Zoom In / Out</span>
+          <div><span class="kbd">+</span> / <span class="kbd">-</span></div>
+        </div>
+        <div class="shortcut-item">
+          <span>Resetar Zoom</span>
+          <div><span class="kbd">0</span> ou <span class="kbd">R</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="AntesDepois.js"></script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 5 — Como comparar economicamente as alternativas? | Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/lcc-slides.css">
+</head>
+<body>
+  <div class="slides-container">
+    <div class="slides-wrapper" id="slides-wrapper">
+
+      <!-- Slide 1: Capa -->
+      <main class="slide-section active-slide cover-slide" id="slide-1">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Módulo 5: Comparação Econômica</h3>
+          <p>Duração sugerida: 35 min. Agora trazemos todos os fluxos de caixa para a mesma data-base (t = 0) usando a taxa de desconto real (8% a.a.) e revelamos o resultado oficial do cenário base (6.000 h/ano).</p>
+        </div>
+        <div class="cover-technical-grid"></div>
+        <div class="cover-content">
+          <span class="cover-badge animate-item">MÓDULO 05 • 35 MIN</span>
+          <h1 class="cover-title animate-item delay-1">Como comparar economicamente as alternativas?</h1>
+          <div class="cover-divider animate-item delay-2"></div>
+          <p class="cover-subtitle animate-item delay-3">O momento em que cada custo ocorre importa. Aprenda a descontar fluxos futuros para a data-base, manter consistência entre taxa real e nominal e consolidar o LCC.</p>
+          <div class="cover-meta-row animate-item delay-4">
+            <span class="cover-pill">Valor Presente &amp; Fator F</span>
+            <span class="cover-pill">Resultado Base: A vs B</span>
+            <button type="button" class="cover-cta" data-start-lesson>Iniciar Módulo →</button>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <span>CURSO LCC — MANUTENÇÃO · CONFIABILIDADE · GESTÃO DE ATIVOS</span>
+          <span>MÓDULO 05 / 08</span>
+        </div>
+      </main>
+
+      <!-- Slide 2: Fluxo Econômico Ano a Ano -->
+      <section class="slide-section" id="slide-2">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Em que momento cada custo ocorre?</h3>
+          <p>Posicione investimento em t=0, custos anuais no fim de cada ano, intervenção no ano 4 e encerramento no ano 8. O fluxo econômico não equivale apenas a desembolsos (inclui perdas de oportunidade).</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">FLUXO DE CAIXA NO TEMPO (6.000 h/ano · 8% a.a.)</span>
+          <h2 class="display-xl animate-item delay-1">O momento de cada custo importa</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="tabs-row animate-item delay-1" style="justify-content:space-between;">
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill active" id="m5-flow-a">Fluxo Bomba A</button>
+              <button type="button" class="tab-pill" id="m5-flow-b">Fluxo Bomba B</button>
+            </div>
+            <span id="m5-flow-summary" style="font-weight:700; font-size:14px;">Total em Valor Presente (LCC): R$ 1.053.970</span>
+          </div>
+
+          <div class="lcc-table-wrap animate-item delay-2">
+            <table class="lcc-table" id="m5-flow-table">
+              <thead>
+                <tr>
+                  <th>Ano</th>
+                  <th>Inicial (t=0)</th>
+                  <th>Anual Recorrente</th>
+                  <th>Intervenção / Fim</th>
+                  <th>Total Nominal</th>
+                  <th>Valor Presente (8%)</th>
+                </tr>
+              </thead>
+              <tbody id="m5-flow-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Simulador de Desconto & Fator Uniforme -->
+      <section class="slide-section" id="slide-3">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Como trazer para a mesma data? &amp; Série Uniforme</h3>
+          <p>Desconto não reduz fisicamente um custo: muda sua expressão econômica na data-base. Explique F = [1 - (1+r)^(-n)] / r sem exigir memorização. Se taxa = 0%, F = n.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">DESCONTO &amp; FATOR DE SÉRIE UNIFORME</span>
+          <h2 class="display-xl animate-item delay-1">VP_t = C_t / (1 + r)^t &nbsp;|&nbsp; VP_anual = C_anual × F</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Taxa de Desconto Real (r) <strong id="m5-r-val">8,0% a.a.</strong></label>
+                <input type="range" id="m5-r" min="0" max="20" step="0.5" value="8">
+              </div>
+              <div class="sim-field">
+                <label>Horizonte (n) <strong id="m5-n-val">8 anos</strong></label>
+                <input type="range" id="m5-n" min="1" max="15" step="1" value="8">
+              </div>
+              <div class="sim-field">
+                <label>Custo Anual Exemplo (R$)</label>
+                <input type="number" id="m5-c" value="164000" step="1000">
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-asymmetric-rev animate-item delay-2" style="align-items:center;">
+            <!-- Objeto SVG: Linha do Tempo + Dinheiro no Tempo -->
+            <div class="lcc-card" style="padding:14px 18px; align-items:center;">
+              <svg viewBox="0 0 340 165" style="width:100%; max-width:340px; height:auto;" aria-label="Linha do tempo e valor do dinheiro no tempo">
+                <line x1="24" y1="115" x2="316" y2="115" stroke="#475569" stroke-width="2.5"/>
+                <circle cx="40" cy="115" r="7" fill="#dc2626"/>
+                <circle cx="170" cy="115" r="5" fill="#0f172a"/>
+                <circle cx="300" cy="115" r="7" fill="#0f172a"/>
+                <text x="40" y="138" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626">t = 0 (Hoje)</text>
+                <text x="170" y="138" text-anchor="middle" font-size="11" fill="#475569">t = 4</text>
+                <text x="300" y="138" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a">t = n (Futuro)</text>
+                <!-- Moeda/Nota no futuro sendo descontada para t=0 -->
+                <rect x="268" y="34" width="64" height="38" rx="6" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+                <text x="300" y="58" text-anchor="middle" font-size="16" font-weight="900" fill="#0f172a">R$</text>
+                <path d="M262 52 Q155 12 52 86" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 4"/>
+                <polygon points="48,90 58,86 52,78" fill="#dc2626"/>
+                <text x="158" y="26" text-anchor="middle" font-size="12" font-weight="800" fill="#dc2626">÷ (1 + r)^t</text>
+              </svg>
+            </div>
+
+            <div class="grid-3">
+              <div class="lcc-card">
+                <span class="card-kicker">Fator Uniforme (F)</span>
+                <div class="card-metric" id="m5-factor">5,7466</div>
+                <p class="card-text">Anos equivalentes hoje.</p>
+              </div>
+              <div class="lcc-card">
+                <span class="card-kicker">Soma Nominal</span>
+                <div class="card-metric" id="m5-nom" style="font-size:clamp(20px,2vw,30px);">R$ 1.312.000</div>
+                <p class="card-text">Sem desconto.</p>
+              </div>
+              <div class="lcc-card accent-dark">
+                <span class="card-kicker">Valor Presente</span>
+                <div class="card-metric" id="m5-pv" style="font-size:clamp(20px,2vw,30px);">R$ 942.449</div>
+                <p class="card-text">Na data-base t = 0.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4 (Novo): Fluxo de Caixa Horizontal & VPL -->
+      <section class="slide-section" id="slide-4">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Fluxo de Caixa Horizontal &amp; Valor Presente Líquido (VPL)</h3>
+          <p>Demonstre ano a ano como um mesmo valor nominal perde peso econômico quanto mais distante está no tempo, sendo dividido por (1 + r)^t. A soma de todas as colunas descontadas forma o VPL (Valor Presente Líquido).</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header align-left">
+          <span class="body-sm-strong animate-item">VALOR DO DINHEIRO NO TEMPO • FLUXO HORIZONTAL</span>
+          <h2 class="display-xl animate-item delay-1">Desconto ano a ano até o Valor Presente Líquido</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Taxa de Desconto (r) <strong id="m5-hcf-r-val">8,0% a.a.</strong></label>
+                <input type="range" id="m5-hcf-r" min="0" max="25" step="0.5" value="8">
+              </div>
+              <div class="sim-field">
+                <label>Investimento Inicial (t=0)</label>
+                <input type="number" id="m5-hcf-inv" value="-100000" step="5000">
+              </div>
+              <div class="sim-field">
+                <label>Retorno Anual (Anos 1 a 5)</label>
+                <input type="number" id="m5-hcf-ann" value="30000" step="2000">
+              </div>
+              <div class="lcc-card accent-dark" style="min-width:210px; padding:12px 16px;">
+                <span class="card-kicker">Somatória (VPL = Σ VP_t)</span>
+                <div class="card-metric" id="m5-hcf-vpl" style="font-size:clamp(22px,2.3vw,32px);">R$ 19.781</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fluxo de Caixa Horizontal (Ano 0 a Ano 5) -->
+          <div id="m5-hcf-grid" class="animate-item delay-2" style="display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:10px; align-items:stretch;"></div>
+
+          <div class="statement-bar animate-item delay-3" id="m5-hcf-note">
+            Observe: o retorno nominal de R$ 30.000 no <strong>Ano 5</strong> vale hoje apenas <strong>R$ 20.417</strong> (÷ 1,08⁵). A soma de todas as colunas descontadas é o VPL.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5 (Novo): TIR, Payback Simples e Payback Descontado -->
+      <section class="slide-section" id="slide-5">
+        <div class="speaker-notes" style="display: none;">
+          <h3>TIR, Payback Simples e Payback Descontado</h3>
+          <p>Usando a mesma lógica horizontal do fluxo de caixa: acompanhe o saldo acumulado nominal (Payback Simples) vs o saldo acumulado descontado (Payback Descontado). Mostre que o Payback Descontado sempre demora mais quando r &gt; 0, e que a TIR é a taxa exata em que o VPL zera.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header align-left">
+          <span class="body-sm-strong animate-item">MESMA LÓGICA HORIZONTAL • RETORNO E TAXA LIMITE</span>
+          <h2 class="display-xl animate-item delay-1">TIR, Payback Simples e Payback Descontado</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Taxa de Desconto / TMA (r) <strong id="m5-pb-r-val">8,0% a.a.</strong></label>
+                <input type="range" id="m5-pb-r" min="0" max="25" step="0.5" value="8">
+              </div>
+              <div class="lcc-card" style="min-width:170px; padding:10px 14px;">
+                <span class="card-kicker">Payback Simples</span>
+                <strong id="m5-pb-simple" style="font-size:clamp(20px,2vw,28px); font-weight:900;">3,33 anos</strong>
+              </div>
+              <div class="lcc-card accent-dark" style="min-width:185px; padding:10px 14px;">
+                <span class="card-kicker">Payback Descontado</span>
+                <strong id="m5-pb-disc" style="font-size:clamp(20px,2vw,28px); font-weight:900; color:#fca5a5;">4,18 anos</strong>
+              </div>
+              <div class="lcc-card editorial-red-frame" style="min-width:165px; padding:10px 14px;">
+                <span class="card-kicker" style="color:var(--color-danger);">TIR (VPL = 0)</span>
+                <strong id="m5-pb-irr" style="font-size:clamp(20px,2vw,28px); font-weight:900;">15,24% a.a.</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="lcc-table-wrap animate-item delay-2">
+            <table class="lcc-table">
+              <thead>
+                <tr>
+                  <th>Métrica (Projeto −R$ 100k + R$ 30k/ano)</th>
+                  <th>Ano 0</th><th>Ano 1</th><th>Ano 2</th><th>Ano 3</th><th>Ano 4</th><th>Ano 5</th>
+                </tr>
+              </thead>
+              <tbody id="m5-pb-tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="statement-bar animate-item delay-3" id="m5-pb-verdict">
+            <strong>TIR (15,24%) &gt; TMA (8,0%):</strong> VPL positivo! Note que o Payback Simples ocorre no <strong>Ano 4</strong> (3,33 anos), enquanto o Descontado só fecha no <strong>Ano 5</strong> (4,18 anos).
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Resultado Oficial do Cenário Original -->
+      <section class="slide-section" id="slide-6">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Qual alternativa tem menor LCC?</h3>
+          <p>Revele por etapas. No original (6.000 h/ano, 8 anos, 8% real a.a.), A ≈ R$ 1.053.970 e B ≈ R$ 889.770; vantagem de B ≈ R$ 164.200. O resultado inclui perdas econômicas do escopo.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header-bar">
+          <div class="slide-header">
+            <span class="body-sm-strong">RESULTADO OFICIAL • CENÁRIO BASE (6.000 h/ano)</span>
+            <h2 class="display-xl">Consolidação do LCC em Valor Presente</h2>
+          </div>
+          <div class="step-controls-inline">
+            <span class="step-pill-label" data-step-label>Etapa 1/4</span>
+            <div class="step-dots-mini" data-step-dots></div>
+            <button type="button" class="btn-step-next" data-step-next>Avançar ▸</button>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="bento-wide-top animate-item delay-1">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div class="lcc-card" data-step-item="0">
+                <span class="card-kicker">Bomba A • Composição do LCC</span>
+                <div class="card-metric" id="m5-res-a">R$ 1.053.970</div>
+                <p class="card-text">Inicial: R$ 100.000 · Anual (VP): R$ 942.449 · Ano 4 (VP): R$ 8.820 · Ano 8 (VP): +R$ 2.701</p>
+              </div>
+              <div class="lcc-card accent-dark" data-step-item="1">
+                <span class="card-kicker">Bomba B • Composição do LCC</span>
+                <div class="card-metric" id="m5-res-b">R$ 889.770</div>
+                <p class="card-text">Inicial: R$ 130.000 · Anual (VP): R$ 752.810 · Ano 4 (VP): R$ 5.880 · Ano 8 (VP): +R$ 1.081</p>
+              </div>
+            </div>
+
+            <div class="lcc-card" data-step-item="2" style="border-left: 6px solid #22c55e; justify-content:center;">
+              <span class="card-kicker">Economia em Valor Presente</span>
+              <div class="hero-callout-num" style="color:#22c55e; margin:10px 0;">R$ 164.200</div>
+              <p class="card-text">Bomba B vence! CAE: A = R$ 183.406/ano vs B = R$ 154.833/ano.</p>
+            </div>
+          </div>
+
+          <div class="statement-bar" data-step-item="3">
+            A economia de energia (R$ 24k/ano) e menor perda/manutenção (R$ 9k/ano) superam em mais de <strong>5 vezes</strong> o investimento adicional inicial de R$ 30 mil.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: LCC vs Payback -->
+      <section class="slide-section" id="slide-7">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Menor LCC não é menor payback &amp; Condições</h3>
+          <p>Payback simples ignora desconto e efeitos após o retorno. Mesmo o descontado não substitui a comparação completa. Diferencie cálculo correto de decisão robusta.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header align-left">
+          <span class="body-sm-strong animate-item">INDICADORES RESPONDEM A PERGUNTAS DIFERENTES</span>
+          <h2 class="display-xl animate-item delay-1">Menor LCC não é sinônimo de menor Payback</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-asymmetric animate-item delay-1">
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">LCC (Custo do Ciclo de Vida)</span>
+              <h3 class="card-title">Quanto custa no horizonte inteiro?</h3>
+              <p class="card-text">Considera valor do dinheiro no tempo, todas as fases (ano 0 ao ano 8), reformas intermediárias e encerramento.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Payback (Tempo de Retorno)</span>
+              <h3 class="card-title">Em quanto tempo recupero o delta inicial?</h3>
+              <p class="card-text">Mede liquidez rápida, mas o payback simples ignora desconto e o que acontece <strong>depois</strong> que o investimento se paga.</p>
+            </div>
+          </div>
+
+          <div class="statement-bar animate-item delay-2">
+            Atenção: o resultado de R$ 164.200 vale <strong>sob estas premissas</strong> (6.000 h/ano, 8 anos, 8% a.a.). No próximo módulo, vamos testar quando essa conclusão muda!
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Quiz Oficial -->
+      <section class="slide-section quiz-slide" id="slide-8">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Quiz do Módulo 5</h3>
+          <p>Verifique o entendimento sobre desconto, taxa real vs nominal e interpretação do LCC.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <header class="quiz-header animate-item">
+          <h2 class="quiz-title-giant">QUIZ</h2>
+          <div class="quiz-tabs-nav" id="quiz-tabs-nav"></div>
+        </header>
+
+        <div class="slide-body">
+          <div class="quiz-prompt-card animate-item delay-1">
+            <div class="quiz-prompt-tag" id="quiz-prompt-tag">DESAFIO</div>
+            <p class="quiz-prompt-text" id="quiz-prompt-text"></p>
+          </div>
+          <div class="quiz-options-grid animate-item delay-2" id="quiz-options-grid"></div>
+          <div class="quiz-feedback-banner" id="quiz-feedback-banner"></div>
+          <div class="quiz-footer-bar">
+            <span id="quiz-progress-label" style="font-weight: 700; font-size: 13px;"></span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill" id="btn-quiz-reset">Reiniciar</button>
+              <button type="button" class="tab-pill active" id="btn-quiz-next">Próximo Cenário →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="slide-nav-indicators" aria-label="Navegação de slides">
+    <div class="slide-indicator-dot active" data-title="Capa do Módulo 5"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-0"></div><span class="slide-preview-text">Capa do Módulo 5</span></div></div>
+    <div class="slide-indicator-dot" data-title="Fluxo no Tempo"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-1"></div><span class="slide-preview-text">Fluxo no Tempo</span></div></div>
+    <div class="slide-indicator-dot" data-title="Valor Presente e Fator F"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-2"></div><span class="slide-preview-text">Valor Presente e Fator F</span></div></div>
+    <div class="slide-indicator-dot" data-title="Fluxo Horizontal e VPL"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-3"></div><span class="slide-preview-text">Fluxo Horizontal e VPL</span></div></div>
+    <div class="slide-indicator-dot" data-title="TIR e Payback"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-4"></div><span class="slide-preview-text">TIR e Payback</span></div></div>
+    <div class="slide-indicator-dot" data-title="Resultado Base (6.000 h)"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-5"></div><span class="slide-preview-text">Resultado Base (6.000 h)</span></div></div>
+    <div class="slide-indicator-dot" data-title="LCC vs Payback"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-6"></div><span class="slide-preview-text">LCC vs Payback</span></div></div>
+    <div class="slide-indicator-dot" data-title="Quiz: Economia do LCC"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-7"></div><span class="slide-preview-text">Quiz: Economia do LCC</span></div></div>
+  </nav>
+
+  <script type="module" src="./005.ComparacaoEconomica.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

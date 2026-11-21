@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 2 — Como estruturar a análise? | Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/lcc-slides.css">
+</head>
+<body>
+  <div class="slides-container">
+    <div class="slides-wrapper" id="slides-wrapper">
+
+      <!-- Slide 1: Capa -->
+      <main class="slide-section active-slide cover-slide" id="slide-1">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Módulo 2: Como estruturar a análise?</h3>
+          <p>Duração sugerida: 30 min. Antes de abrir planilhas, precisamos definir o problema, a necessidade real, os requisitos obrigatórios, as fronteiras físicas e temporais (horizonte vs vida útil) e a origem das premissas.</p>
+        </div>
+        <div class="cover-technical-grid"></div>
+        <div class="cover-content">
+          <span class="cover-badge animate-item">MÓDULO 02 • 30 MIN</span>
+          <h1 class="cover-title animate-item delay-1">Como estruturar a análise?</h1>
+          <div class="cover-divider animate-item delay-2"></div>
+          <p class="cover-subtitle animate-item delay-3">Uma comparação válida exige base definida: problema, necessidade operacional, requisitos eliminatórios, fronteiras claras, horizonte comum e premissas rastreáveis.</p>
+          <div class="cover-meta-row animate-item delay-4">
+            <span class="cover-pill">Fronteiras &amp; Escopo</span>
+            <span class="cover-pill">Horizonte vs Vida Útil</span>
+            <button type="button" class="cover-cta" data-start-lesson>Iniciar Módulo →</button>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <span>CURSO LCC — MANUTENÇÃO · CONFIABILIDADE · GESTÃO DE ATIVOS</span>
+          <span>MÓDULO 02 / 08</span>
+        </div>
+      </main>
+
+      <!-- Slide 2: Decisão & Necessidade -->
+      <section class="slide-section" id="slide-2">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Qual decisão precisamos tomar? &amp; Primeiro, a necessidade</h3>
+          <p>Formule o problema. Selecionar equipamento, ampliar capacidade e substituir um ativo são decisões diferentes. Comprar a bomba é a solução; movimentar o fluido nas condições requeridas é a necessidade. Atender ao ponto nominal não garante desempenho em todos os regimes.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header align-left">
+          <span class="body-sm-strong animate-item">FORMULAÇÃO DO PROBLEMA</span>
+          <h2 class="display-xl animate-item delay-1">Da decisão à necessidade real</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <span class="card-kicker">Tipo de Decisão em Análise:</span>
+              <div class="tabs-row" id="m2-dec-tabs">
+                <button type="button" class="tab-pill active" data-m2dec="0">Selecionar Equipamento</button>
+                <button type="button" class="tab-pill" data-m2dec="1">Ampliar Capacidade</button>
+                <button type="button" class="tab-pill" data-m2dec="2">Substituir Ativo</button>
+              </div>
+            </div>
+            <div id="m2-dec-text" class="statement-bar">
+              <strong>Selecionar Equipamento:</strong> Foco na escolha entre propostas (A vs B) que atendam à mesma necessidade operacional definida.
+            </div>
+          </div>
+
+          <div class="stagger-4 animate-item delay-2">
+            <div class="lcc-card">
+              <span class="card-kicker">Entrega 01</span>
+              <h3 class="card-title">Qual vazão?</h3>
+              <p class="card-text">Faixa mínima, nominal e de pico exigida pelo processo produtivo.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Entrega 02</span>
+              <h3 class="card-title">Qual pressão?</h3>
+              <p class="card-text">Altura manométrica total considerando perdas de carga do sistema.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Entrega 03</span>
+              <h3 class="card-title">Qual regime?</h3>
+              <p class="card-text">Contínuo (6.000 h/ano), intermitente ou reserva (300 h/ano) muda tudo.</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Entrega 04</span>
+              <h3 class="card-title">Quais condições?</h3>
+              <p class="card-text">Fluido, temperatura, sólidos, ambiente corrosivo e variação de demanda.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Requisitos Obrigatórios vs Preferências -->
+      <section class="slide-section" id="slide-3">
+        <div class="speaker-notes" style="display: none;">
+          <h3>O que é obrigatório atender?</h3>
+          <p>Diferencie obrigação de preferência. Vazão e pressão atendidas não equivalem à aprovação de todos os critérios. Registre a evidência da verificação. Simule com a turma o impacto de reprovar um requisito obrigatório.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">FILTRO DE ADMISSIBILIDADE</span>
+          <h2 class="display-xl animate-item delay-1">Requisitos delimitam alternativas admissíveis</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="lcc-table-wrap animate-item delay-1">
+            <table class="lcc-table" id="req-matrix-table">
+              <thead>
+                <tr>
+                  <th>Critério Obrigatório</th>
+                  <th>O que verificar na prática</th>
+                  <th>Proposta A</th>
+                  <th>Proposta B</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Desempenho Hidráulico</strong></td>
+                  <td>Curva atende vazão e pressão em todo o regime?</td>
+                  <td><button type="button" class="tab-pill active" data-req="a0">✓ Atende</button></td>
+                  <td><button type="button" class="tab-pill active" data-req="b0">✓ Atende</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Segurança &amp; Conformidade</strong></td>
+                  <td>NR-12, área classificada, limites de ruído/vazamento</td>
+                  <td><button type="button" class="tab-pill active" data-req="a1">✓ Atende</button></td>
+                  <td><button type="button" class="tab-pill active" data-req="b1">✓ Atende</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Compatibilidade Física</strong></td>
+                  <td>Base, flanges, tensão elétrica e espaço disponível</td>
+                  <td><button type="button" class="tab-pill active" data-req="a2">✓ Atende</button></td>
+                  <td><button type="button" class="tab-pill active" data-req="b2">✓ Atende</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Manutenção &amp; Suporte</strong></td>
+                  <td>Peças sobressalentes, assistência e prazo de entrega</td>
+                  <td><button type="button" class="tab-pill active" data-req="a3">✓ Atende</button></td>
+                  <td><button type="button" class="tab-pill active" data-req="b3">✓ Atende</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="req-matrix-status" class="statement-bar animate-item delay-2">
+            Clique nos botões acima para simular reprovação: ambas as propostas estão <strong>admissíveis</strong> para comparação de LCC.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Fronteiras da Análise -->
+      <section class="slide-section" id="slide-4">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Duas propostas, a mesma entrega? &amp; Onde a análise começa e termina?</h3>
+          <p>Verifique motor, acionamento, testes e acessórios. Use a hipótese de adequação elétrica exigida por uma alternativa. Defina abrangência física, etapas e consequências. Custos já incorridos não mudam com a decisão futura.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">ESCOPO FÍSICO E FRONTEIRAS</span>
+          <h2 class="display-xl animate-item delay-1">Inclusões e exclusões precisam ser explícitas</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="tabs-row animate-item delay-1" id="boundary-tabs" style="justify-content: center;">
+            <button type="button" class="tab-pill" data-bnd="0">Nível 1: Apenas a Bomba</button>
+            <button type="button" class="tab-pill active" data-bnd="1">Nível 2: Conjunto de Bombeamento</button>
+            <button type="button" class="tab-pill" data-bnd="2">Nível 3: Sistema &amp; Interfaces</button>
+          </div>
+
+          <div class="stagger-cards animate-item delay-2" id="boundary-cards">
+            <div class="lcc-card" id="bnd-card-0">
+              <span class="card-kicker">Nível 1 • Restrito</span>
+              <h3 class="card-title">Bomba Isolada</h3>
+              <p class="card-text">Considera apenas corpo, rotor e selo mecânico. Risco alto de omitir motor e acionamento.</p>
+            </div>
+            <div class="lcc-card accent-dark" id="bnd-card-1">
+              <span class="card-kicker">Nível 2 • Padrão do Caso</span>
+              <h3 class="card-title">Conjunto Completo</h3>
+              <p class="card-text">Bomba + motor + acoplamento + base + comissionamento. Garante mesma entrega útil.</p>
+            </div>
+            <div class="lcc-card" id="bnd-card-2">
+              <span class="card-kicker">Nível 3 • Ampliado</span>
+              <h3 class="card-title">Sistema e Interfaces</h3>
+              <p class="card-text">Inclui adequação elétrica, tubulação, inversor e impacto produtivo na planta.</p>
+            </div>
+          </div>
+
+          <div id="boundary-detail" class="statement-bar animate-item delay-3">
+            <strong>Nível 2 (Conjunto de Bombeamento):</strong> Compara soluções completas para o mesmo serviço. Custos comuns (como engenharia R$ 5 mil) são reconhecidos; sunk costs ficam fora.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Horizonte vs Vida Útil -->
+      <section class="slide-section" id="slide-5">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Por quantos anos?</h3>
+          <p>O horizonte é escolhido para a decisão. A vida útil depende do ativo e das condições. Substituições intermediárias e residual precisam de tratamento coerente. O caso adota oito anos como hipótese, não como vida útil universal de bombas.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">ESCOPO TEMPORAL • SIMULAÇÃO</span>
+          <h2 class="display-xl animate-item delay-1">Horizonte da análise ≠ Vida útil</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Horizonte da Análise (Decisão) <strong id="hz-val">8 anos</strong></label>
+                <input type="range" id="hz-slider" min="2" max="15" step="1" value="8">
+              </div>
+              <div class="sim-field">
+                <label>Vida Útil Estimada — A <strong id="vua-val">8 anos</strong></label>
+                <input type="range" id="vua-slider" min="3" max="15" step="1" value="8">
+              </div>
+              <div class="sim-field">
+                <label>Vida Útil Estimada — B <strong id="vub-val">10 anos</strong></label>
+                <input type="range" id="vub-slider" min="3" max="15" step="1" value="10">
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2 animate-item delay-2">
+            <div class="lcc-card">
+              <span class="card-kicker">Alternativa A no Horizonte</span>
+              <h3 class="card-title" id="hz-status-a">Alinhada ao horizonte</h3>
+              <p class="card-text" id="hz-desc-a">...</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Alternativa B no Horizonte</span>
+              <h3 class="card-title" id="hz-status-b">Residual positivo</h3>
+              <p class="card-text" id="hz-desc-b">...</p>
+            </div>
+          </div>
+
+          <div class="statement-bar animate-item delay-3">
+            Regra de ouro: ambas as alternativas devem ser comparadas no <strong>mesmo período (horizonte comum)</strong>, tratando substituições intermediárias e valor residual de forma coerente.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Registro de Premissas & Fontes -->
+      <section class="slide-section" id="slide-6">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Dado ou premissa? &amp; A análise está definida?</h3>
+          <p>Diferencie histórico observado, informação de fornecedor e hipótese. Registre limites de validade e incerteza. Uma ficha organizada ainda pode ter pendências, que precisam de responsáveis. O objetivo é tornar a comparação compreensível e reproduzível.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">RASTREABILIDADE E REPRODUTIBILIDADE</span>
+          <h2 class="display-xl animate-item delay-1">Toda estimativa precisa de origem</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="lcc-table-wrap animate-item delay-1">
+            <table class="lcc-table">
+              <thead>
+                <tr>
+                  <th>Parâmetro</th>
+                  <th>Valor Base</th>
+                  <th>Origem / Tipo de Dado</th>
+                  <th>Nível de Confiança</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Horas de Operação</strong></td>
+                  <td>6.000 h/ano</td>
+                  <td>
+                    <select class="premise-origin" data-prem="hours" style="padding:4px 8px; border-radius:4px;">
+                      <option value="Histórico">Histórico do Processo</option>
+                      <option value="Fornecedor">Fornecedor</option>
+                      <option value="Hipótese" selected>Hipótese Operacional</option>
+                    </select>
+                  </td>
+                  <td><span class="tab-pill" style="padding:3px 10px; font-size:11px;">Crítico · Validar</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Potência Absorvida (A / B)</strong></td>
+                  <td>30 kW / 25 kW</td>
+                  <td>
+                    <select class="premise-origin" data-prem="power" style="padding:4px 8px; border-radius:4px;">
+                      <option value="Histórico">Medição em Campo</option>
+                      <option value="Fornecedor" selected>Curva do Fornecedor</option>
+                      <option value="Hipótese">Hipótese</option>
+                    </select>
+                  </td>
+                  <td><span class="tab-pill" style="padding:3px 10px; font-size:11px;">Alto Impacto</span></td>
+                </tr>
+                <tr>
+                  <td><strong>MTBF (A / B)</strong></td>
+                  <td>6.000 h / 12.000 h</td>
+                  <td>
+                    <select class="premise-origin" data-prem="mtbf" style="padding:4px 8px; border-radius:4px;">
+                      <option value="Histórico" selected>Histórico CMMS + Fabricante</option>
+                      <option value="Fornecedor">Fornecedor</option>
+                      <option value="Hipótese">Hipótese</option>
+                    </select>
+                  </td>
+                  <td><span class="tab-pill" style="padding:3px 10px; font-size:11px;">Verificar Dispersão</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Perda Líquida / Hora</strong></td>
+                  <td>R$ 1.000 / h</td>
+                  <td>
+                    <select class="premise-origin" data-prem="loss" style="padding:4px 8px; border-radius:4px;">
+                      <option value="Histórico">Controladoria / Finanças</option>
+                      <option value="Fornecedor">Fornecedor</option>
+                      <option value="Hipótese" selected>Hipótese Didática</option>
+                    </select>
+                  </td>
+                  <td><span class="tab-pill" style="padding:3px 10px; font-size:11px;">Validar com Finanças</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="statement-bar animate-item delay-2">
+            Estrutura definida não significa dados completos: registre pendências com <strong>responsável e prazo</strong> para que outra pessoa consiga reproduzir a comparação.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Quiz Oficial -->
+      <section class="slide-section quiz-slide" id="slide-7">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Quiz do Módulo 2</h3>
+          <p>Verifique o entendimento sobre fronteiras, horizonte vs vida útil e origem das premissas.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <header class="quiz-header animate-item">
+          <h2 class="quiz-title-giant">QUIZ</h2>
+          <div class="quiz-tabs-nav" id="quiz-tabs-nav"></div>
+        </header>
+
+        <div class="slide-body">
+          <div class="quiz-prompt-card animate-item delay-1">
+            <div class="quiz-prompt-tag" id="quiz-prompt-tag">DESAFIO</div>
+            <p class="quiz-prompt-text" id="quiz-prompt-text"></p>
+          </div>
+          <div class="quiz-options-grid animate-item delay-2" id="quiz-options-grid"></div>
+          <div class="quiz-feedback-banner" id="quiz-feedback-banner"></div>
+          <div class="quiz-footer-bar">
+            <span id="quiz-progress-label" style="font-weight: 700; font-size: 13px;"></span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill" id="btn-quiz-reset">Reiniciar</button>
+              <button type="button" class="tab-pill active" id="btn-quiz-next">Próximo Cenário →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="slide-nav-indicators" aria-label="Navegação de slides">
+    <div class="slide-indicator-dot active" data-title="Capa do Módulo 2"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-0"></div><span class="slide-preview-text">Capa do Módulo 2</span></div></div>
+    <div class="slide-indicator-dot" data-title="Decisão e Necessidade"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-1"></div><span class="slide-preview-text">Decisão e Necessidade</span></div></div>
+    <div class="slide-indicator-dot" data-title="Requisitos Obrigatórios"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-2"></div><span class="slide-preview-text">Requisitos Obrigatórios</span></div></div>
+    <div class="slide-indicator-dot" data-title="Fronteiras da Análise"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-3"></div><span class="slide-preview-text">Fronteiras da Análise</span></div></div>
+    <div class="slide-indicator-dot" data-title="Horizonte vs Vida Útil"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-4"></div><span class="slide-preview-text">Horizonte vs Vida Útil</span></div></div>
+    <div class="slide-indicator-dot" data-title="Premissas e Fontes"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-5"></div><span class="slide-preview-text">Premissas e Fontes</span></div></div>
+    <div class="slide-indicator-dot" data-title="Quiz: Estruturação"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-6"></div><span class="slide-preview-text">Quiz: Estruturação</span></div></div>
+  </nav>
+
+  <script type="module" src="./002.EstruturarAnalise.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

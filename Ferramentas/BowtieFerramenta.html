@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ferramenta Bowtie — Mindmap Interativo RCA</title>
+  <meta name="description" content="Ferramenta Interativa de Análise Bowtie baseada em Mindmapping, Matriz SOD/FMEA, Escala de Gravidade 1-5 e Vinculação de Barreiras.">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-canvas);
+      color: var(--color-ink);
+      font-family: UberMoveText, system-ui, Helvetica Neue, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .bowtie-app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      width: 100%;
+      position: relative;
+    }
+
+    .technical-grid {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(to right, rgba(0,0,0,0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.025) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    /* Toolbar Header */
+    .bowtie-toolbar {
+      position: relative; z-index: 10;
+      background-color: var(--color-canvas-soft);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--spacing-sm) clamp(16px, 3vw, 40px);
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: var(--spacing-md);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .toolbar-brand-group {
+      display: flex; align-items: center; gap: var(--spacing-md);
+    }
+
+    .toolbar-title-badge {
+      background-color: var(--color-primary); color: var(--color-on-primary);
+      padding: 4px 12px; border-radius: var(--rounded-pill);
+      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    .toolbar-main-title { font-size: 16px; font-weight: 700; color: var(--color-ink); margin: 0; }
+    .toolbar-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--spacing-xs); }
+
+    .btn-pill {
+      background-color: var(--color-canvas); color: var(--color-ink);
+      border: 1px solid var(--color-border); padding: 6px 14px;
+      border-radius: var(--rounded-pill); font-size: 12.5px; font-weight: 600;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-pill:hover { background-color: var(--color-canvas-softer); border-color: var(--color-ink); }
+    .btn-pill-primary { background-color: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+    .btn-pill-primary:hover { background-color: var(--color-black-elevated); border-color: var(--color-black-elevated); }
+    .btn-pill-danger { background-color: #fee2e2; color: var(--color-danger); border-color: #fca5a5; }
+    .btn-pill-danger:hover { background-color: var(--color-danger); color: #ffffff; border-color: var(--color-danger); }
+
+    .template-select {
+      background-color: var(--color-canvas); color: var(--color-ink);
+      border: 1px solid var(--color-border); padding: 6px 12px;
+      border-radius: var(--rounded-pill); font-size: 12.5px; font-weight: 600;
+      cursor: pointer; outline: none; transition: border-color 0.2s ease;
+    }
+
+    /* Workspace */
+    .bowtie-main-content {
+      position: relative; z-index: 1; flex: 1;
+      display: flex; flex-direction: column;
+      padding: 12px 24px 20px 24px;
+      gap: 12px; height: calc(100vh - 70px);
+      box-sizing: border-box;
+    }
+
+    /* Top Event Banner */
+    .central-event-bar {
+      background-color: var(--color-canvas-soft);
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-xl);
+      padding: 10px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: var(--spacing-md); box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+      flex-shrink: 0;
+    }
+
+    .event-info h2 {
+      margin: 0; font-size: 15px; font-weight: 800; color: var(--color-danger);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .event-info p { margin: 2px 0 0 0; font-size: 12px; color: var(--color-body); }
+    .event-meta { display: flex; gap: var(--spacing-md); font-size: 12px; color: var(--color-ink); }
+    .meta-item { background-color: var(--color-canvas); padding: 4px 10px; border-radius: var(--rounded-md); border: 1px solid var(--color-border); }
+
+    /* Mindmap Grid Area (Canvas Infinito com Rolagem Dupla) */
+    .mindmap-canvas-container {
+      position: relative; flex: 1;
+      background-color: #ffffff; border: 1px solid var(--color-border);
+      border-radius: var(--rounded-xl); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+      overflow: auto; padding: 32px 48px;
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(280px, 1.2fr) 160px minmax(280px, 1.2fr) minmax(260px, 1fr);
+      gap: clamp(40px, 4vw, 72px);
+      align-items: center; justify-items: stretch;
+      min-width: 1550px; min-height: 650px;
+      box-sizing: border-box;
+    }
+
+    /* Scrollbars Elegantes para Canvas Infinito */
+    .mindmap-canvas-container::-webkit-scrollbar { width: 8px; height: 8px; }
+    .mindmap-canvas-container::-webkit-scrollbar-track { background: var(--color-canvas-soft); border-radius: 4px; }
+    .mindmap-canvas-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .mindmap-canvas-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .svg-connections-overlay {
+      position: absolute; inset: 0; pointer-events: none; z-index: 2; width: 100%; height: 100%;
+    }
+
+    /* Mindmap Columns */
+    .mindmap-column {
+      position: relative; z-index: 3; width: 100%;
+      display: flex; flex-direction: column; gap: 18px;
+      align-items: stretch; justify-content: center;
+    }
+
+    .column-header {
+      font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--color-body); margin-bottom: 4px; text-align: center;
+    }
+
+    /* Node Cards */
+    .mindmap-node-card {
+      width: 100%; box-sizing: border-box; background: var(--color-canvas);
+      border: 1px solid var(--color-border); border-radius: var(--rounded-lg);
+      padding: 14px 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex; flex-direction: column; gap: 8px; position: relative;
+    }
+
+    .mindmap-node-card:hover {
+      transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border-color: var(--color-primary);
+    }
+
+    .node-code-badge {
+      font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: var(--rounded-pill);
+      background: var(--color-canvas-soft); color: var(--color-ink); display: inline-block;
+    }
+
+    .node-title { font-size: 14px; font-weight: 700; color: var(--color-ink); margin: 0; line-height: 1.35; }
+    .node-desc { font-size: 12px; color: var(--color-body); margin: 0; line-height: 1.35; }
+
+    /* Barreiras Status Color Tones */
+    .barrier-card-implemented {
+      border-left: 4px solid #16a34a !important; background: #f0fdf4;
+    }
+
+    .barrier-card-degraded {
+      border-left: 4px solid #d97706 !important; background: #fffbeb;
+    }
+
+    .barrier-card-not-implemented {
+      border-left: 4px solid #dc2626 !important; background: #fef2f2;
+      border-style: dashed;
+    }
+
+    .barrier-status-toggle {
+      display: flex; gap: 3px; margin-top: 4px;
+    }
+
+    .btn-status-toggle {
+      flex: 1; padding: 3px 2px; font-size: 9.5px; font-weight: 700; border-radius: var(--rounded-pill);
+      border: 1px solid var(--color-border); cursor: pointer; text-align: center;
+      transition: all 0.2s ease; background: var(--color-canvas); color: var(--color-body);
+    }
+
+    .btn-status-toggle.active-implemented {
+      background: #16a34a; color: #ffffff; border-color: #16a34a;
+    }
+
+    .btn-status-toggle.active-degraded {
+      background: #d97706; color: #ffffff; border-color: #d97706;
+    }
+
+    .btn-status-toggle.active-not-implemented {
+      background: #dc2626; color: #ffffff; border-color: #dc2626;
+    }
+
+    /* Consequência Gravity Scale Color Tones */
+    .severity-scale-container {
+      display: flex; align-items: center; gap: 4px; margin-top: 4px;
+    }
+
+    .btn-severity-step {
+      flex: 1; padding: 3px 0; font-size: 10px; font-weight: 800; text-anchor: middle;
+      border-radius: var(--rounded-sm); border: 1px solid var(--color-border);
+      cursor: pointer; text-align: center; background: var(--color-canvas); color: var(--color-ink);
+      transition: all 0.2s ease;
+    }
+
+    /* Tonalidades da Gravidade 1 a 5 */
+    .consequence-severity-1 { border-left: 4px solid #84cc16 !important; background: #f7fee7; }
+    .consequence-severity-2 { border-left: 4px solid #eab308 !important; background: #fefce8; }
+    .consequence-severity-3 { border-left: 4px solid #f97316 !important; background: #fff7ed; }
+    .consequence-severity-4 { border-left: 4px solid #ef4444 !important; background: #fef2f2; }
+    .consequence-severity-5 { border-left: 4px solid #991b1b !important; background: #450a0a; color: #ffffff !important; }
+    .consequence-severity-5 .node-title, .consequence-severity-5 .node-desc { color: #ffffff !important; }
+
+    /* Central Event Node */
+    .central-node-card {
+      background: var(--color-canvas); border: 2px solid var(--color-danger);
+      border-radius: 50%; width: 140px; height: 140px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 12px; box-shadow: 0 0 20px rgba(220,38,38,0.15);
+      cursor: pointer; transition: transform 0.3s ease; margin: auto;
+    }
+
+    .central-node-card:hover { transform: scale(1.05); }
+
+    /* Modals System */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 2500; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .modal-card {
+      background: var(--color-canvas); border: 1px solid var(--color-border);
+      border-radius: var(--rounded-xl); width: 94%; max-width: 1020px; max-height: 90vh;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column;
+      overflow: hidden; transform: scale(0.95); transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.active .modal-card { transform: scale(1); }
+
+    .modal-header {
+      padding: var(--spacing-md) var(--spacing-xl); background-color: var(--color-canvas-soft);
+      border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .modal-header h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--color-ink); }
+    .btn-close-modal { background: transparent; border: none; font-size: 24px; cursor: pointer; color: var(--color-body); }
+    .btn-close-modal:hover { color: var(--color-danger); }
+    .modal-body { padding: var(--spacing-xl); overflow-y: auto; display: flex; flex-direction: column; gap: var(--spacing-md); }
+    .modal-footer { padding: var(--spacing-md) var(--spacing-xl); background-color: var(--color-canvas-soft); border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: var(--spacing-sm); }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--color-body); }
+    .form-control { padding: 8px 12px; border-radius: var(--rounded-md); border: 1px solid var(--color-border); background: var(--color-canvas); color: var(--color-ink); font-size: 14px; outline: none; }
+    .sod-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .sod-table th, .sod-table td { padding: 10px 12px; border-bottom: 1px solid var(--color-border); text-align: left; }
+    .sod-table th { background: var(--color-canvas-soft); font-weight: 700; color: var(--color-ink); }
+    .sod-badge { padding: 2px 8px; border-radius: var(--rounded-pill); font-size: 11px; font-weight: 800; }
+
+    .sod-selector-container {
+      display: flex; gap: 4px; overflow-x: auto; padding: 2px 0;
+    }
+    .btn-sod-step {
+      flex: 1; min-width: 22px; height: 28px; font-size: 11px; font-weight: 800;
+      border-radius: var(--rounded-md); border: 1px solid var(--color-border);
+      background: var(--color-canvas); color: var(--color-ink); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .btn-sod-step:hover { border-color: var(--color-primary); background: var(--color-canvas-soft); }
+    .btn-sod-step.active { background: #000000 !important; color: #ffffff !important; border-color: #000000 !important; }
+
+    .sod-range-slider {
+      width: 100%; height: 6px; background: #e2e8f0; border-radius: 4px;
+      outline: none; accent-color: #000000; cursor: pointer; margin: 10px 0 14px 0;
+    }
+    .sod-factor-card {
+      background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--rounded-xl);
+      padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .sod-factor-header {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .sod-factor-title {
+      display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--color-ink);
+    }
+    .sod-factor-badge-icon {
+      width: 22px; height: 22px; border-radius: 4px; background: var(--color-canvas-soft);
+      border: 1px solid var(--color-border); font-size: 11px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center; color: var(--color-ink);
+    }
+    .sod-factor-val-badge {
+      font-size: 14px; font-weight: 800; background: var(--color-canvas-soft);
+      border: 1px solid var(--color-border); padding: 2px 10px; border-radius: var(--rounded-md);
+    }
+    .sod-desc-box {
+      background: var(--color-canvas-soft); border: 1px solid var(--color-border);
+      border-radius: var(--rounded-md); padding: 12px; min-height: 85px;
+    }
+    .sod-desc-title { font-size: 12px; font-weight: 800; color: var(--color-ink); display: block; margin-bottom: 4px; }
+    .sod-desc-text { font-size: 11.5px; color: var(--color-body); margin: 0; line-height: 1.35; }
+    .btn-add-element-premium {
+      background: #000000; color: #ffffff; font-weight: 800; font-size: 12.5px;
+      padding: 6px 16px; border-radius: var(--rounded-pill); border: 1px solid #000000;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      font-family: UberMoveText, system-ui, sans-serif;
+    }
+    .btn-add-element-premium:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+      background: #1e293b; border-color: #1e293b;
+    }
+
+    /* Header das Colunas estilo Figura 2 (Fundo Preto / Slate Elegante) */
+    .mindmap-column .column-header {
+      background: #0f172a; color: #f8fafc; border: 1px solid #1e293b;
+      border-radius: var(--rounded-md); padding: 9px 12px; margin-bottom: 14px;
+      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    .header-label-group {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .header-icon {
+      font-size: 12px;
+    }
+    .btn-col-quick-add-dark {
+      width: 24px; height: 24px; border-radius: 6px;
+      background: #1e293b; color: #ffffff; border: 1px solid #334155;
+      font-size: 14px; font-weight: 800; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease; line-height: 1; padding: 0;
+    }
+    .btn-col-quick-add-dark:hover {
+      background: #ffffff; color: #000000; border-color: #ffffff; transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="bowtie-app-container">
+    <div class="technical-grid"></div>
+
+    <!-- Toolbar Header -->
+    <header class="bowtie-toolbar">
+      <div class="toolbar-brand-group">
+        <h1 class="toolbar-main-title">Ferramenta Bowtie — Mindmap Interativo RCA</h1>
+      </div>
+
+      <div class="toolbar-actions">
+        <label for="template-select" style="font-size: 12px; font-weight: 700; color: var(--color-body);">CENÁRIO:</label>
+        <select id="template-select" class="template-select"></select>
+        <button id="btn-add-scenario" class="btn-pill" style="font-size: 11px; padding: 4px 8px; font-weight: 700;" title="Criar Novo Cenário de Análise">+ Novo Cenário</button>
+        <button id="btn-edit-scenario" class="btn-pill" style="font-size: 11px; padding: 4px 8px;" title="Editar Nome do Cenário">✏️ Renomear Cenário</button>
+
+        <button id="btn-add-node" class="btn-add-element-premium" title="Adicionar Novo Elemento ao Bowtie">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+          <span>Adicionar Elemento</span>
+        </button>
+        <button id="btn-sod-matrix" class="btn-pill">Matriz SOD (FMEA)</button>
+        <button id="btn-rca-summary" class="btn-pill">Resumo RCA</button>
+        <button id="btn-export-json" class="btn-pill">Exportar</button>
+        <button id="btn-import-json" class="btn-pill">Importar</button>
+        <button id="btn-clear-diagram" class="btn-pill btn-pill-danger">🗑 Limpar Análise</button>
+        <input type="file" id="input-import-file" style="display: none;" accept=".json">
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="bowtie-main-content">
+      <div class="central-event-bar">
+        <div class="event-info">
+          <h2 id="display-event-title">⚠ EVENTO FOCO / FALHA</h2>
+          <p id="display-event-desc">Selecione ou edite o evento central do sistema.</p>
+        </div>
+        <div class="event-meta">
+          <span class="meta-item" id="display-event-system">Sistema: --</span>
+          <span class="meta-item" id="display-event-location">Local: --</span>
+          <button id="btn-edit-central" class="btn-pill" style="font-size: 11px; padding: 2px 8px;">Editar Evento</button>
+        </div>
+      </div>
+
+      <!-- Mindmap 5-Column Grid -->
+      <div class="mindmap-canvas-container" id="mindmap-container">
+        <!-- SVG Connections Overlay -->
+        <svg class="svg-connections-overlay" id="mindmap-svg-overlay"></svg>
+
+        <!-- Column 1: Ameaças -->
+        <div class="mindmap-column" id="col-threats">
+          <div class="column-header">Ameaças (Causas)</div>
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Column 2: Barreiras Preventivas -->
+        <div class="mindmap-column" id="col-prev-barriers">
+          <div class="column-header">Barreiras Preventivas</div>
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Column 3: Evento Central (Falha) -->
+        <div class="mindmap-column" id="col-central-event">
+          <div class="column-header">Evento Central</div>
+          <div class="central-node-card" id="node-central-event">
+            <span style="font-size: 20px; color: var(--color-danger);">⚠</span>
+            <span style="font-size: 11px; font-weight: 900; color: var(--color-danger); margin-top: 4px;">FALHA CENTRAL</span>
+            <span id="central-card-title" style="font-size: 10px; font-weight: 700; color: var(--color-ink); margin-top: 2px; line-height: 1.1;">Perda de Contenção</span>
+          </div>
+        </div>
+
+        <!-- Column 4: Barreiras Mitigadoras -->
+        <div class="mindmap-column" id="col-mit-barriers">
+          <div class="column-header">Barreiras Mitigadoras</div>
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Column 5: Consequências -->
+        <div class="mindmap-column" id="col-consequences">
+          <div class="column-header">Consequências</div>
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAIS -->
+  <div class="modal-overlay" id="modal-sod">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Matriz SOD / Pontuação FMEA por Ameaça</h3>
+        <button class="btn-close-modal" data-close="modal-sod">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--color-body); margin: 0;">
+          Ajuste os fatores de FMEA: <strong>Severidade (S 1-10)</strong>, <strong>Ocorrência (O 1-10)</strong> e <strong>Detecção (D 1-10)</strong> para calcular o RPN (S × O × D).
+        </p>
+        <table class="sod-table">
+          <thead>
+            <tr>
+              <th>Ameaça</th><th>Severidade (S)</th><th>Ocorrência (O)</th><th>Detecção (D)</th><th>RPN (S×O×D)</th>
+            </tr>
+          </thead>
+          <tbody id="sod-table-body"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer"><button class="btn-pill btn-pill-primary" data-close="modal-sod">Concluído</button></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-node-editor">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="node-editor-title">Adicionar / Editar Elemento</h3>
+        <button class="btn-close-modal" data-close="modal-node-editor">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-node-editor" style="display: flex; flex-direction: column; gap: 14px;">
+          <input type="hidden" id="node-edit-id" value="">
+          <div class="form-group">
+            <label for="node-edit-type">Tipo de Elemento</label>
+            <select id="node-edit-type" class="form-control">
+              <option value="THREAT">Ameaça (Causa Inicial)</option>
+              <option value="PREVENTIVE_BARRIER">Barreira Preventiva</option>
+              <option value="CENTRAL_EVENT">Evento Central (Falha)</option>
+              <option value="MITIGATION_BARRIER">Barreira Mitigadora</option>
+              <option value="CONSEQUENCE">Consequência / Impacto</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="node-edit-title">Título / Nome</label>
+            <input type="text" id="node-edit-title" class="form-control" placeholder="ex: Inspeção por Ultrassom NR-13" required>
+          </div>
+          <div class="form-group">
+            <label for="node-edit-desc">Descrição Detalhada</label>
+            <textarea id="node-edit-desc" class="form-control" rows="3" placeholder="Descreva os detalhes operacionais..."></textarea>
+          </div>
+
+          <!-- Matriz SOD / FMEA integrada para Ameaças (1 a 10) -->
+          <div id="group-sod-threat" style="display: none; flex-direction: column; gap: 16px; background: #fafafa; padding: 16px; border-radius: var(--rounded-xl); border: 1px solid var(--color-border);">
+            <!-- Top Gauge Card -->
+            <div style="background: #ffffff; border: 1px solid var(--color-border); border-radius: var(--rounded-lg); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="background: var(--color-canvas-soft); border: 1px solid var(--color-border); border-radius: var(--rounded-md); padding: 6px 12px; text-align: center;">
+                  <span style="font-size: 10px; text-transform: uppercase; font-weight: 800; color: var(--color-body); display: block;">FÓRMULA FMEA</span>
+                  <span id="sod-formula-text" style="font-size: 13px; font-weight: 800; color: var(--color-ink);">S (5) × O (5) × D (5)</span>
+                </div>
+                <div>
+                  <span style="font-size: 10px; text-transform: uppercase; font-weight: 800; color: var(--color-body); display: block;">NÚMERO DE RISCO PRIORITÁRIO</span>
+                  <div style="display: flex; align-items: baseline; gap: 6px;">
+                    <span id="editor-rpn-display" style="font-size: 30px; font-weight: 900; color: var(--color-ink); line-height: 1;">125</span>
+                    <span style="font-size: 11px; color: var(--color-body);">/ 1000 Máx</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align: right; display: flex; align-items: center; gap: 12px;">
+                <div style="text-align: right;">
+                  <span style="font-size: 10px; color: var(--color-body); display: block;">Nível de Prioridade</span>
+                  <span id="editor-priority-text" style="font-size: 12px; font-weight: 800; color: var(--color-ink);">Monitoramento Regular</span>
+                </div>
+                <div id="editor-risk-badge" style="padding: 6px 14px; border-radius: var(--rounded-md); font-size: 12px; font-weight: 900; background: var(--color-canvas-soft); border: 1px solid var(--color-border); color: var(--color-ink);">
+                  RISCO MÉDIO
+                </div>
+              </div>
+            </div>
+
+            <!-- 3 Factor Cards (S, O, D) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;">
+              <!-- Severidade (S) -->
+              <div class="sod-factor-card">
+                <div>
+                  <div class="sod-factor-header">
+                    <div class="sod-factor-title">
+                      <span class="sod-factor-badge-icon">S</span>
+                      <span>Severidade (1 - 10)</span>
+                    </div>
+                    <span class="sod-factor-val-badge" id="val-badge-s">5</span>
+                  </div>
+                  <input type="range" min="1" max="10" value="5" class="sod-range-slider" id="sod-slider-s">
+                  <div class="sod-desc-box">
+                    <span class="sod-desc-title" id="title-s">Moderado</span>
+                    <p class="sod-desc-text" id="desc-s">Dano moderado ao patrimônio ou lesão moderada reversível.</p>
+                  </div>
+                </div>
+                <div class="sod-selector-container" id="sod-selector-s"></div>
+              </div>
+
+              <!-- Ocorrência (O) -->
+              <div class="sod-factor-card">
+                <div>
+                  <div class="sod-factor-header">
+                    <div class="sod-factor-title">
+                      <span class="sod-factor-badge-icon">O</span>
+                      <span>Ocorrência (1 - 10)</span>
+                    </div>
+                    <span class="sod-factor-val-badge" id="val-badge-o">5</span>
+                  </div>
+                  <input type="range" min="1" max="10" value="5" class="sod-range-slider" id="sod-slider-o">
+                  <div class="sod-desc-box">
+                    <span class="sod-desc-title" id="title-o">Ocasional</span>
+                    <p class="sod-desc-text" id="desc-o">Pode ocorrer cerca de 1 vez ao ano na unidade operacional.</p>
+                  </div>
+                </div>
+                <div class="sod-selector-container" id="sod-selector-o"></div>
+              </div>
+
+              <!-- Detecção (D) -->
+              <div class="sod-factor-card">
+                <div>
+                  <div class="sod-factor-header">
+                    <div class="sod-factor-title">
+                      <span class="sod-factor-badge-icon">D</span>
+                      <span>Detecção (1 - 10)</span>
+                    </div>
+                    <span class="sod-factor-val-badge" id="val-badge-d">5</span>
+                  </div>
+                  <input type="range" min="1" max="10" value="5" class="sod-range-slider" id="sod-slider-d">
+                  <div class="sod-desc-box">
+                    <span class="sod-desc-title" id="title-d">Moderada</span>
+                    <p class="sod-desc-text" id="desc-d">Medição manual frequente ou alarme simples em painel local.</p>
+                  </div>
+                </div>
+                <div class="sod-selector-container" id="sod-selector-d"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status para Barreiras (Preventivas e Mitigadoras) -->
+          <div class="form-group" id="group-barrier-status" style="display: none;">
+            <label for="node-edit-barrier-status">Status de Operação da Barreira</label>
+            <select id="node-edit-barrier-status" class="form-control">
+              <option value="IMPLEMENTED">✔ Implementada (Ativa)</option>
+              <option value="DEGRADED">⚠ Degradada (Atenção / Parcial)</option>
+              <option value="NOT_IMPLEMENTED">✖ Não Implementada (Inativa)</option>
+            </select>
+          </div>
+
+          <!-- Vinculação para Ameaças -->
+          <div class="form-group" id="group-link-preventive" style="display: none;">
+            <label>Vincular a Barreiras Preventivas (Mindmapping)</label>
+            <div id="container-link-preventive" style="display: flex; flex-direction: column; gap: 6px; max-height: 120px; overflow-y: auto;"></div>
+          </div>
+
+          <!-- Vinculação para Consequências -->
+          <div class="form-group" id="group-link-mitigation" style="display: none;">
+            <label>Vincular a Barreiras Mitigadoras (Mindmapping)</label>
+            <div id="container-link-mitigation" style="display: flex; flex-direction: column; gap: 6px; max-height: 120px; overflow-y: auto;"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-pill" data-close="modal-node-editor">Cancelar</button>
+        <button class="btn-pill btn-pill-primary" id="btn-save-node">Salvar Elemento</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-rca-summary">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Diagnóstico Consolidado RCA — Barreiras &amp; Riscos</h3>
+        <button class="btn-close-modal" data-close="modal-rca-summary">&times;</button>
+      </div>
+      <div class="modal-body" id="rca-summary-content"></div>
+      <div class="modal-footer"><button class="btn-pill btn-pill-primary" data-close="modal-rca-summary">Fechar</button></div>
+    </div>
+  </div>
+
+  <script type="module" src="./BowtieFerramenta.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

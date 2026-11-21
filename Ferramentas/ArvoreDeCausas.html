@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Árvore de Causas (FTA) — Ferramentas RCA</title>
+  <meta name="description" content="Ferramenta interativa de Árvore de Causas (Fault Tree Analysis / FTA) em proporção 16:9 para ensino de Causa Raiz.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #121212;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-family);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .aspect-frame {
+      width: min(100vw, calc(100vh * (16 / 9)));
+      height: min(100vh, calc(100vw * (9 / 16)));
+      aspect-ratio: 16 / 9;
+      position: relative;
+      background-color: var(--color-canvas);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    .tech-grid-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .rca-header {
+      position: relative;
+      z-index: 10;
+      background-color: var(--color-canvas);
+      border-bottom: 1px solid var(--color-border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      height: 60px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-badge {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: 5px 14px;
+      border-radius: var(--rounded-pill);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .preset-select-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .preset-select {
+      background-color: var(--color-canvas-softer);
+      color: var(--color-ink);
+      border: 1px solid var(--color-border);
+      padding: 6px 32px 6px 14px;
+      border-radius: var(--rounded-pill);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      transition: all 0.2s ease;
+    }
+
+    .preset-select:hover {
+      background-color: var(--color-canvas-soft);
+      border-color: var(--color-ink);
+    }
+
+    .preset-arrow {
+      position: absolute;
+      right: 12px;
+      pointer-events: none;
+      font-size: 10px;
+      color: var(--color-body);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-pill {
+      background-color: var(--color-canvas);
+      color: var(--color-ink);
+      border: 1px solid var(--color-border);
+      padding: 6px 14px;
+      border-radius: var(--rounded-pill);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-pill:hover {
+      background-color: var(--color-canvas-softer);
+      border-color: var(--color-ink);
+    }
+
+    .btn-pill-primary {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border-color: var(--color-primary);
+    }
+
+    .btn-pill-primary:hover {
+      background-color: var(--color-black-elevated);
+      border-color: var(--color-black-elevated);
+    }
+
+    .btn-pill-danger {
+      background-color: #fef2f2;
+      color: var(--color-danger);
+      border-color: #fca5a5;
+    }
+
+    .btn-pill-danger:hover {
+      background-color: var(--color-danger);
+      color: #ffffff;
+      border-color: var(--color-danger);
+    }
+
+    .rca-viewport {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 20px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .case-banner {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border-radius: var(--rounded-lg);
+      padding: 8px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+      margin-bottom: 8px;
+    }
+
+    .banner-field-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: rgba(255,255,255,0.1);
+      padding: 4px 10px;
+      border-radius: var(--rounded-md);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .banner-label {
+      font-size: 9.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.75);
+      white-space: nowrap;
+    }
+
+    .banner-input {
+      font-size: 13.5px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      width: 100%;
+      outline: none;
+    }
+
+    .workspace-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: #fafafa;
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-lg);
+    }
+
+    .workspace-spacer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .tree-nodes-scaler {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+      transition: transform 0.1s ease-out;
+    }
+
+    .tree-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: visible;
+    }
+
+    .tree-nodes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+
+    .node-card {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-lg);
+      padding: 10px 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      user-select: none;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+      box-sizing: border-box;
+    }
+
+    .node-card:hover {
+      border-color: var(--color-ink);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .node-card.active-path {
+      border: 2px solid var(--color-danger);
+    }
+
+    .node-card.root-cause {
+      border: 2px solid var(--color-success);
+      background-color: #f0fdf4;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .node-role {
+      font-size: 9.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-body);
+    }
+
+    .direct-badge {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--color-mute);
+      background-color: var(--color-canvas-soft);
+      padding: 1px 5px;
+      border-radius: var(--rounded-pill);
+    }
+
+    .node-description {
+      width: 100%;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-ink);
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: var(--rounded-sm);
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      padding: 2px 4px;
+      box-sizing: border-box;
+    }
+
+    .node-description:focus {
+      border-color: var(--color-primary);
+      background-color: var(--color-canvas);
+    }
+
+    .root-status-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--color-danger);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background-color: #fef2f2;
+      padding: 2px 6px;
+      border-radius: var(--rounded-sm);
+      text-align: center;
+    }
+
+    .node-status-select {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: var(--rounded-md);
+      border: 1px solid var(--color-border);
+      outline: none;
+      background-color: var(--color-canvas-softer);
+      cursor: pointer;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .btn-add-child, .btn-toggle-connect, .btn-delete-node {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--rounded-pill);
+      border: 1px solid var(--color-border);
+      background-color: var(--color-canvas-softer);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-add-child:hover {
+      background-color: var(--color-primary);
+      color: #ffffff;
+      border-color: var(--color-primary);
+    }
+
+    .btn-toggle-connect.is-direct {
+      background-color: #eff6ff;
+      color: #2563eb;
+      border-color: #bfdbfe;
+    }
+
+    .btn-delete-node:hover {
+      background-color: var(--color-danger);
+      color: #ffffff;
+      border-color: var(--color-danger);
+    }
+
+    .resize-handle {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      width: 12px;
+      height: 12px;
+      cursor: se-resize;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+
+    .resize-handle::after {
+      content: "";
+      position: absolute;
+      right: 3px;
+      bottom: 3px;
+      width: 5px;
+      height: 5px;
+      border-right: 2px solid var(--color-ink);
+      border-bottom: 2px solid var(--color-ink);
+    }
+
+    .node-card:hover .resize-handle {
+      opacity: 1;
+    }
+
+    .gate-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--color-primary);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+      user-select: none;
+    }
+
+    .gate-badge:hover {
+      transform: scale(1.2);
+    }
+
+    .gate-badge.gate-and {
+      background-color: #2563eb;
+    }
+
+    .gate-badge.gate-none {
+      background-color: var(--color-mute);
+    }
+
+    .workspace-controls {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      z-index: 20;
+      background-color: rgba(255,255,255,0.92);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--rounded-pill);
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .toast-notification {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--color-primary);
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: var(--rounded-pill);
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .toast-notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="aspect-frame">
+    <div class="tech-grid-bg"></div>
+
+    <header class="rca-header">
+      <div class="header-left">
+        <div class="brand-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          ÁRVORE DE CAUSAS (FTA)
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="preset-select-wrapper">
+          <select id="preset-select" class="preset-select" onchange="loadPreset(this.value)">
+            <option value="" disabled selected>📂 Carregar Caso Prático...</option>
+            <option value="compressor">Case 1: Superaquecimento em Compressor 250HP</option>
+            <option value="prensa">Case 2: Vazamento de Hidráulico na Prensa</option>
+            <option value="qualidade">Case 3: Desvio de Espessura na Linha 2</option>
+            <option value="bomba">Case 4: Trava de Eixo por Cavitação na Bomba</option>
+          </select>
+          <span class="preset-arrow">▼</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="btn-pill btn-pill-primary" onclick="addChildNode('root')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar Causa
+        </button>
+        <button class="btn-pill" onclick="exportJSON()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Salvar (.json)
+        </button>
+        <button class="btn-pill" onclick="triggerImportJSON()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Importar (.json)
+        </button>
+        <input type="file" id="json-file-input" accept=".json" style="display: none;" onchange="importJSON(event)">
+        <button class="btn-pill btn-pill-danger" onclick="clearBoard()">Limpar Quadro</button>
+      </div>
+    </header>
+
+    <main class="rca-viewport">
+      <div class="case-banner">
+        <div class="banner-field-group">
+          <span class="banner-label">NOME DO CASE:</span>
+          <input type="text" id="case-name-input" class="banner-input" value="Case 1: Compressor C-01" oninput="updateCaseName(this.value)">
+        </div>
+        <div class="banner-field-group">
+          <span class="banner-label">EVENTO TOPO (FALHA):</span>
+          <input type="text" id="problem-input" class="banner-input" value="Superaquecimento e Desarme no Compressor C-01" oninput="updateProblemText(this.value)">
+        </div>
+      </div>
+
+      <div class="workspace-container" id="workspace-container">
+        <div class="workspace-spacer" id="workspace-spacer"></div>
+        <div class="tree-nodes-scaler" id="tree-nodes-scaler">
+          <svg class="tree-svg" id="tree-svg"></svg>
+          <div class="tree-nodes" id="tree-nodes"></div>
+        </div>
+
+        <div class="workspace-controls">
+          <button class="btn-pill" id="pan-toggle-btn" title="Alternar Modo Mão (Pan)">🖐️ Mão</button>
+          <button class="btn-pill" id="zoom-out-btn" title="Reduzir Zoom">-</button>
+          <button class="btn-pill" id="zoom-reset-btn" title="Resetar Zoom">100%</button>
+          <button class="btn-pill" id="zoom-in-btn" title="Aumentar Zoom">+</button>
+          <button class="btn-pill" id="reset-tree-btn" title="Auto-Organizar Árvore">🔄 Auto-Layout</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-notification" id="toast-msg">Atualizado!</div>
+  <script src="ArvoreDeCausas.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

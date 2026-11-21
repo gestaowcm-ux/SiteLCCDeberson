@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ (Grid Parallax Asférico) — Mentoria de Confiabilidade</title>
+  <meta name="description" content="Perguntas frequentes em formato de grid parallax asférico baseado no template grid_cards_parallax.md.">
+  <link rel="stylesheet" href="./style.css">
+  
+  <!-- GSAP & ScrollTrigger via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* 1. Variáveis e Sobrescritas para o Tema Escuro da Página */
+    :root {
+      --bg-color: #0b0c10;
+      --text-color: #ffffff;
+      --accent-color: #66fcf1; /* Ciano Neon */
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-bg-gradient: linear-gradient(135deg, #11141a 0%, #07090d 100%);
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    /* Sobrescrita da Nav-bar para integrar com o Tema Escuro */
+    .nav-bar {
+      background-color: rgba(11, 12, 16, 0.9) !important;
+      border-bottom: 1px solid var(--card-border) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+    }
+
+    .nav-bar .logo, 
+    .nav-bar .nav-link {
+      color: var(--text-color) !important;
+    }
+
+    .nav-bar .nav-link:hover {
+      color: var(--accent-color) !important;
+    }
+
+    /* 2. Seção de Introdução (Intro Section) */
+    .intro-section {
+      height: 75vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 var(--spacing-xl);
+      border-bottom: 1px solid var(--card-border);
+      background: radial-gradient(circle at center, #15202b 0%, #0b0c10 100%);
+      margin-top: 80px; /* Deslocamento da navbar */
+    }
+
+    .intro-section h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: var(--spacing-md);
+      color: var(--text-color);
+    }
+
+    .intro-section p {
+      font-size: 1.2rem;
+      color: #8f9aa6;
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .scroll-indicator {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent-color);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    /* 3. Área do Grid de Cards Dispersos */
+    .grid-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px var(--spacing-2xl);
+      position: relative;
+    }
+
+    .scattered-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      row-gap: 160px;
+      column-gap: var(--spacing-2xl);
+    }
+
+    /* Cards com Parallax */
+    .parallax-card {
+      grid-column: span 5;
+      position: relative;
+      background: var(--card-bg-gradient);
+      border: 1px solid var(--card-border);
+      border-radius: var(--rounded-xl);
+      padding: var(--spacing-2xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+      will-change: transform;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .parallax-card:hover {
+      border-color: var(--accent-color);
+      box-shadow: 0 15px 40px rgba(102, 252, 241, 0.12);
+    }
+
+    /* Posições e Offset para Assimetria (Collage) */
+    .card-left-1 {
+      grid-column: 1 / 7;
+    }
+
+    .card-right-1 {
+      grid-column: 7 / 13;
+      margin-top: 120px;
+    }
+
+    .card-center {
+      grid-column: 4 / 10;
+      text-align: center;
+    }
+
+    .card-left-2 {
+      grid-column: 2 / 7;
+    }
+
+    .card-right-2 {
+      grid-column: 8 / 13;
+      margin-top: -60px;
+    }
+
+    /* Imagens Mockup Stylized */
+    .card-image-placeholder {
+      width: 100%;
+      height: 280px;
+      border-radius: var(--rounded-md);
+      background: linear-gradient(135deg, #16222f 0%, #080d14 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .card-image-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(102, 252, 241, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-image-placeholder svg {
+      width: 80px;
+      height: 80px;
+      fill: none;
+      stroke: var(--accent-color);
+      stroke-width: 1.5;
+      opacity: 0.85;
+      transition: transform 0.5s ease, filter 0.3s ease;
+    }
+
+    .parallax-card:hover .card-image-placeholder svg {
+      transform: scale(1.1) rotate(2deg);
+      filter: drop-shadow(0 0 8px var(--accent-color));
+    }
+
+    .card-tag {
+      align-self: flex-start;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-color);
+      background: rgba(102, 252, 241, 0.1);
+      padding: 6px 12px;
+      border-radius: var(--rounded-pill);
+      font-weight: 600;
+    }
+
+    .card-center .card-tag {
+      align-self: center;
+    }
+
+    .parallax-card h3 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--text-color);
+    }
+
+    .parallax-card p {
+      color: #8f9aa6;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    /* 4. Footer Spacer & CTA */
+    .footer-spacer {
+      padding: 120px var(--spacing-xl);
+      text-align: center;
+      background: linear-gradient(to bottom, #0b0c10 0%, #050608 100%);
+      border-top: 1px solid var(--card-border);
+    }
+
+    .footer-spacer h2 {
+      font-size: 2.25rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--text-color);
+    }
+
+    .footer-spacer p {
+      color: #8f9aa6;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    /* Estilização específica do botão no tema escuro */
+    .btn-dark-cta {
+      background-color: var(--text-color);
+      color: var(--bg-color);
+      font-weight: 700;
+      border: 1px solid var(--text-color);
+      padding: var(--spacing-md) var(--spacing-3xl);
+      border-radius: var(--rounded-md);
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-dark-cta:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 20px rgba(102, 252, 241, 0.4);
+    }
+
+    /* Fallbacks de Acessibilidade */
+    @media (prefers-reduced-motion: reduce) {
+      .parallax-card {
+        transform: none !important;
+        will-change: auto !important;
+      }
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .scattered-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+      }
+
+      .parallax-card {
+        margin-top: 0 !important;
+        grid-column: span 12 !important;
+      }
+
+      .intro-section h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Navegação Superior (nav-bar) -->
+  
+
+  <!-- Intro Banner -->
+  <div class="intro-section">
+    <span class="tag">Estrutura Asférica</span>
+    <h1>FAQ Parallax Asférico</h1>
+    <p>Uma experiência de leitura imersiva. À medida que rola a página, os cartões de dúvida deslizam com velocidades independentes, criando uma percepção de profundidade física real.</p>
+    <div class="scroll-indicator">Role para baixo</div>
+  </div>
+
+  <!-- Grid de Cards Parallax com FAQ -->
+  <div class="grid-container">
+    <main class="scattered-grid">
+      
+      <!-- Card 1: Esquerda - Lento (data-speed="0.1") -->
+      <article class="parallax-card card-left-1" data-speed="0.1">
+        <div class="card-image-placeholder">
+          <!-- SVG Ícone: Público / Equipe -->
+          <svg viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm14 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </div>
+        <span class="card-tag">Público-Alvo</span>
+        <h3>Para quem é a mentoria?</h3>
+        <p>Desenvolvida especialmente para Engenheiros, Supervisores, Coordenadores, Técnicos e Analistas de PCM. Se você trabalha direta ou indiretamente com manutenção e deseja dominar a gestão de ativos na prática de forma estratégica, esse programa foi feito para você.</p>
+      </article>
+
+      <!-- Card 2: Direita - Rápido (data-speed="0.25") -->
+      <article class="parallax-card card-right-1" data-speed="0.25">
+        <div class="card-image-placeholder">
+          <!-- SVG Ícone: Relógio / Cronômetro -->
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="card-tag">Duração e Acesso</span>
+        <h3>Quanto tempo de acesso terei?</h3>
+        <p>O acompanhamento ativo dura 12 semanas (3 meses), com transmissões semanais ao vivo pelo Zoom. Além disso, as gravações de todas as mentorias, as planilhas prontas e as licenças dos simuladores web ficam disponíveis por 1 ano completo para consulta.</p>
+      </article>
+
+      <!-- Card 3: Centralizado - Profundo / Lento Reverso (data-speed="-0.08") -->
+      <article class="parallax-card card-center" data-speed="-0.08">
+        <div class="card-image-placeholder" style="height: 380px;">
+          <!-- SVG Ícone: Curva / Gráfico (Curva Banheira) -->
+          <svg viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M3 9c3 0 5 6 9 6s4-9 9-9" />
+          </svg>
+        </div>
+        <span class="card-tag">Método Sem Slides</span>
+        <h3>Como funcionam os simuladores interativos?</h3>
+        <p>Em vez de aulas baseadas em apresentações estáticas e cansativas, você utilizará laboratórios interativos online. É possível ajustar parâmetros reais da Curva Banheira, simular diagramas de blocos (RBD) e preencher criticidades RCM, visualizando o impacto financeiro e operacional instantaneamente no navegador.</p>
+      </article>
+
+      <!-- Card 4: Esquerda - Médio (data-speed="0.15") -->
+      <article class="parallax-card card-left-2" data-speed="0.15">
+        <div class="card-image-placeholder">
+          <!-- SVG Ícone: Diagnóstico / Prancheta -->
+          <svg viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8" />
+          </svg>
+        </div>
+        <span class="card-tag">Foco Prático</span>
+        <h3>Posso analisar dados da minha empresa?</h3>
+        <p>Sim. A proposta principal da mentoria é a aplicação direta. Você terá o respaldo do mentor Deberson Luis para abrir seus dados operacionais, auditar processos atuais de PCM ou estruturar análises de causa raiz (RCA) com foco na solução de falhas reais da sua fábrica.</p>
+      </article>
+
+      <!-- Card 5: Direita - Muito Rápido (data-speed="0.3") -->
+      <article class="parallax-card card-right-2" data-speed="0.3">
+        <div class="card-image-placeholder">
+          <!-- SVG Ícone: Escudo / Garantia -->
+          <svg viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 11l2 2 4-4" />
+          </svg>
+        </div>
+        <span class="card-tag">Matrícula & Garantia</span>
+        <h3>Existe garantia de satisfação?</h3>
+        <p>A mentoria possui garantia incondicional de 14 dias: se você ingressar e achar que o programa não atende suas expectativas, devolvemos seu dinheiro integralmente. Também emitimos Notas Fiscais corporativas para faturamento direto ou reembolso via RH de sua empresa.</p>
+      </article>
+
+    </main>
+  </div>
+
+  <!-- Footer Spacer & CTA -->
+  <div class="footer-spacer">
+    <h2>Deseja dar o próximo passo?</h2>
+    <p>Garanta sua prioridade e receba o convite de abertura das inscrições direto na fila de espera.</p>
+    <button class="btn-dark-cta" data-modal="mentoria" id="btn-faq3-cta">
+      Entrar na Fila de Espera
+    </button>
+    <div style="margin-top: var(--spacing-xl);">
+      <a href="./index.html" class="body-sm-strong" style="text-decoration: underline; color: var(--accent-color);">
+        Voltar para a página inicial
+      </a>
+    </div>
+  </div>
+
+  <script src="/mentoria-modal.js"></script>
+
+  <script>
+    // --- INICIALIZAÇÃO DO PARALLAX (GSAP + SCROLLTRIGGER) ---
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Ativa o parallax somente se o usuário não preferir movimento reduzido e a tela for desktop/tablet (> 768px)
+        if (!prefersReducedMotion && window.innerWidth > 768) {
+          gsap.utils.toArray('.parallax-card').forEach(card => {
+            const speed = parseFloat(card.getAttribute('data-speed')) || 0.1;
+            
+            // Fator de escala para deslocamento em Y (velocidade * 150px)
+            const yTranslation = speed * 150; 
+
+            gsap.fromTo(card, 
+              { 
+                y: -yTranslation 
+              }, 
+              {
+                y: yTranslation,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: card,
+                  start: 'top bottom', // Inicia quando o topo do card entra na base da tela
+                  end: 'bottom top',   // Termina quando a base sai pelo topo
+                  scrub: true,         // Vincula o progresso da animação ao scroll
+                  invalidateOnRefresh: true
+                }
+              }
+            );
+          });
+        }
+      }
+    });
+  </script>
+<script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

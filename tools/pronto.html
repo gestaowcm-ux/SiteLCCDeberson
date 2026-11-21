@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Você está pronto? — Mentoria de Confiabilidade</title>
+  <meta name="description" content="Página inicial interativa para o preloader da Mentoria de Confiabilidade.">
+  <link rel="stylesheet" href="./style.css">
+  
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    /* Container de transição de fade-in no carregamento */
+    .fade-in-container {
+      opacity: 0;
+      transform: scale(0.98);
+      animation: page-fade-in 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    @keyframes page-fade-in {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .prompt-text {
+      font-size: 5rem;
+      font-weight: 800;
+      color: #000000;
+      letter-spacing: -2.5px;
+      text-align: center;
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+      user-select: none;
+    }
+
+    /* Ao passar o mouse pela página, o texto se expande ligeiramente de forma premium */
+    body:hover .prompt-text {
+      transform: scale(1.04);
+      opacity: 0.85;
+    }
+
+    /* Animação sutil de seta dinâmica */
+    .prompt-text::after {
+      content: ' →';
+      font-weight: 300;
+      opacity: 0.6;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      display: inline-block;
+    }
+
+    body:hover .prompt-text::after {
+      transform: translateX(8px);
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .prompt-text {
+        font-size: 3.2rem;
+        letter-spacing: -1.5px;
+      }
+    }
+  </style>
+</head>
+<body onclick="navigateToPreloader()">
+  
+  <div class="fade-in-container">
+    <h1 class="prompt-text">Você está pronto?</h1>
+  </div>
+
+  <script>
+    function navigateToPreloader() {
+      // Adiciona uma transição de fade-out suave antes de redirecionar
+      const container = document.querySelector('.fade-in-container');
+      container.style.transition = 'opacity 0.5s cubic-bezier(0.77, 0, 0.175, 1), transform 0.5s cubic-bezier(0.77, 0, 0.175, 1)';
+      container.style.opacity = '0';
+      container.style.transform = 'scale(1.03)';
+      
+      setTimeout(() => {
+        window.location.href = './preloader-branco.html';
+      }, 450);
+    }
+  </script>
+<script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

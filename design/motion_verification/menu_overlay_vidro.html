@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Overlay de Vidro - Exemplo Completo</title>
+    <!-- Fonte Inter para o visual clean (estilo Uber) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- GSAP via CDN para a transição escalonada suave -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --text-color: #ffffff;
+            --accent-color: #66fcf1;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --font-main: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Mockup de Background para demonstrar o Blur */
+        .page-wrapper {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(11, 12, 16, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            color: var(--text-color);
+        }
+
+        .menu-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .menu-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Elementos coloridos no fundo para realçar o efeito Glassmorphism */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .blob-1 {
+            width: 300px;
+            height: 300px;
+            background: #1f2833;
+            top: 15%;
+            left: 10%;
+        }
+
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-color);
+            bottom: 20%;
+            right: 10%;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-top: 100px;
+            margin-bottom: 60px;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            color: #c5a059;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .mock-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .mock-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .mock-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .mock-card p {
+            color: #8f9aa6;
+            line-height: 1.5;
+        }
+
+        /* ESTILOS DO MENU OVERLAY DE VIDRO */
+        .glass-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 12, 16, 0.6); /* Camada escura translúcida */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            /* Inicialmente oculto sem quebrar a acessibilidade ou animações */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-menu-overlay.is-active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .close-menu-btn {
+            position: absolute;
+            top: 24px;
+            right: 40px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s ease;
+        }
+
+        .close-menu-btn:hover {
+            opacity: 0.7;
+        }
+
+        .close-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .nav-links-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            text-align: center;
+        }
+
+        .menu-nav-link {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            padding: 4px 10px;
+            transition: color 0.3s ease;
+            letter-spacing: -0.02em;
+        }
+
+        /* Efeito Hover Estilo Minimalista / Uber */
+        .menu-nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-color);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .menu-nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .menu-nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Fallbacks de Acessibilidade e Performance */
+        @media (prefers-reduced-motion: reduce) {
+            .glass-menu-overlay {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: rgba(11, 12, 16, 0.98) !important;
+            }
+            
+            .menu-nav-link {
+                transition: none !important;
+            }
+            .menu-nav-link::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-nav-link {
+                font-size: 2rem;
+            }
+            .close-menu-btn {
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header fixo -->
+    <header class="header">
+        <div class="logo">MENTORIA.MOTION</div>
+        <button class="menu-toggle-btn" id="openBtn">Menu</button>
+    </header>
+
+    <!-- Estrutura Principal -->
+    <div class="page-wrapper">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+
+        <section class="hero-section">
+            <h1>Alta Performance em Movimento</h1>
+            <p>Este mockup demonstra o efeito do Glassmorphism. O desfoque atua nos elementos atrás da camada de overlay quando ativa.</p>
+        </section>
+
+        <main class="content-grid">
+            <article class="mock-card">
+                <h2>Criticidade RCM</h2>
+                <p>Metodologias robustas para análise de risco físico e priorização de ativos industriais.</p>
+            </article>
+            <article class="mock-card">
+                <h2>Árvore de Causas</h2>
+                <p>Rastreabilidade lógica de falhas baseada em encadeamentos sequenciais de fatos e desvios.</p>
+            </article>
+            <article class="mock-card">
+                <h2>FMEA Integrado</h2>
+                <p>Redução de falhas críticas através da identificação precoce dos modos e efeitos de anomalias.</p>
+            </article>
+        </main>
+    </div>
+
+    <!-- MENU OVERLAY DE VIDRO -->
+    <div class="glass-menu-overlay" id="menuOverlay" aria-hidden="true" role="dialog">
+        <button class="close-menu-btn" id="closeBtn" aria-label="Fechar menu">
+            <span>Fechar</span>
+            <span class="close-icon">&times;</span>
+        </button>
+        <nav class="nav-links-container">
+            <!-- Os links usam sentence-case como sugerido pela Uber Identity -->
+            <a href="#" class="menu-nav-link">Página inicial</a>
+            <a href="#" class="menu-nav-link">Criticidade RCM</a>
+            <a href="#" class="menu-nav-link">Árvore de causas</a>
+            <a href="#" class="menu-nav-link">Casos de estudo</a>
+            <a href="#" class="menu-nav-link">Fale conosco</a>
+        </nav>
+    </div>
+
+    <script>
+        const menuOverlay = document.getElementById('menuOverlay');
+        const openBtn = document.getElementById('openBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const menuLinks = document.querySelectorAll('.menu-nav-link');
+
+        // Configuração da timeline do GSAP para a entrada dos elementos de forma escalonada (Stagger)
+        const menuTimeline = gsap.timeline({ paused: true });
+
+        // Definindo a animação dos links e do fechamento
+        menuTimeline.fromTo(
+            menuLinks, 
+            { 
+                y: 50, 
+                opacity: 0 
+            }, 
+            { 
+                y: 0, 
+                opacity: 1, 
+                duration: 0.6, 
+                stagger: 0.1, 
+                ease: 'power3.out' 
+            }
+        ).fromTo(
+            closeBtn,
+            {
+                opacity: 0,
+                scale: 0.8
+            },
+            {
+                opacity: 1,
+                scale: 1,
+                duration: 0.4,
+                ease: 'power2.out'
+            },
+            "-=0.4" // Sobreposição de tempo na timeline
+        );
+
+        // Função para Abrir o Menu
+        function openMenu() {
+            // Habilita visibilidade adicionando a classe correspondente
+            menuOverlay.classList.add('is-active');
+            menuOverlay.setAttribute('aria-hidden', 'false');
+            
+            // Impede rolagem da página por trás do menu
+            document.body.style.overflow = 'hidden';
+            
+            // Reinicia e executa a timeline de animação dos links
+            menuTimeline.play(0);
+        }
+
+        // Função para Fechar o Menu
+        function closeMenu() {
+            // Animação de saída rápida
+            gsap.to(menuOverlay, {
+                opacity: 0,
+                duration: 0.4,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    menuOverlay.classList.remove('is-active');
+                    menuOverlay.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                    gsap.set(menuOverlay, { clearProps: "opacity" });
+                }
+            });
+        }
+
+        // Event Listeners
+        openBtn.addEventListener('click', openMenu);
+        closeBtn.addEventListener('click', closeMenu);
+
+        // Fechar ao clicar em um link
+        menuLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Fechar com a tecla ESC para melhor acessibilidade
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menuOverlay.classList.contains('is-active')) {
+                closeMenu();
+            }
+        });
+    </script>
+<script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>

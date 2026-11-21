@@ -1,0 +1,450 @@
+# Teclado Virtual Interativo (3D Virtual Keyboard Footer)
+
+Este documento apresenta a especificação técnica, o guia de performance e um exemplo prático completo para a implementação do componente **Teclado Virtual Interativo (3D Virtual Keyboard Footer)**.
+
+---
+
+## 1. Descrição da Funcionalidade
+
+O **Teclado Virtual Interativo** é um componente tridimensional projetado para a seção de rodapé da página. Ele simula de forma realista um teclado mecânico físico com perspectiva e relevo 3D.
+
+### Características Estéticas e Visuais:
+- **Projeção 3D com Perspectiva**: O teclado é renderizado em perspectiva isométrica/tridimensional usando transformações espaciais do CSS. A base do teclado e as teclas parecem repousar em um plano inclinado.
+- **Teclas Táteis Estrudadas (Extrude Height)**: Cada tecla possui um efeito de extrusão simulado usando múltiplas camadas tridimensionais de sombreamento (`box-shadow` empilhado e translação no eixo Z), dando a impressão física de relevo e profundidade.
+- **Feedback de Hover**: Ao passar o cursor do mouse sobre uma tecla, ela responde levantando-se ligeiramente no eixo Z (`translateZ`), criando um efeito tátil pré-pressão.
+- **Feedback de Clique (Pressão e Iluminação)**: Ao clicar em uma tecla virtual (ou pressionar a tecla correspondente no teclado físico), a tecla é transladada para baixo (reduzindo `translateZ`), sua sombra é achatada e ela emite um brilho luminoso em LED.
+- **Associação com Teclado Físico (Global Listener)**: Um ouvinte de eventos global rastreia o evento `keydown`/`keyup` do sistema físico e mapeia para a tecla correspondente na tela, fazendo com que a tecla virtual acenda e afunde em tempo real, digitando texto em uma tela virtual de simulação.
+
+---
+
+## 2. Guia Conceitual de Performance
+
+Para atingir uma taxa de atualização perfeita de **60 a 120 FPS** sem onerar o carregamento ou consumo de bateria, adota-se a seguinte estratégia:
+
+### A. Projeção CSS 3D vs. Custo de Inicialização WebGL
+- **Custo WebGL**: Carregar uma biblioteca de renderização 3D como `Three.js` adiciona cerca de 600KB+ de JavaScript ao bundle inicial, consome memória RAM para compilar shaders, exige inicialização do contexto WebGL e consome ciclos constantes de processamento na GPU para redesenhar a cena em cada frame via `requestAnimationFrame`.
+- **Vantagem CSS 3D**: O uso de elementos HTML simples estruturados com `perspective`, `transform-style: preserve-3d` e `transform: rotateX()` aproveita a árvore de renderização nativa do navegador. O teclado carrega instantaneamente, não tem dependências externas e consome zero ciclos de GPU quando estático.
+
+### B. Aceleração de Hardware para Transições de Teclas
+- **Otimização de Renderização**: As animações de descida e subida das teclas utilizam a propriedade `transform: translateZ()` em vez de manipular posicionamentos geométricos como `top`, `margin-top` ou `padding`.
+- **Vantagem**: A propriedade `transform` é processada inteiramente na thread de composição da GPU, sem disparar estágios de layout (Reflow) ou pintura (Paint) no documento principal, eliminando travamentos de frame.
+
+### C. Delegação de Eventos de Clique (Event Delegation)
+- Em vez de anexar ouvintes de evento `click` individuais em todas as teclas do teclado (o que criaria mais de 30 manipuladores e elevaria o consumo de memória), adicionamos um único ouvinte na base do teclado (`.keyboard-base`).
+- Usando a técnica de propagação de eventos (*Event Bubbling*), identificamos o elemento clicado através de `event.target.closest('.key')`, garantindo alta eficiência de processamento e menor pegada de memória para o coletor de lixo (*garbage collector*).
+
+---
+
+## 3. Código de Exemplo Completo
+
+O código abaixo é um arquivo HTML completo, standalone e pronto para uso. Ele implementa o teclado tridimensional, a captura física de eventos e um visor digital superior onde as palavras digitadas aparecem com efeitos de easter egg para palavras chave.
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teclado Virtual Interativo 3D (3D Virtual Keyboard Footer)</title>
+  <style>
+    :root {
+      --bg-color: #0b0c10;
+      --board-bg: #1f2833;
+      --key-bg: #c5a059; /* Tom dourado premium para teclas de destaque */
+      --key-standard-bg: #2d3748; /* Tom cinza escuro para teclas comuns */
+      --text-color: #ffffff;
+      --text-muted: #8b9bb4;
+      --led-glow: #00ffcc; /* LED verde-água */
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-family);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    p.subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    /* Visor Digital Simulado */
+    .screen-wrapper {
+      width: 100%;
+      max-width: 650px;
+      background: #0d1117;
+      border: 2px solid #21262d;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 2px 8px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .screen-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      letter-spacing: 0.1em;
+    }
+
+    .screen-input {
+      font-family: monospace;
+      font-size: 1.6rem;
+      color: var(--led-glow);
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      white-space: pre-wrap;
+      word-break: break-all;
+      text-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 12px;
+      height: 24px;
+      background-color: var(--led-glow);
+      margin-left: 4px;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      from, to { background-color: transparent }
+      50% { background-color: var(--led-glow); }
+    }
+
+    /* Caixa de Notificação de Easter Eggs */
+    .notification {
+      font-size: 0.9rem;
+      color: #ffb703;
+      margin-top: 10px;
+      min-height: 20px;
+      font-weight: 600;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .notification.active {
+      opacity: 1;
+    }
+
+    /* 3D Contexto do Teclado */
+    .keyboard-wrapper {
+      perspective: 1000px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .keyboard-base {
+      background-color: #161a22;
+      border: 3px solid #30363d;
+      border-radius: 20px;
+      padding: 24px 20px;
+      transform: rotateX(25deg) rotateY(-2deg) rotateZ(0deg);
+      transform-style: preserve-3d;
+      box-shadow: 0 15px 0 #0d1117, 0 35px 50px rgba(0,0,0,0.6);
+      width: 100%;
+      max-width: 700px;
+      transition: transform 0.3s ease;
+    }
+
+    .keyboard-base:hover {
+      transform: rotateX(22deg) rotateY(-1deg) rotateZ(0deg);
+    }
+
+    /* Linhas do Teclado */
+    .key-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+      transform-style: preserve-3d;
+    }
+
+    .key-row:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Tecla Estilo Físico 3D */
+    .key {
+      background-color: var(--key-standard-bg);
+      color: var(--text-color);
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin: 0 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 44px;
+      cursor: pointer;
+      user-select: none;
+      transform-style: preserve-3d;
+      transform: translateZ(12px);
+      box-shadow: 0 5px 0 #1b202b, 0 10px 10px rgba(0,0,0,0.4);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.08s ease;
+      will-change: transform, box-shadow;
+    }
+
+    .key:hover {
+      transform: translateZ(15px);
+      box-shadow: 0 7px 0 #1b202b, 0 12px 12px rgba(0,0,0,0.5);
+      background-color: #3b485c;
+    }
+
+    /* Tecla Ativa ou Pressionada */
+    .key.is-pressed {
+      transform: translateZ(2px);
+      box-shadow: 0 1px 0 #1b202b, 0 3px 5px rgba(0,0,0,0.3);
+      background-color: var(--led-glow) !important;
+      color: #0b0c10;
+      text-shadow: none;
+    }
+
+    /* Estilos Especiais de Tamanho e Destaque */
+    .key.accent {
+      background-color: var(--key-bg);
+      color: #0b0c10;
+    }
+
+    .key.accent:hover {
+      background-color: #dcb36c;
+    }
+
+    .key.backspace {
+      min-width: 80px;
+    }
+
+    .key.tab {
+      min-width: 60px;
+    }
+
+    .key.caps {
+      min-width: 75px;
+    }
+
+    .key.enter {
+      min-width: 80px;
+    }
+
+    .key.space {
+      min-width: 240px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Teclado Virtual Interativo 3D</h1>
+    <p class="subtitle">Use seu teclado físico ou clique nas teclas para digitar no visor digital.</p>
+
+    <!-- Visor de Saída de Digitação -->
+    <div class="screen-wrapper">
+      <div class="screen-title">Simulador de Terminal de Confiabilidade</div>
+      <div class="screen-input"><span id="typedText"></span><span class="cursor"></span></div>
+      <div class="notification" id="notificationBox">CONQUISTA: Mestre da Confiabilidade Ativado!</div>
+    </div>
+
+    <!-- Interface do Teclado -->
+    <div class="keyboard-wrapper">
+      <div class="keyboard-base" id="keyboardBase">
+        
+        <!-- Linha 1 -->
+        <div class="key-row">
+          <div class="key" data-key="KeyQ">Q</div>
+          <div class="key" data-key="KeyW">W</div>
+          <div class="key" data-key="KeyE">E</div>
+          <div class="key" data-key="KeyR">R</div>
+          <div class="key" data-key="KeyT">T</div>
+          <div class="key" data-key="KeyY">Y</div>
+          <div class="key" data-key="KeyU">U</div>
+          <div class="key" data-key="KeyI">I</div>
+          <div class="key" data-key="KeyO">O</div>
+          <div class="key" data-key="KeyP">P</div>
+          <div class="key accent backspace" data-key="Backspace">←</div>
+        </div>
+
+        <!-- Linha 2 -->
+        <div class="key-row">
+          <div class="key" data-key="KeyA">A</div>
+          <div class="key" data-key="KeyS">S</div>
+          <div class="key" data-key="KeyD">D</div>
+          <div class="key" data-key="KeyF">F</div>
+          <div class="key" data-key="KeyG">G</div>
+          <div class="key" data-key="KeyH">H</div>
+          <div class="key" data-key="KeyJ">J</div>
+          <div class="key" data-key="KeyK">K</div>
+          <div class="key" data-key="KeyL">L</div>
+          <div class="key accent enter" data-key="Enter">ENTER</div>
+        </div>
+
+        <!-- Linha 3 -->
+        <div class="key-row">
+          <div class="key" data-key="KeyZ">Z</div>
+          <div class="key" data-key="KeyX">X</div>
+          <div class="key" data-key="KeyC">C</div>
+          <div class="key" data-key="KeyV">V</div>
+          <div class="key" data-key="KeyB">B</div>
+          <div class="key" data-key="KeyN">N</div>
+          <div class="key" data-key="KeyM">M</div>
+        </div>
+
+        <!-- Linha 4 (Barra de Espaço) -->
+        <div class="key-row">
+          <div class="key space" data-key="Space">ESPAÇO</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dicionário de Códigos Físicos para exibição
+    const keyMap = {
+      'KeyQ': 'Q', 'KeyW': 'W', 'KeyE': 'E', 'KeyR': 'R', 'KeyT': 'T', 'KeyY': 'Y', 'KeyU': 'U', 'KeyI': 'I', 'KeyO': 'O', 'KeyP': 'P',
+      'KeyA': 'A', 'KeyS': 'S', 'KeyD': 'D', 'KeyF': 'F', 'KeyG': 'G', 'KeyH': 'H', 'KeyJ': 'J', 'KeyK': 'K', 'KeyL': 'L',
+      'KeyZ': 'Z', 'KeyX': 'X', 'KeyC': 'C', 'KeyV': 'V', 'KeyB': 'B', 'KeyN': 'N', 'KeyM': 'M',
+      'Space': ' '
+    };
+
+    const typedTextEl = document.getElementById('typedText');
+    const notificationBox = document.getElementById('notificationBox');
+    const keyboardBase = document.getElementById('keyboardBase');
+    
+    let currentInputString = "";
+
+    // 1. Processamento de Caracteres Digitados
+    function handleKeyPress(code) {
+      if (code === 'Backspace') {
+        currentInputString = currentInputString.slice(0, -1);
+      } else if (code === 'Enter') {
+        checkEasterEgg(currentInputString);
+        currentInputString = ""; // Limpa ao dar enter
+      } else if (keyMap[code] !== undefined) {
+        // Limita tamanho para caber no display simulado
+        if (currentInputString.length < 35) {
+          currentInputString += keyMap[code];
+        }
+      }
+      
+      typedTextEl.textContent = currentInputString;
+    }
+
+    // 2. Verificação de Ocorrência de Easter Eggs Reais
+    function checkEasterEgg(input) {
+      const formattedInput = input.trim().toUpperCase();
+      
+      if (formattedInput === 'RCM') {
+        triggerNotification('EASTER EGG: Criticidade e Modos de Falha mapeados com RCM!');
+        glowAllKeys('#ff5a00');
+      } else if (formattedInput === 'DEBERSON') {
+        triggerNotification('EASTER EGG: Mentoria Prática em Confiabilidade com Deberson Luis!');
+        glowAllKeys('#007aff');
+      } else if (formattedInput === 'CONFIABILIDADE') {
+        triggerNotification('EASTER EGG: Ativos sob controle e quebras minimizadas!');
+        glowAllKeys('#ffb703');
+      } else {
+        triggerNotification('Comando enviado ao terminal com sucesso.');
+      }
+    }
+
+    function triggerNotification(text) {
+      notificationBox.textContent = text;
+      notificationBox.classList.add('active');
+      setTimeout(() => {
+        notificationBox.classList.remove('active');
+      }, 4000);
+    }
+
+    // Pisca as teclas com cor customizada para efeito visual
+    function glowAllKeys(color) {
+      const keys = document.querySelectorAll('.key');
+      keys.forEach(key => {
+        key.style.backgroundColor = color;
+        setTimeout(() => {
+          key.style.backgroundColor = '';
+        }, 800);
+      });
+    }
+
+    // 3. Ouvintes Globais do Teclado Físico
+    window.addEventListener('keydown', (e) => {
+      let code = e.code;
+      // Compatibilidade para mapear tecla de espaço normal
+      if (e.key === ' ') code = 'Space';
+
+      const keyEl = document.querySelector(`.key[data-key="${code}"]`);
+      if (keyEl) {
+        keyEl.classList.add('is-pressed');
+        handleKeyPress(code);
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      let code = e.code;
+      if (e.key === ' ') code = 'Space';
+
+      const keyEl = document.querySelector(`.key[data-key="${code}"]`);
+      if (keyEl) {
+        keyEl.classList.remove('is-pressed');
+      }
+    });
+
+    // 4. Delegação de Eventos de Clique para Teclas Virtuais
+    keyboardBase.addEventListener('mousedown', (e) => {
+      const keyEl = e.target.closest('.key');
+      if (keyEl) {
+        const code = keyEl.getAttribute('data-key');
+        keyEl.classList.add('is-pressed');
+        handleKeyPress(code);
+        
+        // Mantém pressionado até soltar o clique
+        const releaseHandler = () => {
+          keyEl.classList.remove('is-pressed');
+          window.removeEventListener('mouseup', releaseHandler);
+        };
+        window.addEventListener('mouseup', releaseHandler);
+      }
+    });
+  </script>
+</body>
+</html>
+```

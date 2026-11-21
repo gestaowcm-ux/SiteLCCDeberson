@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Apresentador - Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      background-color: var(--color-canvas);
+      color: var(--color-ink);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .presenter-header {
+      background-color: var(--color-canvas-softer);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--spacing-md) var(--spacing-2xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .class-info h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-ink);
+    }
+
+    .class-info p {
+      font-size: 11px;
+      color: var(--color-body);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .presenter-stats {
+      display: flex;
+      gap: var(--spacing-md);
+      align-items: center;
+    }
+
+    .timer-box {
+      font-family: monospace;
+      font-size: 20px;
+      background: var(--color-canvas);
+      border: 1px solid var(--color-border);
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--rounded-md);
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    /* Main split container */
+    .presenter-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      height: calc(100% - 70px);
+    }
+
+    /* Notes panel (Obsidian styled) */
+    .notes-panel {
+      padding: var(--spacing-3xl);
+      overflow-y: auto;
+      border-right: 1px solid var(--color-border);
+      background: var(--color-canvas);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .notes-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--spacing-xs);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .notes-panel h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin: 0;
+    }
+
+    .btn-action-small {
+      background-color: var(--color-canvas-soft);
+      border: 1px solid var(--color-border);
+      color: var(--color-ink);
+      padding: 6px 16px;
+      border-radius: var(--rounded-pill);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .btn-action-small:hover {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border-color: var(--color-primary);
+    }
+
+    .notes-content {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--color-body);
+    }
+
+    .notes-content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-ink);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .notes-content p {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .notes-content ul {
+      margin-left: var(--spacing-xl);
+      margin-top: var(--spacing-xs);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .no-notes {
+      color: var(--color-mute);
+      font-style: italic;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    /* Navigation pane */
+    .navigation-pane {
+      background-color: var(--color-canvas-softer);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .pane-header {
+      padding: var(--spacing-xl);
+      border-bottom: 1px solid var(--color-border);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-body);
+    }
+
+    .slides-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-sm);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .slide-item {
+      background: var(--color-canvas);
+      border: 1px solid var(--color-border);
+      padding: var(--spacing-md);
+      border-radius: var(--rounded-md);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      justify-content: space-between;
+      color: var(--color-body);
+    }
+
+    .slide-item:hover {
+      background: var(--color-canvas-soft);
+      color: var(--color-ink);
+    }
+
+    .slide-item.active {
+      border-color: var(--color-primary);
+      background: var(--color-canvas-soft);
+      color: var(--color-primary);
+    }
+
+    .controls-footer {
+      padding: var(--spacing-xl);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      gap: var(--spacing-sm);
+      background-color: var(--color-canvas-softer);
+    }
+
+    /* Botão estilo Uber - Pill Shape */
+    .btn-nav {
+      flex: 1;
+      background-color: var(--color-canvas);
+      border: 1px solid var(--color-border);
+      color: var(--color-ink);
+      padding: var(--spacing-md) var(--spacing-xl);
+      border-radius: var(--rounded-pill);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .btn-nav:hover {
+      background-color: var(--color-canvas-soft);
+    }
+
+    .btn-primary-nav {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary-nav:hover {
+      background-color: var(--color-black-elevated);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Presenter Header -->
+  <header class="presenter-header">
+    <div class="class-info">
+      <p id="module-pretitle">Módulo Ativo</p>
+      <h1 id="module-title">Capa do Curso — LCC</h1>
+    </div>
+    <div class="presenter-stats">
+      <span class="timer-box" id="elapsed-timer">00:00:00</span>
+    </div>
+  </header>
+
+  <!-- Split screen layout -->
+  <main class="presenter-grid">
+    <!-- Notes Panel (Left) -->
+    <div class="notes-panel">
+      <div class="notes-panel-header">
+        <h2>Notas do Orador</h2>
+        <button class="btn-action-small" id="btn-edit-notes">Editar Notas</button>
+      </div>
+      
+      <!-- View Mode -->
+      <div id="notes-content" class="notes-content">
+        <div class="no-notes">Notas do slide ativo carregarão aqui ao iniciar a apresentação.</div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div id="notes-edit-container" style="display: none; flex-direction: column; gap: var(--spacing-md); height: 100%;">
+        <textarea id="notes-editor" style="width: 100%; flex: 1; min-height: 300px; background-color: var(--color-canvas-soft); color: var(--color-ink); border: 1px solid var(--color-border); border-radius: var(--rounded-md); padding: var(--spacing-md); font-family: monospace; font-size: 14.5px; line-height: 1.6; resize: vertical;" placeholder="Escreva as notas em HTML aqui (ex: <h3>Título</h3><p>Descrição...</p>)"></textarea>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn-nav btn-primary-nav" id="btn-save-notes" style="flex: 0 0 120px; font-size: 13px; height: 38px;">Salvar</button>
+          <button class="btn-nav" id="btn-cancel-edit" style="flex: 0 0 120px; font-size: 13px; height: 38px;">Cancelar</button>
+          <span id="save-status" style="margin-left: var(--spacing-sm); font-size: 13px; font-weight: 600; opacity: 0; transition: opacity 0.2s ease;"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide Navigation (Right) -->
+    <div class="navigation-pane">
+      <div class="pane-header">Navegação Rápida de Slides</div>
+      <div class="slides-list" id="slides-list">
+        <!-- Slide list will be populated dynamically -->
+      </div>
+      <div class="controls-footer">
+        <button class="btn-nav" id="btn-prev">
+          ← Anterior
+        </button>
+        <button class="btn-nav btn-primary-nav" id="btn-next">
+          Próximo →
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const channel = new BroadcastChannel('lcc_classroom_presentation');
+    
+    const notesContent = document.getElementById('notes-content');
+    const slidesList = document.getElementById('slides-list');
+    const moduleTitle = document.getElementById('module-title');
+    const elapsedTimer = document.getElementById('elapsed-timer');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    // UI elements for editing notes
+    const btnEditNotes = document.getElementById('btn-edit-notes');
+    const notesEditContainer = document.getElementById('notes-edit-container');
+    const notesEditor = document.getElementById('notes-editor');
+    const btnSaveNotes = document.getElementById('btn-save-notes');
+    const btnCancelEdit = document.getElementById('btn-cancel-edit');
+    const saveStatus = document.getElementById('save-status');
+
+    let currentSlide = 0;
+    let totalSlides = 0;
+    let activeFile = ''; // Guardar o arquivo de aula ativo
+    let isEditing = false;
+
+    // 1. Sync Timer from Main Window
+    let startTime = Date.now();
+    setInterval(() => {
+      const elapsedMs = Date.now() - startTime;
+      const totalSecs = Math.floor(elapsedMs / 1000);
+      const secs = totalSecs % 60;
+      const mins = Math.floor(totalSecs / 60) % 60;
+      const hours = Math.floor(totalSecs / 3600);
+
+      const pad = (n) => n.toString().padStart(2, '0');
+      elapsedTimer.textContent = `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+    }, 1000);
+
+    // 2. Broadcast Channel communication
+    channel.onmessage = (event) => {
+      const { type, slideIndex, notes, title, totalSlides: newTotal, slideTitles } = event.data;
+      
+      if (type === 'RESET_MODULE') {
+        moduleTitle.textContent = title;
+        notesContent.innerHTML = '<div class="no-notes">Aguardando carregamento da primeira seção...</div>';
+        slidesList.innerHTML = '';
+        currentSlide = 0;
+        totalSlides = 0;
+        activeFile = '';
+        exitEditMode();
+      }
+      
+      if (type === 'UPDATE_NOTES') {
+        currentSlide = slideIndex;
+        if (newTotal) totalSlides = newTotal;
+        if (event.data.activeFile) activeFile = event.data.activeFile;
+
+        // Resetar modo de edição ao navegar
+        exitEditMode();
+        
+        // Carrega notas no editor
+        notesEditor.value = notes || '';
+        
+        // Dynamically build slide list if not already populated or if total changed
+        const slides = document.querySelectorAll('.slide-item');
+        const count = totalSlides || 10; // fallback to 10
+        
+        if (slides.length !== count) {
+          slidesList.innerHTML = '';
+          for (let i = 0; i < count; i++) {
+            const div = document.createElement('div');
+            div.className = `slide-item ${i === currentSlide ? 'active' : ''}`;
+            const labelText = (Array.isArray(slideTitles) && slideTitles[i]) ? slideTitles[i] : `${i + 1}`;
+            div.innerHTML = `<span>${labelText}</span>`;
+            div.addEventListener('click', () => {
+              navigate(i);
+            });
+            slidesList.appendChild(div);
+          }
+        } else {
+          document.querySelectorAll('.slide-item').forEach((item, idx) => {
+            const spanEl = item.querySelector('span');
+            if (spanEl && Array.isArray(slideTitles) && slideTitles[idx]) {
+              spanEl.textContent = slideTitles[idx];
+            }
+            if (idx === currentSlide) {
+              item.classList.add('active');
+              item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+              item.classList.remove('active');
+            }
+          });
+        }
+
+        // Render notes
+        if (notes && notes.trim() !== '') {
+          notesContent.innerHTML = notes;
+        } else {
+          notesContent.innerHTML = '<div class="no-notes">Nenhuma nota para este slide.</div>';
+        }
+      }
+    };
+
+    function navigate(index) {
+      if (index < 0) return;
+      channel.postMessage({ type: 'GOTO_SLIDE', slideIndex: index });
+    }
+
+    btnPrev.addEventListener('click', () => {
+      if (currentSlide > 0) {
+        navigate(currentSlide - 1);
+      }
+    });
+
+    btnNext.addEventListener('click', () => {
+      navigate(currentSlide + 1);
+    });
+
+    // 3. Notes Editing Logic
+    function enterEditMode() {
+      if (!activeFile) {
+        alert('Não é possível editar: nenhuma aula ativa carregada.');
+        return;
+      }
+      isEditing = true;
+      notesContent.style.display = 'none';
+      notesEditContainer.style.display = 'flex';
+      btnEditNotes.textContent = 'Visualizar Notas';
+      notesEditor.focus();
+    }
+
+    function exitEditMode() {
+      isEditing = false;
+      notesContent.style.display = 'block';
+      notesEditContainer.style.display = 'none';
+      btnEditNotes.textContent = 'Editar Notas';
+      saveStatus.style.opacity = '0';
+    }
+
+    btnEditNotes.addEventListener('click', () => {
+      if (isEditing) {
+        exitEditMode();
+      } else {
+        enterEditMode();
+      }
+    });
+
+    btnCancelEdit.addEventListener('click', exitEditMode);
+
+    async function saveNotes() {
+      if (!activeFile) {
+        showStatus('Erro: Nenhuma aula ativa.', 'var(--color-danger)');
+        return;
+      }
+
+      const updatedNotes = notesEditor.value;
+      showStatus('Salvando...', 'var(--color-body)');
+      
+      try {
+        const response = await fetch('/save-notes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            file: activeFile,
+            slideIndex: currentSlide,
+            notes: updatedNotes
+          })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+          showStatus('Salvo com sucesso!', 'var(--color-primary)');
+          
+          if (updatedNotes.trim() !== '') {
+            notesContent.innerHTML = updatedNotes;
+          } else {
+            notesContent.innerHTML = '<div class="no-notes">Nenhuma nota para este slide.</div>';
+          }
+
+          // Notifica a janela principal (app.js) para sincronizar o DOM do slide no iframe
+          channel.postMessage({
+            type: 'NOTES_EDITED',
+            slideIndex: currentSlide,
+            file: activeFile,
+            notes: updatedNotes
+          });
+
+          setTimeout(() => {
+            exitEditMode();
+          }, 800);
+        } else {
+          showStatus(`Erro: ${result.error || 'Falha ao salvar'}`, 'var(--color-danger)');
+        }
+      } catch (err) {
+        console.error('Save notes error:', err);
+        showStatus('Erro de conexão com o servidor.', 'var(--color-danger)');
+      }
+    }
+
+    btnSaveNotes.addEventListener('click', saveNotes);
+
+    function showStatus(text, color) {
+      saveStatus.textContent = text;
+      saveStatus.style.color = color;
+      saveStatus.style.opacity = '1';
+    }
+  </script>
+</body>
+</html>

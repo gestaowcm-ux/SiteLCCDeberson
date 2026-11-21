@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seção 9: Dupla Perspectiva (Two Wins) — Padrão Zig.ai</title>
+  <meta name="description" content="Componente interativo de dupla perspectiva (Vendedor vs Líder) com ilustração central, círculos de foco e tooltips conectados por linhas vetoriais SVG">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    :root {
+      --zig-green-500: #08906c;
+      --zig-green-400: #34bf99;
+      --zig-green-200: #b2ebd9;
+      --zig-blue-400: #64b5f6;
+      --zig-blue-200: #bbdefb;
+      --zig-black: #0c0f12;
+      --zig-dark-card: #15191d;
+      --zig-dark-border: rgba(255, 255, 255, 0.08);
+      --zig-gray-400: #9aa1a9;
+      --zig-white: #ffffff;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--zig-black);
+      color: var(--zig-white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      overflow-x: hidden;
+    }
+
+    .wins-section {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header */
+    .section-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 50px;
+    }
+
+    .section-chip-dark {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--zig-dark-border);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--zig-green-400);
+    }
+
+    .title-l {
+      font-size: clamp(2rem, 3.8vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .subtitle-l {
+      font-size: 1.15rem;
+      color: var(--zig-gray-400);
+      max-width: 600px;
+      font-weight: 500;
+    }
+
+    /* Switch de Perspectiva (Fácil visualização no desktop/mobile) */
+    .perspective-toggle {
+      display: flex;
+      gap: 12px;
+      background: var(--zig-dark-card);
+      padding: 6px;
+      border-radius: 100px;
+      border: 1px solid var(--zig-dark-border);
+      margin-bottom: 30px;
+    }
+
+    .toggle-btn {
+      padding: 10px 24px;
+      border-radius: 100px;
+      border: none;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--zig-gray-400);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-btn.active.rep {
+      background: var(--zig-green-500);
+      color: var(--zig-white);
+      box-shadow: 0 4px 16px rgba(8, 144, 108, 0.4);
+    }
+
+    .toggle-btn.active.leader {
+      background: #1e88e5;
+      color: var(--zig-white);
+      box-shadow: 0 4px 16px rgba(30, 136, 229, 0.4);
+    }
+
+    .toggle-btn.active.all {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--zig-white);
+    }
+
+    /* Container dos Círculos e Tooltips */
+    .win-circles-wrapp {
+      position: relative;
+      width: 100%;
+      min-height: 520px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    /* SVG Overlay para as Linhas Conectoras */
+    .win-svg-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Colunas de Tooltips */
+    .tooltips-column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      z-index: 2;
+      width: 320px;
+    }
+
+    .win-tooltip {
+      background: var(--zig-dark-card);
+      border: 1px solid var(--zig-dark-border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .win-tooltip.is-rep {
+      border-left: 4px solid var(--zig-green-500);
+    }
+
+    .win-tooltip.is-leader {
+      border-right: 4px solid var(--zig-blue-400);
+      text-align: right;
+    }
+
+    .win-tooltip:hover {
+      transform: translateY(-3px);
+      background: #1b2126;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .win-tooltip p {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.45;
+    }
+
+    .tooltip-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 800;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+
+    .is-rep .tooltip-badge { color: var(--zig-green-400); }
+    .is-leader .tooltip-badge { color: var(--zig-blue-400); }
+
+    /* Círculo Central / Visual Showcase */
+    .central-stage {
+      position: relative;
+      width: 380px;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .orbit-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      animation: rotateOrbit 40s linear infinite;
+    }
+
+    @keyframes rotateOrbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .central-core {
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #243038, #11161a);
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      box-shadow: 0 0 50px rgba(8, 144, 108, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.6);
+      position: relative;
+    }
+
+    .core-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(8, 144, 108, 0.2);
+      color: var(--zig-green-400);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .core-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--zig-white);
+      margin-bottom: 6px;
+    }
+
+    .core-subtitle {
+      font-size: 0.8rem;
+      color: var(--zig-gray-400);
+      line-height: 1.3;
+    }
+
+    .dual-badges {
+      position: absolute;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      bottom: -15px;
+      padding: 0 20px;
+    }
+
+    .dual-tag {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .dual-tag.rep {
+      background: var(--zig-green-500);
+      color: var(--zig-white);
+    }
+
+    .dual-tag.leader {
+      background: #1e88e5;
+      color: var(--zig-white);
+    }
+
+    /* Responsividade */
+    @media (max-width: 992px) {
+      .win-circles-wrapp {
+        flex-direction: column;
+        gap: 40px;
+      }
+      .tooltips-column {
+        width: 100%;
+        max-width: 500px;
+      }
+      .win-tooltip.is-leader {
+        text-align: left;
+        border-right: 1px solid var(--zig-dark-border);
+        border-left: 4px solid var(--zig-blue-400);
+      }
+      .win-svg-overlay {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="wins-section">
+    
+    <!-- Cabeçalho -->
+    <header class="section-header">
+      <div class="section-chip-dark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span>One platform. Two wins</span>
+      </div>
+      <h2 class="title-l">The rep closes.<br><span style="color: var(--zig-green-400);">The leader has their back.</span></h2>
+      <p class="subtitle-l">The rep stops administrating. The leader stops guessing. The number starts moving.</p>
+    </header>
+
+    <!-- Filtros de Visualização -->
+    <div class="perspective-toggle">
+      <button class="toggle-btn active all" onclick="filterPerspective('all', this)">Ambos os Lados</button>
+      <button class="toggle-btn rep" onclick="filterPerspective('rep', this)">Para o Vendedor</button>
+      <button class="toggle-btn leader" onclick="filterPerspective('leader', this)">Para o Líder</button>
+    </div>
+
+    <!-- Estrutura Interativa com Linhas SVG -->
+    <div class="win-circles-wrapp" id="perspectiveStage">
+      
+      <!-- SVG para conexões vetoriais -->
+      <svg class="win-svg-overlay" id="linesSvg"></svg>
+
+      <!-- Coluna Esquerda: O Vendedor -->
+      <div class="tooltips-column tooltips-left">
+        
+        <div class="win-tooltip is-rep" id="tip-rep-1">
+          <span class="tooltip-badge">Automação Diária</span>
+          <p>60+ hours back. Every month. Automatically.</p>
+        </div>
+
+        <div class="win-tooltip is-rep" id="tip-rep-2">
+          <span class="tooltip-badge">Inteligência Contínua</span>
+          <p>Finds leads, drafts outreach, joins calls, writes follow-ups.</p>
+        </div>
+
+        <div class="win-tooltip is-rep" id="tip-rep-3">
+          <span class="tooltip-badge">Mobilidade Total</span>
+          <p>Wherever you sell — desktop, phone, voice, or text.</p>
+        </div>
+
+      </div>
+
+      <!-- Núcleo Central / IA Hub -->
+      <div class="central-stage" id="centralCore">
+        <div class="orbit-ring"></div>
+        <div class="central-core">
+          <div class="core-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <h3 class="core-title">Zig AI Engine</h3>
+          <p class="core-subtitle">Conexão perfeita entre execução de campo e governança de pipeline</p>
+          <div class="dual-badges">
+            <span class="dual-tag rep">Vendedor</span>
+            <span class="dual-tag leader">Líder</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna Direita: O Líder -->
+      <div class="tooltips-column tooltips-right">
+        
+        <div class="win-tooltip is-leader" id="tip-lead-1">
+          <span class="tooltip-badge">Previsibilidade</span>
+          <p>Pipeline that finally mirrors reality. CRM that survives the quarter.</p>
+        </div>
+
+        <div class="win-tooltip is-leader" id="tip-lead-2">
+          <span class="tooltip-badge">Consolidação</span>
+          <p>One layer that replaces Apollo, Gong, Salesloft, and the notetaker.</p>
+        </div>
+
+        <div class="win-tooltip is-leader" id="tip-lead-3">
+          <span class="tooltip-badge">Retenção de Aprendizado</span>
+          <p>At month 12, knows your deals better than any new hire.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <script>
+    // Desenho dinâmico das linhas de conexão SVG
+    function drawConnectionLines() {
+      const svg = document.getElementById('linesSvg');
+      const stage = document.getElementById('perspectiveStage');
+      const core = document.getElementById('centralCore');
+      if (!svg || !stage || !core || window.innerWidth < 992) return;
+
+      svg.innerHTML = '';
+      const stageRect = stage.getBoundingClientRect();
+      const coreRect = core.getBoundingClientRect();
+      const coreCenterX = coreRect.left - stageRect.left + coreRect.width / 2;
+      const coreCenterY = coreRect.top - stageRect.top + coreRect.height / 2;
+      const coreRadius = coreRect.width / 2;
+
+      // Conexões da Esquerda (Rep)
+      ['tip-rep-1', 'tip-rep-2', 'tip-rep-3'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (!el || el.style.opacity === '0.2') return;
+        const rect = el.getBoundingClientRect();
+        const startX = rect.right - stageRect.left;
+        const startY = rect.top - stageRect.top + rect.height / 2;
+        
+        // Ponto alvo no círculo
+        const angle = (-30 + idx * 30) * (Math.PI / 180);
+        const endX = coreCenterX - Math.cos(angle) * (coreRadius - 10);
+        const endY = coreCenterY + Math.sin(angle) * (coreRadius - 10);
+
+        createSvgCurve(startX, startY, endX, endY, '#08906c');
+      });
+
+      // Conexões da Direita (Leader)
+      ['tip-lead-1', 'tip-lead-2', 'tip-lead-3'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (!el || el.style.opacity === '0.2') return;
+        const rect = el.getBoundingClientRect();
+        const startX = rect.left - stageRect.left;
+        const startY = rect.top - stageRect.top + rect.height / 2;
+
+        const angle = (-30 + idx * 30) * (Math.PI / 180);
+        const endX = coreCenterX + Math.cos(angle) * (coreRadius - 10);
+        const endY = coreCenterY + Math.sin(angle) * (coreRadius - 10);
+
+        createSvgCurve(startX, startY, endX, endY, '#64b5f6');
+      });
+    }
+
+    function createSvgCurve(x1, y1, x2, y2, color) {
+      const svg = document.getElementById('linesSvg');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const midX = (x1 + x2) / 2;
+      const d = `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
+      
+      path.setAttribute('d', d);
+      path.setAttribute('stroke', color);
+      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('stroke-dasharray', '4 4');
+      path.setAttribute('fill', 'none');
+      path.setAttribute('opacity', '0.7');
+      svg.appendChild(path);
+
+      // Ponto no final
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', x2);
+      circle.setAttribute('cy', y2);
+      circle.setAttribute('r', '4');
+      circle.setAttribute('fill', color);
+      svg.appendChild(circle);
+    }
+
+    // Filtrar Perspectiva
+    function filterPerspective(type, btn) {
+      document.querySelectorAll('.toggle-btn').forEach(b => {
+        b.className = 'toggle-btn ' + (b.classList.contains('rep') ? 'rep' : b.classList.contains('leader') ? 'leader' : 'all');
+      });
+      btn.classList.add('active');
+
+      const repCards = document.querySelectorAll('.tooltips-left .win-tooltip');
+      const leadCards = document.querySelectorAll('.tooltips-right .win-tooltip');
+
+      if (type === 'rep') {
+        repCards.forEach(c => c.style.opacity = '1');
+        leadCards.forEach(c => c.style.opacity = '0.2');
+      } else if (type === 'leader') {
+        repCards.forEach(c => c.style.opacity = '0.2');
+        leadCards.forEach(c => c.style.opacity = '1');
+      } else {
+        repCards.forEach(c => c.style.opacity = '1');
+        leadCards.forEach(c => c.style.opacity = '1');
+      }
+
+      drawConnectionLines();
+    }
+
+    window.addEventListener('load', drawConnectionLines);
+    window.addEventListener('resize', drawConnectionLines);
+  </script>
+
+</body>
+</html>

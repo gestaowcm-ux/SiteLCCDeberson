@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo: Sliding Folder Deck (Arquivo Fichário)</title>
+    <!-- Fonte Google Inter & JetBrains Mono para acabamento técnico editorial -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #080808;
+            --bg-card: #0f0f11;
+            --bg-card-alt: #141418;
+            --border-line: rgba(255, 255, 255, 0.12);
+            --border-line-active: rgba(255, 255, 255, 0.35);
+            --text-main: #f0f0f2;
+            --text-muted: #8e8e99;
+            --accent: #e2e2e8;
+            --tab-width: 76px;
+            --total-tabs: 5;
+            --header-h: 70px;
+            --ease-dossier: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar de controle / Metadados */
+        .topbar {
+            height: var(--header-h);
+            border-bottom: 1px solid var(--border-line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            background: rgba(8, 8, 8, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .topbar-badge {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+        }
+
+        .topbar-info {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 20px;
+        }
+
+        .topbar-kbd {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-line);
+            padding: 2px 7px;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        /* Container principal do Deck de Pastas */
+        .dossier-viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: calc(100vh - var(--header-h));
+            overflow: hidden;
+            background: #050506;
+        }
+
+        /* Cada Pasta / Seção */
+        .folder-section {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            min-height: 100%;
+            width: calc(100vw - (var(--total-tabs) * var(--tab-width)));
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-line);
+            display: flex;
+            transform: translateX(100%);
+            transition: transform 0.85s var(--ease-dossier), box-shadow 0.4s ease;
+            box-shadow: -15px 0 35px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+        }
+
+        /* Posicionamento inicial estático das abas fixas */
+        .folder-section[data-index="0"] { left: calc(var(--tab-width) * 0); z-index: 11; transform: translateX(0%); }
+        .folder-section[data-index="1"] { left: calc(var(--tab-width) * 1); z-index: 12; }
+        .folder-section[data-index="2"] { left: calc(var(--tab-width) * 2); z-index: 13; }
+        .folder-section[data-index="3"] { left: calc(var(--tab-width) * 3); z-index: 14; }
+        .folder-section[data-index="4"] { left: calc(var(--tab-width) * 4); z-index: 15; }
+
+        .folder-section.is-active {
+            border-left-color: var(--border-line-active);
+        }
+
+        /* Aba Vertical Clicável (A orelha da pasta) */
+        .folder-tab {
+            width: var(--tab-width);
+            height: 100%;
+            flex-shrink: 0;
+            background: #09090b;
+            border-right: 1px solid var(--border-line);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 0;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .folder-tab:hover {
+            background: #121216;
+        }
+
+        .folder-tab::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            background: transparent;
+            transition: background 0.3s ease;
+        }
+
+        .folder-section.is-active .folder-tab::after {
+            background: #ffffff;
+        }
+
+        .tab-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #71717a;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .folder-section.is-active .tab-number,
+        .folder-tab:hover .tab-number {
+            color: #ffffff;
+            transform: scale(1.08);
+        }
+
+        .tab-title {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: #82828e;
+            white-space: nowrap;
+            transition: color 0.3s ease, letter-spacing 0.3s ease;
+        }
+
+        .folder-section.is-active .tab-title,
+        .folder-tab:hover .tab-title {
+            color: #ffffff;
+            letter-spacing: 4.5px;
+        }
+
+        .tab-icon-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .folder-section.is-active .tab-icon-indicator {
+            background: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            transform: scale(1.3);
+        }
+
+        /* Conteúdo Interno da Pasta (Folha impressa) */
+        .folder-body {
+            flex: 1;
+            display: flex;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, #15151b 0%, #0a0a0c 100%);
+            opacity: 0.3;
+            transform: scale(0.985);
+            transition: opacity 0.6s ease, transform 0.6s var(--ease-dossier);
+        }
+
+        .folder-section.is-active .folder-body {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Coluna Esquerda: Animação Geométrica / Wireframe */
+        .body-art-panel {
+            flex: 1;
+            max-width: 45%;
+            height: 100%;
+            border-right: 1px solid var(--border-line);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .art-watermark {
+            position: absolute;
+            top: 24px;
+            left: 28px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .art-svg-wrapper {
+            width: 240px;
+            height: 240px;
+            position: relative;
+        }
+
+        .art-svg-wrapper svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .spin-slow {
+            animation: spin 35s linear infinite;
+            transform-origin: center;
+        }
+
+        .spin-reverse {
+            animation: spinRev 25s linear infinite;
+            transform-origin: center;
+        }
+
+        .pulse-slow {
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes spinRev {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* Coluna Direita: Conteúdo Editorial e Tipografia */
+        .body-text-panel {
+            flex: 1.2;
+            height: 100%;
+            overflow-y: auto;
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        /* Scrollbar customizada ultra-fina */
+        .body-text-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .body-text-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .body-text-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        .dossier-stamp {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 14px;
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 1.8px;
+            color: #a1a1aa;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        .dossier-stamp-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .dossier-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.3rem;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+        }
+
+        .dossier-subtitle {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #d4d4d8;
+            font-weight: 300;
+            border-left: 2px solid rgba(255, 255, 255, 0.3);
+            padding-left: 18px;
+        }
+
+        .dossier-divider {
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+            margin: 8px 0;
+        }
+
+        .dossier-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .dossier-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-line);
+            padding: 20px;
+            border-radius: 4px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .dossier-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .card-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: #71717a;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 6px;
+        }
+
+        .card-val {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #f4f4f5;
+        }
+
+        .card-desc {
+            font-size: 0.82rem;
+            color: #a1a1aa;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        /* Acordeom de tópicos internos */
+        .topics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .topic-item {
+            border: 1px solid var(--border-line);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .topic-header {
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .topic-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .topic-content {
+            padding: 0 18px 14px;
+            font-size: 0.85rem;
+            color: #a1a1aa;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .topic-item.open .topic-content {
+            display: block;
+        }
+
+        .topic-item.open .topic-header {
+            color: #fff;
+            border-bottom: 1px solid var(--border-line);
+        }
+
+        /* Footer com navegação rápida */
+        .footer-nav {
+            position: absolute;
+            bottom: 24px;
+            right: 32px;
+            display: flex;
+            gap: 12px;
+            z-index: 150;
+        }
+
+        .btn-action {
+            background: rgba(20, 20, 24, 0.85);
+            border: 1px solid var(--border-line);
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        /* Responsividade Mobile / Tablet */
+        @media (max-width: 900px) {
+            :root {
+                --tab-width: 50px;
+            }
+            .topbar-info { display: none; }
+            .body-art-panel { display: none; }
+            .body-text-panel { padding: 30px 24px; }
+            .dossier-title { font-size: 1.7rem; }
+            .dossier-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de topo com metadados do projeto -->
+    <header class="topbar">
+        <div class="topbar-brand">
+            <span class="topbar-badge"></span>
+            <span>G!Dossier Deck &bull; Componente de Pastas Interativas</span>
+        </div>
+        <div class="topbar-info">
+            <span>Navegação: <span class="topbar-kbd">&larr;</span> <span class="topbar-kbd">&rarr;</span> ou teclas <span class="topbar-kbd">1</span> a <span class="topbar-kbd">5</span></span>
+        </div>
+    </header>
+
+    <!-- Viewport das Pastas / Sliding Deck -->
+    <main class="dossier-viewport" id="dossierViewport">
+
+        <!-- PASTA 01: MANIFESTO -->
+        <section class="folder-section is-active" data-index="0">
+            <div class="folder-tab" title="01 / Manifesto">
+                <span class="tab-number">01</span>
+                <span class="tab-title">Manifesto</span>
+                <span class="tab-icon-indicator"></span>
+            </div>
+            <div class="folder-body">
+                <div class="body-art-panel">
+                    <div class="art-watermark">DOC_REF #001 // PHILOSOPHY</div>
+                    <div class="art-svg-wrapper">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#e4e4e7" stroke-width="0.8">
+                            <circle cx="50" cy="50" r="45" stroke-dasharray="2 3" class="spin-slow" />
+                            <circle cx="50" cy="50" r="32" stroke="#fff" class="pulse-slow" />
+                            <polygon points="50,15 80,75 20,75" stroke="rgba(255,255,255,0.4)" class="spin-reverse" />
+                            <line x1="50" y1="0" x2="50" y2="100" stroke="rgba(255,255,255,0.2)" />
+                            <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(255,255,255,0.2)" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="body-text-panel">
+                    <div class="dossier-stamp">
+                        <span class="dossier-stamp-dot"></span>
+                        <span>Seção Primária &bull; Manifesto de Criação</span>
+                    </div>
+                    <h1 class="dossier-title">Ruptura &amp; Imaginação Técnica</h1>
+                    <p class="dossier-subtitle">
+                        Adaptar e transformar constantemente, rompendo o status quo através de uma união precisa entre arte cenográfica e rigor de engenharia.
+                    </p>
+                    <div class="dossier-divider"></div>
+                    <div class="dossier-grid">
+                        <div class="dossier-card">
+                            <div class="card-label">01.1 / Propósito</div>
+                            <div class="card-val">Visão Sem Fronteiras</div>
+                            <div class="card-desc">Redefinir como interfaces físicas e digitais contam histórias complexas sem atrito.</div>
+                        </div>
+                        <div class="dossier-card">
+                            <div class="card-label">01.2 / Execução</div>
+                            <div class="card-val">Precisão Industrial</div>
+                            <div class="card-desc">Controle milimétrico de cada pixel, transição e elemento interativo.</div>
+                        </div>
+                    </div>
+                    <div class="topics-list">
+                        <div class="topic-item open">
+                            <div class="topic-header">
+                                <span>Princípio 01: Menos, porém excelente</span>
+                                <span>+</span>
+                            </div>
+                            <div class="topic-content">
+                                Cada componente visual possui função clara. A navegação horizontal por pastas transmite fisicalidade e foco no documento selecionado.
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="topic-header">
+                                <span>Princípio 02: Transições Orgânicas</span>
+                                <span>+</span>
+                            </div>
+                            <div class="topic-content">
+                                A aceleração exponencial com desaceleração quintic simula o peso e o atrito real de gavetas e papéis de arquivo.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PASTA 02: VISÃO -->
+        <section class="folder-section" data-index="1">
+            <div class="folder-tab" title="02 / Visão">
+                <span class="tab-number">02</span>
+                <span class="tab-title">Visão</span>
+                <span class="tab-icon-indicator"></span>
+            </div>
+            <div class="folder-body">
+                <div class="body-art-panel">
+                    <div class="art-watermark">DOC_REF #002 // STRATEGY</div>
+                    <div class="art-svg-wrapper">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#e4e4e7" stroke-width="0.8">
+                            <rect x="15" y="15" width="70" height="70" stroke-dasharray="4 2" class="spin-slow" />
+                            <circle cx="50" cy="50" r="25" stroke="#fff" />
+                            <circle cx="50" cy="50" r="10" fill="rgba(255,255,255,0.1)" stroke="#fff" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="body-text-panel">
+                    <div class="dossier-stamp">
+                        <span class="dossier-stamp-dot"></span>
+                        <span>Plano Estratégico // 2026-2030</span>
+                    </div>
+                    <h1 class="dossier-title">Arquitetura de Narrativa Visual</h1>
+                    <p class="dossier-subtitle">
+                        Construímos pontes entre dados técnicos densos e apresentações que retêm a atenção absoluta do espectador.
+                    </p>
+                    <div class="dossier-divider"></div>
+                    <div class="dossier-grid">
+                        <div class="dossier-card">
+                            <div class="card-label">Dimensão A</div>
+                            <div class="card-val">Imersão Retentiva</div>
+                            <div class="card-desc">Redução de sobrecarga cognitiva através de camadas de informação reveladas por clique.</div>
+                        </div>
+                        <div class="dossier-card">
+                            <div class="card-label">Dimensão B</div>
+                            <div class="card-val">Fluidez Contínua</div>
+                            <div class="card-desc">Zero recarregamento de página: transições puras de alta performance GPU.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PASTA 03: EXPERTISE -->
+        <section class="folder-section" data-index="2">
+            <div class="folder-tab" title="03 / Expertise">
+                <span class="tab-number">03</span>
+                <span class="tab-title">Expertise</span>
+                <span class="tab-icon-indicator"></span>
+            </div>
+            <div class="folder-body">
+                <div class="body-art-panel">
+                    <div class="art-watermark">DOC_REF #003 // TECH CAPABILITY</div>
+                    <div class="art-svg-wrapper">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#e4e4e7" stroke-width="0.8">
+                            <line x1="10" y1="10" x2="90" y2="90" stroke="rgba(255,255,255,0.4)" />
+                            <line x1="90" y1="10" x2="10" y2="90" stroke="rgba(255,255,255,0.4)" />
+                            <circle cx="50" cy="50" r="40" stroke="#fff" class="spin-reverse" />
+                            <rect x="35" y="35" width="30" height="30" stroke="#3b82f6" class="spin-slow" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="body-text-panel">
+                    <div class="dossier-stamp">
+                        <span class="dossier-stamp-dot"></span>
+                        <span>Domínio Multidisciplinar</span>
+                    </div>
+                    <h1 class="dossier-title">Engenharia &amp; Design Cenográfico</h1>
+                    <p class="dossier-subtitle">
+                        Da micro-interação ao design de sistemas em escala global: controle total de cada etapa do processo.
+                    </p>
+                    <div class="dossier-divider"></div>
+                    <div class="dossier-grid">
+                        <div class="dossier-card">
+                            <div class="card-label">Pilar 01</div>
+                            <div class="card-val">CSS Architecture</div>
+                            <div class="card-desc">Transforms 3D acelerados por hardware sem dependências pesadas.</div>
+                        </div>
+                        <div class="dossier-card">
+                            <div class="card-label">Pilar 02</div>
+                            <div class="card-val">Design Editorial</div>
+                            <div class="card-desc">Tipografia técnica, alinhamento tabular e contraste WCAG AAA.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PASTA 04: EXPERIÊNCIA -->
+        <section class="folder-section" data-index="3">
+            <div class="folder-tab" title="04 / Experiência">
+                <span class="tab-number">04</span>
+                <span class="tab-title">Experiência</span>
+                <span class="tab-icon-indicator"></span>
+            </div>
+            <div class="folder-body">
+                <div class="body-art-panel">
+                    <div class="art-watermark">DOC_REF #004 // TRACK RECORD</div>
+                    <div class="art-svg-wrapper">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#e4e4e7" stroke-width="0.8">
+                            <circle cx="50" cy="50" r="48" stroke="rgba(255,255,255,0.2)" />
+                            <circle cx="50" cy="50" r="38" stroke="rgba(255,255,255,0.4)" stroke-dasharray="3 3" />
+                            <circle cx="50" cy="50" r="20" stroke="#fff" />
+                            <polygon points="50,20 60,80 40,80" stroke="#fff" class="spin-slow" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="body-text-panel">
+                    <div class="dossier-stamp">
+                        <span class="dossier-stamp-dot"></span>
+                        <span>Casos e Histórico Operacional</span>
+                    </div>
+                    <h1 class="dossier-title">Jornada Consolidada</h1>
+                    <p class="dossier-subtitle">
+                        Experiência sólida na entrega de decks interativos, salas de situação e painéis de controle analítico.
+                    </p>
+                    <div class="dossier-divider"></div>
+                    <div class="dossier-grid">
+                        <div class="dossier-card">
+                            <div class="card-label">Metrificação</div>
+                            <div class="card-val">+250 Apresentações</div>
+                            <div class="card-desc">Formatadas sob o rigor do método RCA e visual storytelling.</div>
+                        </div>
+                        <div class="dossier-card">
+                            <div class="card-label">Performance</div>
+                            <div class="card-val">60 FPS Estáveis</div>
+                            <div class="card-desc">Renderização suave em qualquer tela desktop ou dispositivo touch.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PASTA 05: CONTATO / ARQUIVO -->
+        <section class="folder-section" data-index="4">
+            <div class="folder-tab" title="05 / Contato">
+                <span class="tab-number">05</span>
+                <span class="tab-title">Contato</span>
+                <span class="tab-icon-indicator"></span>
+            </div>
+            <div class="folder-body">
+                <div class="body-art-panel">
+                    <div class="art-watermark">DOC_REF #005 // COMMUNICATIONS</div>
+                    <div class="art-svg-wrapper">
+                        <svg viewBox="0 0 100 100" fill="none" stroke="#e4e4e7" stroke-width="0.8">
+                            <rect x="20" y="20" width="60" height="60" stroke="#fff" />
+                            <rect x="30" y="30" width="40" height="40" stroke="rgba(255,255,255,0.4)" stroke-dasharray="2 2" />
+                            <circle cx="50" cy="50" r="12" stroke="#3b82f6" class="pulse-slow" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="body-text-panel">
+                    <div class="dossier-stamp">
+                        <span class="dossier-stamp-dot"></span>
+                        <span>Canal de Transmissão Direta</span>
+                    </div>
+                    <h1 class="dossier-title">Iniciar Diálogo Técnico</h1>
+                    <p class="dossier-subtitle">
+                        Disponível para consultorias de design de apresentação, arquitetura de sistemas e metodologias RCA.
+                    </p>
+                    <div class="dossier-divider"></div>
+                    <div class="dossier-grid">
+                        <div class="dossier-card">
+                            <div class="card-label">Canal Oficial</div>
+                            <div class="card-val">equipe@cursorca.com.br</div>
+                            <div class="card-desc">Tempo médio de resposta &lt; 24h úteis.</div>
+                        </div>
+                        <div class="dossier-card">
+                            <div class="card-label">Repositório</div>
+                            <div class="card-val">/Slides/CursoRCA/tools</div>
+                            <div class="card-desc">Exemplares e componentes para reutilização em novos módulos.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Botões de navegação rápida flutuantes -->
+    <div class="footer-nav">
+        <button class="btn-action" id="btnPrev" title="Pasta Anterior">&larr; Anterior</button>
+        <button class="btn-action" id="btnNext" title="Próxima Pasta">Próxima &rarr;</button>
+    </div>
+
+    <!-- Script de Controle do Sliding Folder Deck -->
+    <script>
+        (function() {
+            const sections = Array.from(document.querySelectorAll('.folder-section'));
+            const tabs = document.querySelectorAll('.folder-tab');
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+            const topicHeaders = document.querySelectorAll('.topic-header');
+            
+            let currentIndex = 0;
+            const total = sections.length;
+
+            // Função principal de navegação para a pasta selecionada
+            function goToFolder(index) {
+                if (index < 0) index = 0;
+                if (index >= total) index = total - 1;
+                
+                currentIndex = index;
+
+                sections.forEach((section, i) => {
+                    if (i <= currentIndex) {
+                        // Todas as pastas até a atual se movem para a esquerda (ficam abertas)
+                        section.style.transform = 'translateX(0%)';
+                    } else {
+                        // Pastas subsequentes ficam recolhidas à direita
+                        section.style.transform = 'translateX(100%)';
+                    }
+
+                    if (i === currentIndex) {
+                        section.classList.add('is-active');
+                    } else {
+                        section.classList.remove('is-active');
+                    }
+                });
+            }
+
+            // Click nas abas verticais
+            tabs.forEach((tab, idx) => {
+                tab.addEventListener('click', () => {
+                    goToFolder(idx);
+                });
+            });
+
+            // Botões de Próximo / Anterior
+            btnPrev.addEventListener('click', () => goToFolder(currentIndex - 1));
+            btnNext.addEventListener('click', () => goToFolder(currentIndex + 1));
+
+            // Teclas de atalho (Setas e números 1 a 5)
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                    e.preventDefault();
+                    goToFolder(currentIndex + 1);
+                } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                    e.preventDefault();
+                    goToFolder(currentIndex - 1);
+                } else if (e.key >= '1' && e.key <= '5') {
+                    const num = parseInt(e.key, 10) - 1;
+                    if (num < total) goToFolder(num);
+                } else if (e.key === 'Home') {
+                    goToFolder(0);
+                } else if (e.key === 'End') {
+                    goToFolder(total - 1);
+                }
+            });
+
+            // Toggle de tópicos internos
+            topicHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    item.classList.toggle('open');
+                });
+            });
+
+            // Suporte a gestos touch/swipe horizontal
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const viewport = document.getElementById('dossierViewport');
+
+            viewport.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            viewport.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        // Swipe para esquerda -> próximo
+                        goToFolder(currentIndex + 1);
+                    } else {
+                        // Swipe para direita -> anterior
+                        goToFolder(currentIndex - 1);
+                    }
+                }
+            }, { passive: true });
+
+            // Inicia na primeira pasta
+            goToFolder(0);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LCC — Curso completo</title>
+<style>
+:root{--ink:#000;--paper:#fff}*{box-sizing:border-box}html,body{margin:0;background:#fff;color:#000;font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit;background:#fff;color:#000}button{cursor:pointer}button:disabled{cursor:default;border-style:dotted}button:hover:not(:disabled){text-decoration:underline;text-underline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #000;outline-offset:4px}a{color:#000}body.locked{overflow:hidden}.app{max-width:1640px;min-height:100svh;margin:auto;padding:24px clamp(24px,5vw,78px);display:flex;flex-direction:column}.top{display:flex;align-items:center;justify-content:space-between;gap:24px;text-transform:uppercase;font-size:11px;letter-spacing:.1em}.brand{font-size:26px;font-weight:900;letter-spacing:-.07em}#topicName{max-width:55%;text-align:center;line-height:1.4}main{flex:1;display:flex;align-items:center;padding:36px 0}.slide{width:100%;animation:arrive .3s ease both}@keyframes arrive{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}h1{max-width:1200px;margin:0 0 32px;font-size:clamp(34px,4.5vw,68px);line-height:1.05;letter-spacing:-.055em}h1:focus{outline:none}h2{font-size:28px;line-height:1.15;letter-spacing:-.03em}h3{font-size:18px;line-height:1.3}.kicker{margin:0 0 18px;font-size:12px;font-weight:bold;letter-spacing:.13em;text-transform:uppercase}.lead{font-size:clamp(24px,2.5vw,38px);line-height:1.3;letter-spacing:-.03em}.small{font-size:15px;line-height:1.5}.micro{font-size:12px;line-height:1.5}.statement{border-top:1px solid #000;margin-top:26px;padding-top:20px;font-size:clamp(22px,2.4vw,36px);line-height:1.3;letter-spacing:-.025em}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 40px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card{border-top:2px solid #000;padding-top:18px}.card small{display:block;font-size:12px;margin-bottom:16px}.card .text{font-size:clamp(24px,2.5vw,38px);line-height:1.2;letter-spacing:-.035em}.proposals{display:grid;grid-template-columns:1fr 1fr;gap:40px}.proposal{border-top:2px solid #000;padding-top:20px}.proposal .label{font-size:17px;margin-bottom:20px}.price{font-size:clamp(42px,5.5vw,84px);line-height:1.1;letter-spacing:-.065em}.value{font-size:clamp(34px,4vw,60px);line-height:1.15;letter-spacing:-.055em;overflow-wrap:anywhere}.formula{border-top:2px solid #000;border-bottom:1px solid #000;padding:24px 0;font-size:clamp(23px,3vw,44px);line-height:1.4;letter-spacing:-.035em;overflow-wrap:anywhere}.definition{display:grid;grid-template-columns:1fr 2fr;align-items:center;gap:38px}.acronym{font-size:clamp(95px,12vw,170px);letter-spacing:-.09em;line-height:1}.timeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px;margin:28px 0}.phase{border-top:2px solid #000;padding:20px 0;position:relative;font-size:clamp(18px,1.8vw,27px);line-height:1.25;letter-spacing:-.03em}.phase:before{content:"";position:absolute;top:-6px;left:0;width:10px;height:10px;background:#fff;border:2px solid #000;border-radius:50%}.phase small{display:block;margin-bottom:18px;font-size:12px;letter-spacing:0}.boundary{border:2px solid #000;padding:18px;font-size:clamp(20px,2vw,28px)}.boundary .boundary{margin-top:18px}.reveal{transition:opacity .25s ease,transform .25s ease}.pending{opacity:0;visibility:hidden;transform:translateY(8px);pointer-events:none}.bar-row{display:grid;grid-template-columns:70px 1fr;gap:20px;align-items:center;margin:20px 0}.bar-label{font-size:24px;font-weight:bold}.track{height:50px;display:flex}.bar{border:2px solid #000;height:50px}.hatch{background:repeating-linear-gradient(135deg,#fff 0,#fff 7px,#000 7px,#000 8px)}.bar-value{font-size:18px;margin-top:7px}.legend{display:flex;flex-wrap:wrap;gap:24px;font-size:14px}.legend span{display:inline-flex;align-items:center;gap:8px}.swatch{display:inline-block;width:25px;height:15px;border:1px solid #000}footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:15px;border-top:1px solid #000}.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.btn{border:1px solid #000;padding:10px 13px;font-size:13px;line-height:1.25}.btn.big{font-size:17px;padding:14px 20px}#status{font-size:12px;text-align:center;min-width:115px;font-variant-numeric:tabular-nums}#position{font-size:12px}.help{margin-top:12px;font-size:11px;display:flex;justify-content:space-between;gap:15px;line-height:1.5}#storageInfo{max-width:60%}.actions{margin:22px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap}input,select,textarea{max-width:100%;border:1px solid #000;border-radius:0;padding:9px}textarea{width:100%;min-height:82px;resize:vertical}input[type=number]{width:140px}input[type=range]{accent-color:#000;width:min(540px,100%)}label{display:block;font-size:14px;line-height:1.5}label>input,label>select,label>textarea{display:block;margin-top:6px}table{border-collapse:collapse;width:100%;font-size:15px}th,td{border-bottom:1px solid #000;text-align:left;vertical-align:top;padding:10px 9px;line-height:1.4}th{font-size:12px;text-transform:uppercase;letter-spacing:.04em}.table-wrap{overflow-x:auto}dialog{width:min(1160px,calc(100% - 28px));max-height:92svh;padding:clamp(20px,3vw,42px);border:2px solid #000;background:#fff;color:#000}dialog::backdrop{background:rgb(255 255 255 / 96%)}.dialog-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:1px solid #000;padding-bottom:18px;margin-bottom:22px}.dialog-top h2{margin:0}.dialog-tools{display:flex;gap:8px;flex-wrap:wrap}.note{margin:24px 0}.note h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase}.note p{font-size:18px;line-height:1.6}.material-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:24px}.material-nav select{flex:1;min-width:230px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:22px 0}.notice{border-left:3px solid #000;padding:10px 16px;line-height:1.5;font-size:14px;margin:22px 0}.nav-topic,.audit-item,.check-group{border-top:2px solid #000;padding:18px 0}.nav-slides{display:grid;grid-template-columns:1fr 1fr;gap:8px}.nav-slides button{text-align:left;border:1px solid #000;padding:12px;font-size:15px}.nav-slides button[aria-current]{outline:2px solid #000;outline-offset:1px}.check-row{display:grid;grid-template-columns:2fr 1fr 2fr;gap:16px;border-bottom:1px solid #000;padding:14px 0}.audit-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.audit-head h3{margin-top:0}.audit-item textarea{min-height:65px}.audit-warn{font-size:13px;font-weight:bold}svg{display:block;width:100%;max-width:950px}svg text{fill:#000;font-family:Arial,Helvetica,sans-serif}.start{position:fixed;inset:0;background:#fff;z-index:10;display:flex;align-items:center;justify-content:center;padding:24px}.start[hidden]{display:none}.start-inner{max-width:1000px;width:100%}.start h1{font-size:clamp(42px,6vw,80px)}.start .lead{max-width:850px}.start-meta{display:flex;gap:30px;font-size:14px;border-top:1px solid #000;padding-top:20px;margin-top:35px}
+@media(max-width:760px){.app{padding:20px}.course-label{display:none}.top{font-size:10px}#stage{padding:30px 0}.grid,.grid.three,.definition,.fields{grid-template-columns:1fr}.proposals{gap:24px}.timeline{grid-template-columns:1fr}.phase{border-top:0;border-left:2px solid #000;padding:0 0 0 20px}.phase:before{left:-6px;top:0}.phase small{margin-bottom:6px}footer{flex-wrap:wrap}#position{display:none}.help{display:block}#storageInfo{max-width:100%}.nav-slides{grid-template-columns:1fr}.check-row{grid-template-columns:1fr}.audit-head{flex-wrap:wrap}.bar-row{grid-template-columns:35px 1fr;gap:12px}.start-meta{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.slide{animation:none}.reveal{transition:none}}
+/* Editorial layout: neutral base with restrained functional accents. */
+:root{--accent:#2455a4;--muted:#636a74;--line:#dce0e6;--surface:#f3f4f6;--course-progress:0%}
+body{background:#f1f2f4;color:#15181d}body::before{content:"";position:fixed;left:0;top:0;width:var(--course-progress);height:4px;background:var(--accent);z-index:20;transition:width .25s}
+.app{max-width:1680px;padding:26px clamp(22px,4vw,68px);background:#fff;box-shadow:0 0 60px #11111108;min-height:100svh}
+.top{border-bottom:1px solid var(--line);padding-bottom:18px;letter-spacing:.13em}.brand{background:#14171c;color:#fff;padding:10px 14px;font-size:27px;border-radius:3px;letter-spacing:-.06em}.course-label{color:var(--muted);font-size:10px}
+#topicRail{display:flex;gap:6px;margin-top:18px}#topicRail button{flex:1;border:0;border-top:3px solid #e7e9ed;color:#8a919a;text-align:left;padding:8px 0;background:transparent;font-size:11px;letter-spacing:.08em;transition:border-color .2s}#topicRail button[aria-current]{border-color:var(--accent);color:#15181d;font-weight:800}
+main{padding:26px 0 32px}h1{font-weight:850;letter-spacing:-.055em;font-size:clamp(35px,4.3vw,68px);max-width:1100px;line-height:1.06;margin-bottom:32px}.title-focus{color:var(--accent)}.kicker{color:#626976;font-size:11px;letter-spacing:.14em;display:flex;align-items:center;gap:10px}.kicker::before{content:"";width:24px;height:3px;background:#b63d3d}
+.grid{gap:18px}.card{background:#f3f4f6;border:1px solid #e7e9ed;border-radius:9px;padding:24px 26px;min-height:150px;position:relative;transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px #00000009}.card small{font-weight:700;color:#6c737d;margin-bottom:22px}.card .text{font-size:clamp(23px,2.3vw,35px);max-width:32ch}.grid>.reveal:first-child .card{background:#171b21;color:#fff;border-color:#171b21}.grid>.reveal:first-child .card small{color:#aeb7c4}
+.proposals{gap:20px}.proposal{border:1px solid #dfe3e8;border-radius:10px;padding:26px;background:#f5f6f8}.proposal:first-child{background:#171b21;color:#fff;border-color:#171b21}.proposal .label{font-size:14px;letter-spacing:.04em;margin-bottom:30px}.price,.value{font-weight:750;letter-spacing:-.055em}.proposal .value{font-size:clamp(30px,3.4vw,55px)}
+.statement{border-top:0;border-left:4px solid var(--accent);background:#f3f5f8;padding:19px 24px;margin-top:24px;font-size:clamp(23px,2.2vw,34px);border-radius:0 7px 7px 0}.formula{background:#171b21;color:#fff;border:0;border-radius:9px;padding:24px 28px}.definition{background:#f3f4f6;border-radius:10px;padding:34px}.acronym{color:#15181d}.phase{border-top-color:#bcc2cb;font-size:clamp(18px,1.65vw,26px)}.phase:before{background:var(--accent);border-color:var(--accent)}.boundary{border:1px solid #cfd4dc;background:#f5f6f8;border-radius:9px}.boundary .boundary{background:#e9edf2}.boundary .boundary .boundary{background:#171b21;color:#fff}
+footer{border-color:var(--line);padding-top:18px}.btn{border:1px solid #d0d5dd;border-radius:6px;padding:11px 14px;font-weight:600;font-size:12px;transition:background .2s,transform .2s}.btn:hover:not(:disabled){background:#eceff3;text-decoration:none;transform:translateY(-1px)}#nextButton{background:#171b21;color:#fff;border-color:#171b21;min-width:48px}#prevButton{min-width:48px}#status{color:var(--muted)}.help{color:#737a84;font-size:10px}.micro{color:#646c77;font-size:12px}.small{color:#3f4650;font-size:16px}.notice{background:#f2f4f7;border-left:3px solid var(--accent);border-radius:0 7px 7px 0}.bar{background:#1a1e24;border:0;border-radius:5px}.bar.hatch{background:repeating-linear-gradient(135deg,#f0f1f3 0,#f0f1f3 7px,#545b66 7px,#545b66 9px);border:1px solid #7b838f}.bar-value{font-weight:700}.track{background:#f0f2f5;border-radius:5px}.hatch.swatch{background:repeating-linear-gradient(135deg,#fff 0,#fff 7px,#000 7px,#000 8px)}
+dialog{border:1px solid #d9dde3;box-shadow:0 22px 90px #00000020;border-radius:14px}dialog::backdrop{background:#161b2590;backdrop-filter:blur(4px)}.dialog-top{border-color:var(--line)}.nav-topic{border-color:#e1e5eb}.nav-slides button{border-color:#dde1e8;border-radius:6px;background:#f6f7f9}.nav-slides button[aria-current]{outline-color:var(--accent)}input,select,textarea{border-color:#ccd2dc;border-radius:5px}input[type=range]{accent-color:var(--accent)}th{color:#646c78;font-size:11px;background:#f2f4f7}td,th{border-bottom:1px solid #e3e6ec;padding:11px 12px}td{font-variant-numeric:tabular-nums}tbody tr:hover{background:#f8f9fb}.table-wrap{border:1px solid #e1e5eb;border-radius:8px}
+.sens-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.chart-panel{border:1px solid #e2e5eb;border-radius:10px;padding:22px;background:#fff;min-width:0}.chart-panel h2{font-size:24px;margin:8px 0 18px}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#737b88;margin:0}.sensitivity-controls{display:flex;align-items:center;gap:20px;flex-wrap:wrap;background:#f4f5f7;padding:14px 18px;border-radius:8px;margin-bottom:18px}.sensitivity-controls label{font-size:12px}.sensitivity-controls input{width:165px}.sensitivity-controls select{margin-top:4px}.sensitivity-controls strong{font-size:22px}.sens-summary{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:0 0 18px;font-size:14px}.sens-summary b{font-weight:800}.curve-verdict{border-left:3px solid #b63d3d;padding-left:10px;min-height:36px}.metric-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 20px}.metric-strip>div{background:#f1f3f6;padding:18px 20px;border-radius:8px}.metric-strip>div:last-child{background:#171b21;color:white}.metric-strip small{display:block;font-size:11px;margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase}.metric-strip b{font-size:clamp(23px,2.6vw,36px);letter-spacing:-.04em}.analysis-detail{border:1px solid #dbe0e7;border-radius:8px;padding:14px;margin-bottom:20px}.analysis-detail summary{cursor:pointer;font-size:14px;font-weight:700}.analysis-detail[open] summary{margin-bottom:15px}.winner{display:inline-grid;place-items:center;width:28px;height:28px;background:#171b21;color:white;border-radius:5px}.formula-chain{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#171b21;color:#fff;border-radius:10px;padding:26px;margin-bottom:24px}.formula-chain small{display:block;color:#b4bcc8;font-size:12px;margin-bottom:12px}.formula-chain b{font-size:clamp(19px,2.5vw,34px);letter-spacing:-.03em}.formula-chain>span{color:#aab3c1;font-size:27px}.maintenance-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.maintenance-card{background:#f1f3f6;border:1px solid #e1e5eb;border-radius:12px;padding:26px}.maintenance-card h2{font-size:32px}.maintenance-card>p{font-size:15px}.maintenance-values{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:30px 0}.maintenance-values small{display:block;font-size:11px;margin-bottom:10px}.maintenance-values b{font-size:clamp(24px,3vw,40px);letter-spacing:-.04em}.maintenance-event{border-top:1px solid #cdd3dc;padding-top:18px;line-height:1.6}.maintenance-card:first-child{background:#171b21;color:#fff;border-color:#171b21}.maintenance-card:first-child .eyebrow{color:#b6beca}.maintenance-card:first-child .maintenance-event{border-color:#454d59}
+body[data-kind="sensitivityVisual"] h1,body[data-kind="sensitivityAnalytic"] h1{font-size:clamp(32px,3.6vw,52px);margin-bottom:22px}body[data-kind="sensitivityAnalytic"] table{font-size:14px}
+@media(min-width:1100px){body[data-kind="sensitivityVisual"] .app,body[data-kind="sensitivityAnalytic"] .app{padding-top:18px}body[data-kind="sensitivityVisual"] main,body[data-kind="sensitivityAnalytic"] main{padding-top:20px}.sens-grid svg{max-height:310px}}
+@media(max-width:760px){.sens-grid,.maintenance-grid{grid-template-columns:1fr}.metric-strip{gap:7px}.metric-strip>div{padding:13px 10px}.metric-strip b{font-size:21px}.formula-chain{flex-wrap:wrap;padding:20px;gap:12px}.formula-chain b{font-size:22px}.proposal{padding:20px}.sens-summary{font-size:13px}.chart-panel{padding:16px}.sensitivity-controls{gap:12px}.title-focus{color:var(--accent)}}
+@media(prefers-reduced-motion:reduce){body::before,.card,.btn{transition:none}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><span class="brand">LCC</span><span id="topicName"></span><span class="course-label">Manutenção · Confiabilidade · Gestão de ativos</span></header>
+<nav id="topicRail" aria-label="Navegação por tópico"></nav><main id="stage" aria-label="Apresentação"></main>
+<footer>
+<div class="controls"><button class="btn" id="indexButton">Tópicos</button><button class="btn" id="notesButton">Notas</button><button class="btn" id="materialsButton">Materiais</button><button class="btn" id="fullButton">Tela cheia</button></div>
+<span id="position"></span>
+<div class="controls"><button class="btn" id="prevButton" aria-label="Voltar">←</button><span id="status" aria-live="polite"></span><button class="btn" id="nextButton" aria-label="Avançar">→</button></div>
+</footer>
+<div class="help"><span id="storageInfo"></span><span>← → / espaço · N: notas · M: materiais · Home: início</span></div>
+</div>
+<dialog id="panel" aria-labelledby="panelTitle"><div class="dialog-top"><h2 id="panelTitle"></h2><div class="dialog-tools"><button class="btn" id="printButton">Imprimir</button><button class="btn" id="closePanel">Fechar</button></div></div><div id="panelBody"></div></dialog>
+<script>
+"use strict";
+const topics=[{"title":"Por que utilizar o LCC?","minutes":25,"times":[3,3,3,3,4,3,3,3],"slides":[["Qual você compraria?","O preço isolado não resolve a decisão.",["Qual você aprovaria?"],"Apresente as duas propostas fictícias. Ambas atendem à vazão e à pressão requeridas, mas ainda não sabemos se todos os demais requisitos foram verificados. Faça uma votação e ouça justificativas sem indicar uma vencedora. Não revele consumo, manutenção ou vida útil.","Quem escolheria A? Quem escolheria B?","O que precisamos saber antes de aprovar?","purchase"],["O que falta saber?","Precisamos conhecer uso e custos futuros.",["Quanto consome?","Quanto falha?","Quanto custa manter?","Quanto tempo será utilizada?"],"Antes de revelar as perguntas, peça sugestões à turma. Relacione as respostas a informações dos fornecedores, da manutenção e da operação. Consumo e falhas dependem da aplicação. A intensidade de uso pode mudar a preferência.","Qual informação mais poderia mudar sua decisão?","A compra é apenas o começo.","cards"],["A compra é apenas o começo.","O desembolso continua depois da compra.",["Concepção","Aquisição","Instalação","Operação e manutenção","Descomissionamento"],"Percorra a trajetória da bomba desde a necessidade até sua retirada. Cite projeto, instalação, energia, peças, intervenções e destinação. Apresente as categorias sem detalhar os custos. A análise de uma decisão atual distingue custos futuros dos já incorridos.","Em qual etapa sua área participa? Em qual deveria participar?","Precisamos organizar esses custos.","timeline"],["É isso que o LCC organiza.","O LCC amplia a perspectiva da decisão.",["LCC — Life Cycle Cost","Custo do ciclo de vida","Avaliar os custos das alternativas ao longo da vida do ativo."],"Dê nome ao raciocínio construído. Compare alternativas que atendam à mesma necessidade, com premissas coerentes e horizonte definido. O momento dos custos importa. Não apresente cálculos: a estruturação e o desconto serão aprofundados depois.","O que poderia distorcer essa comparação?","A ordem das propostas pode mudar.","definition"],["O menor preço leva ao menor custo?","A diferença inicial pode se inverter.",["Aquisição","Custos posteriores","A diferença inicial pode se inverter."],"Apresente uma hipótese: A consome mais energia e exige mais intervenções. O gráfico é conceitual, sem escala; não representa resultado calculado. B precisa justificar seu investimento adicional. Não revele o gabarito do curso.","O que precisaria acontecer para A continuar sendo melhor?","Parte desses custos nasce antes da operação.","concept"],["O custo nasce antes da falha.","Decisões de projeto influenciam custos futuros.",["Especificação","Eficiência","Acesso para manutenção"],"Relacione seleção inadequada a consumo e problemas operacionais. Acesso difícil aumenta tempo de intervenção; componentes influenciam peças e suporte. Mostre por que manutenção e operação devem participar da especificação.","Qual problema da sua manutenção poderia ter sido evitado no projeto?","O raciocínio também vale para ativos existentes.","cards"],["Que decisões o LCC apoia?","O LCC apoia decisões durante a vida do ativo.",["Manter","Modernizar","Substituir"],"Avance hipoteticamente na história: imagine que a bomba já opera há alguns anos. Discuta continuidade, modernização e substituição. Todas as alternativas devem atender aos requisitos de segurança, desempenho e conformidade. Menor custo não compensa requisito obrigatório descumprido.","Qual dessas decisões está em discussão na sua empresa?","Antes de comparar, precisamos definir a análise.","cards"],["Antes de calcular, precisamos definir.","Uma comparação válida exige uma base definida.",["Para qual necessidade?","Por quantos anos?","Sob quais condições?"],"Retorne ao momento inicial da compra. Peça à turma que reformule a pergunta considerando condições de uso e horizonte. Não escolha A ou B. A evolução pretendida é sair da comparação de preços para uma decisão estruturada.","Como vocês formulariam agora a pergunta da análise?","Vamos estruturar essa comparação.","cards"]]},{"title":"Como estruturar a análise?","minutes":30,"times":[3,4,4,4,4,4,4,3],"slides":[["Qual decisão precisamos tomar?","A análise começa pela decisão.",["Selecionar uma bomba para atender à necessidade da operação."],"Formule o problema. Selecionar equipamento, ampliar capacidade e substituir um ativo são decisões diferentes. Elas podem exigir alternativas e fronteiras distintas. Neste caso, mantenha o foco na seleção entre A e B.","Estamos escolhendo uma bomba ou ainda definindo como atender à necessidade?","Precisamos descrever o serviço esperado.","decision"],["Primeiro, a necessidade.","A necessidade define a entrega.",["Qual vazão?","Qual pressão?","Qual regime?","Quais condições?"],"Comprar a bomba é a solução; movimentar o fluido nas condições requeridas é a necessidade. Explore fluido, variação de demanda e ambiente. Não invente especificações ausentes. Atender ao ponto nominal não garante desempenho em todos os regimes.","Atender ao ponto nominal garante bom desempenho em todo o regime?","Agora precisamos definir os requisitos.","cards"],["O que é obrigatório atender?","Requisitos delimitam alternativas admissíveis.",["Desempenho","Segurança e conformidade","Compatibilidade","Manutenção e suporte"],"Diferencie obrigação de preferência. Materiais, características elétricas, espaço e suporte mínimo podem ser requisitos. Vazão e pressão atendidas não equivalem à aprovação de todos os critérios. Registre a evidência da verificação.","O que eliminaria uma proposta?","Quais soluções podem entrar na comparação?","cards"],["Duas propostas, a mesma entrega?","Comparar soluções completas.",["A: solução completa?","B: solução completa?","Mesmo serviço requerido."],"Verifique motor, acionamento, testes e acessórios. Uma alternativa pode exigir adequações externas. Soluções diferentes são comparáveis quando atendem ao mesmo serviço e os custos complementares são reconhecidos.","O que pode estar faltando em uma proposta?","Precisamos estabelecer as fronteiras.","cards"],["Onde a análise começa e termina?","Inclusões e exclusões precisam ser explícitas.",["Bomba","Conjunto de bombeamento","Sistema e interfaces"],"Use a hipótese de adequação elétrica exigida por uma alternativa. Defina abrangência física, etapas e consequências. Custos já incorridos e irrecuperáveis não mudam com a decisão futura. Documente simplificações de custos comuns.","Qual custo fora da proposta seria provocado pela escolha?","Também precisamos definir o período.","boundaries"],["Por quantos anos?","Horizonte e vida útil não são sinônimos.",["Horizonte da análise ≠ vida útil","Mesmo período de comparação."],"O horizonte é escolhido para a decisão. A vida útil depende do ativo e das condições. Substituições intermediárias e residual precisam de tratamento coerente. O caso adota oito anos como hipótese, não como vida útil universal de bombas.","É válido comparar períodos diferentes sem tratamento?","Agora registramos as premissas.","horizon"],["Dado ou premissa?","Toda estimativa precisa de origem.",["Informação","Fonte","Responsável","Data"],"Diferencie histórico observado, informação de fornecedor e hipótese. Registre limites de validade e incerteza. Uma estimativa pode ser útil sem ser certeza. Abra o registro de premissas nos materiais, se necessário.","Qual dado merece maior verificação?","Vamos consolidar a base da análise.","cards"],["A análise está definida?","Estrutura definida não significa dados completos.",["Decisão e necessidade","Requisitos e alternativas","Fronteiras e horizonte","Premissas e fontes"],"Uma ficha organizada ainda pode ter pendências, que precisam de responsáveis. Não marque desconhecidos como confirmados. O objetivo é tornar a comparação compreensível e reproduzível.","Outra pessoa conseguiria reproduzir a comparação?","Agora vamos identificar os custos.","cards"]]},{"title":"Quais custos considerar?","minutes":35,"times":[3,4,4,5,5,5,5,4],"slides":[["O que ainda não está na proposta?","O preço comercial pode não conter todos os custos.",["Comprar","Colocar em operação","Manter funcionando","Encerrar"],"Retome as fronteiras e identifique quem arca com cada item. Propostas podem omitir instalação, interfaces e despesas futuras. Não acrescente tudo indiscriminadamente: avalie pertinência e diferenças.","O que costuma aparecer somente depois da aprovação?","Comecemos pelos custos iniciais.","cards"],["Quanto custa colocar para funcionar?","Investimento inicial é maior que o preço da bomba.",["Aquisição + engenharia + logística + instalação + comissionamento"],"Abra os adicionais originais: engenharia R$ 5 mil, logística R$ 3 mil, instalação R$ 8 mil e comissionamento R$ 4 mil em cada alternativa. São hipóteses. Custos comuns precisam ser identificados, ainda que não alterem a diferença.","Qual item costuma ficar fora do orçamento inicial?","Depois da partida, começam os custos recorrentes.","initial"],["O que se repete todos os anos?","Custos recorrentes podem ser relevantes no horizonte.",["Energia","Operação","Manutenção","Consequências das falhas"],"Separe recorrente, eventual e terminal. Apresente 6.000 horas efetivas anuais. Alguns custos dependem do uso; outros, do calendário. No exercício, planejada e outros custos operacionais são parcelas anuais fixas.","Quais custos variam com uso e quais seguem o calendário?","Vamos calcular um dos principais componentes.","cards"],["Quanto custa a energia?","Consumo depende de potência, tempo e tarifa.",["C_energia = P × H × Tarifa"],"Use 30 e 25 kW de potência elétrica absorvida, 6.000 h e R$ 0,80/kWh. Não divida novamente por eficiência. No caso não há aumento real de tarifa. Sistemas reais podem exigir perfil de carga e condições tarifárias mais detalhadas.","O que muda se a bomba operar poucas horas?","Energia não é o único custo de uso.","energy"],["Quanto custa manter?","Manutenção planejada e corretiva compõem o custo de manutenção.",["Planejada","Corretiva"],"Organize a manutenção em duas categorias. A planejada inclui rotinas anuais de R$ 6 mil para A e R$ 4 mil para B, mais uma intervenção prevista no ano 4 de R$ 12 mil e R$ 8 mil. Essa intervenção é uma parcela da planejada e não está incluída nas rotinas anuais. A corretiva depende da frequência esperada de falhas e do custo por reparo. Some cada desembolso apenas uma vez, no ano correspondente.","A intervenção prevista já está incluída no orçamento anual da planejada?","Também precisamos olhar para o fim do período.","maintenance"],["O fim da vida também tem valor.","Encerramento pode gerar custos e créditos.",["Retirar","Destinar","Recuperar valor"],"Descomissionamento original de R$ 10 mil em cada alternativa; residual de R$ 5 mil e R$ 8 mil. O residual é estimado, não garantido. Evite deduzir o mesmo crédito em mais de uma parcela.","O valor residual está documentado ou apenas suposto?","Agora verificamos o que pode estar faltando.","terminal"],["O que pode ficar invisível?","Custos indiretos e consequências exigem análise de pertinência.",["Interfaces","Treinamento","Sobressalentes","Perdas e obrigações"],"Discuta estoques, obsolescência, contratos, obrigações ambientais e indisponibilidade. Diferencie incluído, excluído com justificativa e pendente. O exercício não modela todos os impactos possíveis: isso não significa que sejam sempre nulos.","Qual item seria relevante na sua planta e não está neste caso?","Antes de somar, precisamos eliminar sobreposições.","cards"],["Cada custo tem um lugar.","A estrutura deve impedir dupla contagem.",["Descrição","Categoria e momento","Fonte","Já está incluído?"],"Revise pacote e componentes; rotinas anuais e intervenção prevista dentro da manutenção planejada; reparo e consequência produtiva. Cada linha precisa de unidade, recorrência e fonte. Abra a estrutura de custos nos materiais.","Conseguimos rastrear cada parcela até sua origem?","Agora vamos estimar as consequências das falhas.","cards"]]},{"title":"Como a confiabilidade influencia os custos?","minutes":25,"times":[3,3,3,4,3,3,3,3],"slides":[["Falhar custa mais que reparar?","Uma falha pode gerar custos diretos e consequências.",["Reparo","Interrupção","Consequência"],"Diferencie desembolso de reparo e oportunidade econômica perdida. Nem toda parada impede produção. Antes de monetizar, entenda o sistema, a redundância e a possibilidade de recuperar produção.","Na sua operação, o maior impacto está onde?","Primeiro estimamos quantas falhas podem ocorrer.","cards"],["Quantas falhas esperar?","Frequência esperada não é previsão exata de eventos.",["N_falhas ≈ H / MTBF"],"Use MTBF de 6.000 h para A e 12.000 h para B. O modelo supõe taxa estável. Uma expectativa de 0,5 evento/ano não é meia falha física. Envelhecimento ou mudanças de regime podem exigir outro modelo.","O que mudaria se a taxa de falhas aumentasse com a idade?","Frequência e duração precisam ser separadas.","failures"],["Quanto tempo ficamos indisponíveis?","A duração da interrupção influencia o resultado.",["H_indisponibilidade = N_falhas × D"],"D é a duração total considerada: 8 h em A e 6 h em B por falha. Diferencie reparo ativo e restauração total. Se logística e reinício já estão incluídos, não os some novamente.","Qual parcela do tempo é reparo e qual é espera?","Vamos calcular primeiro o custo direto.","downtime"],["Quanto custa o reparo?","O custo direto depende da frequência e do custo por evento.",["C_corretivo = N_falhas × Custo_por_falha"],"Use R$ 4 mil por evento em ambas. O valor inclui recursos diretos e não contém perda produtiva. Verifique se a base é histórica, estimada ou fornecida pelo fabricante.","O custo por evento veio de histórico ou estimativa?","Agora avaliamos a consequência operacional.","corrective"],["Parada não é sinônimo de perda.","A consequência depende do sistema.",["Há reserva?","Há estoque?","É gargalo?","A produção será recuperada?"],"No original, não há reserva e a perda não será recuperada. Isso é hipótese. Uma reserva tem custo e pode não cobrir todos os eventos. Estoques intermediários e capacidade ociosa podem modificar a consequência.","Uma hora parada representa uma hora perdida de produção?","Quando há perda, precisamos valorizá-la corretamente.","cards"],["Qual é a perda econômica?","Usar perda líquida relevante, não faturamento bruto.",["C_perda = H_indisponibilidade × Perda_líquida/h"],"Adote R$ 1.000/h de contribuição líquida não recuperável. Não use faturamento bruto. Separe oportunidade perdida dos desembolsos. Custos variáveis evitados precisam de tratamento coerente.","Quem valida esse valor por hora na empresa?","Além da média, precisamos entender a evidência.","loss"],["Uma média não conta toda a história.","Dados e modelos têm limites.",["Aplicação","Histórico","Dispersão","Envelhecimento"],"MTBF não é vida útil. Verifique representatividade e contexto. Eventos raros graves exigem tratamento próprio de risco: baixo valor esperado não os torna automaticamente aceitáveis.","Esses dados representam nossa aplicação?","Vamos consolidar as parcelas anuais.","cards"],["A confiabilidade entrou na conta.","O custo anual reúne operação, manutenção e consequências.",["Mesmo caso. Mais informações."],"Revise energia, operação, planejada, corretiva e perdas. Ainda não use soma simples como conclusão econômica: os custos ocorrem em momentos diferentes. Faça o intervalo antes do tópico 5.","Basta multiplicar pelo número de anos?","Após o intervalo, colocaremos os custos na mesma data.","annual"]]},{"title":"Como comparar economicamente as alternativas?","minutes":35,"times":[4,4,5,5,4,5,4,4],"slides":[["Em que momento cada custo ocorre?","O momento do custo importa.",["Hoje","Anualmente","Ano da intervenção","Fim do horizonte"],"Posicione investimento em t=0, anuais no fim de cada ano, intervenção no ano 4 e encerramento no ano 8. Separe custos diretos e perdas de oportunidade. O fluxo econômico não equivale apenas a desembolsos.","Qual parcela ocorre uma vez e qual se repete?","Precisamos comparar valores em uma mesma data.","cards"],["Como trazer para a mesma data?","O desconto torna valores comparáveis na data-base.",["VP_t = C_t / (1 + r)^t","Comparar na mesma data."],"Explique taxa e período. Desconto não reduz fisicamente um custo: muda sua expressão econômica. A taxa deve seguir os critérios da organização. Os 8% do caso são didáticos.","Um custo distante tem o mesmo valor presente de um custo hoje?","A taxa precisa combinar com a forma dos valores.","formula"],["Taxa real ou nominal?","Inflação e desconto precisam ser consistentes.",["Valores constantes → taxa real","Valores nominais → taxa nominal"],"O caso usa reais constantes e taxa real. Relação: (1+r_nominal)=(1+r_real)×(1+inflação). Não aplique inflação geral para depois descontar com taxa real. Variações reais de preços são distintas da inflação geral.","O que acontece se misturarmos as duas bases?","Agora podemos consolidar o LCC.","cards"],["Como o LCC é formado?","Somar valores presentes das parcelas relevantes.",["Investimento inicial","Custos futuros descontados","Menos créditos descontados"],"Use a fórmula completa nos materiais. Intervenção e residual entram uma única vez. Se o fluxo anual já incorpora esses eventos, não acrescente novamente suas parcelas.","O valor residual entra com qual sinal?","Para custos anuais iguais, podemos simplificar.","lccformula"],["O que fazer com os custos recorrentes?","Uma série uniforme pode ser convertida por um fator.",["VP_anual = C_anual × F"],"Explique F=[1-(1+r)^(-n)]/r sem exigir memorização. Vale para valores uniformes no fim dos períodos. Se taxa zero, F=n. Se os custos variam, descontar ano a ano.","Podemos usar o mesmo fator com outro horizonte?","Vamos revelar o resultado do cenário original.","factor"],["Qual alternativa tem menor LCC?","A conclusão depende do cenário calculado.",["Comparação em valor presente"],"Revele por etapas. No original, A ≈ R$ 1.053.970 e B ≈ R$ 889.770; vantagem de B ≈ R$ 164.200. Identifique horizonte, taxa e horas. O resultado inclui perdas econômicas do escopo.","Qual parcela explica a maior parte da diferença?","Esse resultado não é equivalente a um payback.","lccresult"],["Menor LCC não é menor payback.","Indicadores respondem a perguntas diferentes.",["LCC: custo no horizonte","Payback: tempo de recuperação"],"Payback simples ignora desconto e efeitos após o retorno. Mesmo o descontado não substitui a comparação completa. Serviços ou benefícios diferentes podem exigir uma análise de valor mais ampla.","Qual decisão seria prejudicada usando apenas retorno rápido?","Agora precisamos testar a força da conclusão.","cards"],["O resultado vale sob quais condições?","A conclusão está vinculada às premissas.",["Neste horizonte","Neste regime","Com estes dados"],"Diferencie cálculo correto e decisão robusta. Fontes frágeis ou condições alteradas mudam a preferência. Desafie premissas sem alterar arbitrariamente a taxa para favorecer uma alternativa.","Qual premissa poderia inverter a escolha?","Vamos desafiar o resultado.","cards"]]},{"title":"Como avaliar as incertezas?","minutes":25,"times":[3,3,3,4,3,3,3,3],"slides":[["O que pode estar errado?","Precisão aparente não elimina incerteza.",["Uso","Energia","Falhas","Custos futuros"],"Peça as maiores dúvidas. Muitos decimais não significam confiabilidade. Não invente distribuições ou probabilidades. Identifique o que sabemos e o que estimamos.","Qual número vocês verificariam primeiro?","Vamos variar uma premissa de cada vez.","cards"],["O que mais influencia a escolha?","Compare a influência sobre a diferença de LCC, não apenas o tamanho do custo.",["Impacto por variável","Limite de inversão"],"Tela visual. O tornado varia uma entrada por vez em ±20% por padrão, mantendo as demais. O controle permite 10% a 50%; o uso é limitado a 8.760 h/ano. Manutenção planejada varia as rotinas e a intervenção prevista, nas duas alternativas. MTBF e reparo também variam nas duas bombas. As faixas são didáticas, não intervalos de confiança. A curva permite escolher tarifa ou horas. Δ = LCC A − LCC B: positivo favorece B, negativo favorece A. Não force cruzamento: no caso original, a tarifa não inverte a escolha em valores não negativos, embora tenha impacto relevante. O regime de uso pode inverter a escolha. Os controles desta tela não alteram o cenário principal.","Qual variável merece ser confirmada antes da aprovação?","Vamos conferir os números e combinar premissas.","sensitivityVisual"],["Quais cenários mudam a decisão?","A recomendação precisa resistir a condições plausíveis.",["Premissas explícitas","Resultados comparáveis"],"Tela analítica. Use a tabela de testes isolados para ler a faixa e os valores de Δ; use a tabela de cenários para combinações de tarifa e horas. As variações são exemplos didáticos, sem probabilidades atribuídas. Energia, falhas, reparos e perdas acompanham as horas efetivas. A planejada por calendário e a operação fixa permanecem. A tabela distingue impacto no custo de mudança de preferência. O cenário de uso reduzido adota 5% das horas-base e pode inverter a escolha. Explique por que cada cenário seria plausível na aplicação real. Os cenários usam as entradas atuais do simulador.","A escolha muda em uma condição plausível para a operação?","Vamos aprofundar a influência das horas de operação.","sensitivityAnalytic"],["A escolha depende do uso?","O valor da eficiência depende da utilização.",["Mais horas: maior exposição aos custos de uso.","Menos horas: maior peso relativo do investimento."],"Compare 3.000 e 6.000 h com as demais premissas iguais. Não revele ainda o exercício de 300 h. Baixo uso não favorece automaticamente A: o resultado depende de todos os custos.","Qual informação operacional precisa ser confirmada antes da compra?","E se a consequência da parada for diferente?","hourscompare"],["E se a produção não for perdida?","A consequência depende da configuração.",["Perda não recuperável","Produção recuperável","Sistema com reserva"],"Demonstre perda produtiva nula, mantendo reparos. Isso não modela automaticamente uma reserva. Redundância exige incluir investimento, uso e cobertura dos eventos.","Que evidência sustenta a consequência adotada?","Existe um ponto em que a preferência muda?","noloss"],["Onde a decisão se inverte?","O ponto de indiferença identifica uma condição crítica.",["LCC_A = LCC_B","Onde a escolha muda?"],"Apresente a ideia de zerar a diferença. Não revele o limite numérico do caso. O cruzamento depende das premissas e da faixa fisicamente possível.","A operação real está perto ou longe desse limite?","Isso ajuda a decidir onde buscar informação.","formula"],["Qual dado vale a pena melhorar?","Priorizar alta influência e baixa confiança.",["Impacto na decisão","Confiança no dado"],"Exemplos: medir potência, confirmar horas, revisar histórico. Não dedique o mesmo esforço a todas as entradas. Uma informação incerta pode ter pouca influência; outra pode ser decisiva.","Qual medição reduziria mais nossa dúvida?","Uma conclusão pode exigir condições adicionais.","cards"],["Decisão robusta ou condicional?","A recomendação deve informar seus limites.",["Escolher","Validar antes","Reavaliar se mudar"],"Uma recomendação pode ser condicionada à confirmação de dados. Defina responsável, prazo e gatilho. Não transforme ausência de evidência em certeza nem use o modelo só para justificar uma decisão prévia.","O que precisaríamos confirmar para aprovar?","Agora a turma vai decidir em outro regime de uso.","cards"]]},{"title":"Aplicação prática: qual alternativa escolher?","minutes":35,"times":[3,3,7,7,4,4,4,3],"slides":[["A necessidade mudou.","Uma mudança operacional exige reavaliação.",["Mesmas bombas.","Agora: 300 h/ano.","A escolha continua a mesma?"],"Apresente o novo regime. São as mesmas propostas sob outra aplicação. Os demais dados permanecem. Não mostre o gabarito. Peça uma previsão e registre o raciocínio.","Qual alternativa vocês esperam que seja favorecida?","Vamos esclarecer as regras do exercício.","cards"],["O que muda e o que permanece?","Recalcular os efeitos da premissa alterada.",["Muda: horas e custos dependentes do uso.","Permanece: demais premissas do caso."],"Variam energia, frequência de falhas, corretivas e perdas. A planejada (rotinas e intervenção por calendário) e a operação fixa permanecem. Essa simplificação precisa de validação em aplicações reais.","Qual parcela não pode continuar com o valor de 6.000 horas?","Primeiro calculem os custos anuais.","cards"],["Refaçam os custos anuais.","Recalcular antes de concluir.",["Energia","Corretivas","Perdas","Total anual"],"Organize duplas ou grupos. Forneça dados e fórmulas. Verifique unidades e parcelas fixas. Não corrija revelando logo a alternativa vencedora. Sete minutos incluem trabalho e breve conferência de processo.","Quais parcelas ficaram iguais? Quais diminuíram?","Agora tragam os valores para a data-base.","exerciseAnnual"],["Calculem o LCC.","Aplicar o mesmo método ao novo cenário.",["Investimento","Custos anuais descontados","Intervenção","Encerramento líquido"],"Forneça o fator ou permita calculadora. Mantenha resultados ocultos. Os alunos devem justificar condições, além dos números. Verifique sinal do residual e desconto da intervenção.","Qual alternativa vocês recomendam e sob quais condições?","Vamos comparar os resultados.","exerciseLCC"],["O resultado mudou.","A escolha depende do regime considerado.",["Resultado para 300 h/ano"],"No original, A = R$ 202.318,60 e B = R$ 207.357,10. Vantagem de A = R$ 5.038,51. Anuais: R$ 15.800 e R$ 12.250. A diferença é pequena em relação ao total e merece atenção às premissas.","O cálculo está correto, mas a decisão está suficientemente segura?","Vamos entender onde ocorre a inversão.","exerciseResult"],["O limite pertence ao cenário.","O ponto de indiferença depende do modelo.",["Mantidas as demais premissas."],"No original, cruzamento perto de 470 h/ano. Abaixo, A tende a vencer; acima, B. Discuta custos fixos e intervenção por calendário. Não generalize o limite para outras bombas.","Qual alteração faria esse limite mudar?","Transformemos o resultado em uma recomendação.","threshold"],["Como defender a decisão?","Recomendação exige justificativa e condições.",["Escolha","Evidência","Condições","Próxima verificação"],"Peça apresentações breves. Aceite recomendações condicionais coerentes. Avalie escopo, modelo, interpretação e ressalvas, não apenas a letra escolhida. Use o registro de decisão.","O que vocês diriam ao comitê de investimento?","Agora examinamos a qualidade da análise.","cards"],["O que poderia invalidar a conclusão?","Revisar a análise faz parte da decisão.",["Requisito não atendido","Custo omitido","Premissa inconsistente","Dupla contagem"],"Revise o exercício com o checklist. Diferencie divergência de julgamento e erro de cálculo. Um resultado correto pode vir de uma análise incompleta ou com premissas inadequadas.","Qual erro vocês mais precisam prevenir na empresa?","Como fazer essa prática continuar depois do curso?","cards"]]},{"title":"Como incorporar o LCC à gestão?","minutes":20,"times":[2,3,3,3,3,2,2,2],"slides":[["Quando exigir uma análise?","Aplicar esforço proporcional à decisão.",["Aquisição relevante","Substituição","Modernização","Mudança de estratégia"],"Defina critérios por criticidade, valor e incerteza. Uma compra simples não exige o mesmo detalhamento de um investimento relevante. Os gatilhos devem ser conhecidos antes da aprovação.","Onde o LCC deveria ser obrigatório?","Quem participa da construção?","cards"],["Quem responde por cada parte?","A qualidade depende de responsabilidades claras.",["Operação","Manutenção e engenharia","Suprimentos","Finanças e decisor"],"Operação valida uso e consequências. Manutenção e engenharia validam desempenho e intervenções. Suprimentos valida condições comerciais. Finanças valida critérios econômicos. O decisor registra aprovação e condições.","Qual informação hoje fica sem responsável?","Antes de aprovar, precisamos revisar.","cards"],["O que toda análise deve ter?","Um checklist reduz omissões.",["Escopo","Dados e custos","Modelo","Sensibilidade e decisão"],"Abra os 34 itens. Use concluído, pendente e não aplicável justificado. Marcação sem evidência não equivale a revisão. Priorize pendências capazes de alterar a decisão.","Qual grupo costuma ser mais frágil?","Também precisamos avaliar a prática da empresa.","checklist"],["A empresa usa LCC ou apenas uma planilha?","Auditar evidências de aplicação.",["Critérios","Evidências","Notas de 1 a 5"],"Use as 12 perguntas. A nota exige evidências. A escala é didática, não certificação normativa. Uma média elevada não compensa falha crítica.","Que evidência sustentaria uma nota 4?","A aprovação precisa deixar uma referência para o futuro.","audit"],["O que deve ficar registrado?","Preservar a base da decisão aprovada.",["Versão","Premissas","Resultado","Condições de aprovação"],"Guarde modelo, fontes, responsáveis e alterações. Não sobrescreva a versão aprovada ao atualizar a previsão. Separe o que era conhecido na decisão do que foi aprendido depois.","Conseguimos explicar uma decisão tomada há três anos?","Depois da compra, precisamos acompanhar.","cards"],["Previsto versus realizado.","O desempenho real alimenta decisões futuras.",["Uso","Energia","Manutenção","Falhas e perdas"],"Compare períodos e bases de preços equivalentes. Separe volume, preço e desempenho. Não confronte todo o LCC com o desembolso de um ano. Identifique se o desvio veio do uso, de preços ou do equipamento.","O desvio veio do equipamento ou de uma premissa alterada?","Algumas mudanças exigem refazer a análise.","cards"],["Quando revisar?","Revisar quando mudam condições relevantes.",["Demanda e tarifa","Confiabilidade","Vida útil","Alternativas disponíveis"],"Defina limites, frequência e responsáveis. Preserve histórico e justificativas. O objetivo é melhorar decisões futuras, não alterar retroativamente a análise para defender escolhas passadas.","Qual mudança dispararia uma revisão na sua operação?","Fechamos o ciclo voltando à primeira pergunta.","cards"],["Qual você aprovaria agora?","A boa decisão combina requisitos, custos e condições de uso.",["Agora, sabemos o que perguntar."],"No original, B venceu no uso intenso e A no uso reduzido. As condições do modelo explicam a diferença. Peça uma decisão real que cada participante pretende reavaliar. Encerre reforçando definição, comparação e acompanhamento.","Qual decisão real você vai reavaliar com LCC?","Defina a necessidade, compare o ciclo de vida e acompanhe o resultado.","closing"]]}]
+;
+const DEFAULTS={
+ hours:6000,years:8,rate:8,tariff:.8,loss:1000,renewalYear:4,
+ A:{purchase:80000,engineering:5000,logistics:3000,installation:8000,commissioning:4000,power:30,operation:2000,planned:6000,mtbf:6000,repair:4000,downtime:8,renewal:12000,disposal:10000,residual:5000},
+ B:{purchase:110000,engineering:5000,logistics:3000,installation:8000,commissioning:4000,power:25,operation:2000,planned:4000,mtbf:12000,repair:4000,downtime:6,renewal:8000,disposal:10000,residual:8000}
+};
+const $=id=>document.getElementById(id);
+const clone=value=>JSON.parse(JSON.stringify(value));
+const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=(v,d=0)=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",minimumFractionDigits:d,maximumFractionDigits:d}).format(v);
+const num=(v,d=2)=>new Intl.NumberFormat("pt-BR",{maximumFractionDigits:d}).format(v);
+const STORAGE="lcc_course_8topics_v2";
+let state={params:clone(DEFAULTS),fields:{},checklist:{},audit:{},current:0,sensitivityHours:6000};
+let persistent=true;
+function validParams(p){
+ if(!p||!p.A||!p.B)return false;
+ if(!Number.isInteger(p.years)||p.years<1||p.years>50)return false;
+ if(!Number.isInteger(p.renewalYear)||p.renewalYear<1||p.renewalYear>50)return false;
+ if(!Number.isFinite(p.hours)||p.hours<0||p.hours>8760)return false;
+ if(!Number.isFinite(p.rate)||p.rate<0||p.rate>100)return false;
+ if(!Number.isFinite(p.tariff)||p.tariff<0||p.tariff>1000000)return false;
+ if(!Number.isFinite(p.loss)||p.loss<0||p.loss>1e12)return false;
+ for(const side of ["A","B"]){
+  for(const key of Object.keys(DEFAULTS[side]))if(!Number.isFinite(p[side][key])||p[side][key]<0||p[side][key]>1e12)return false;
+  if(p[side].mtbf<=0||p[side].downtime>8760)return false;
+ }
+ return true;
+}
+try{
+ const saved=JSON.parse(localStorage.getItem(STORAGE)||"null");
+ if(saved&&validParams(saved.params)){
+  state={...state,...saved};
+  for(const key of ["fields","checklist","audit"])if(!state[key]||typeof state[key]!=="object"||Array.isArray(state[key]))state[key]={};
+  if(!Number.isFinite(state.sensitivityHours))state.sensitivityHours=6000;
+ }
+}catch(e){persistent=false}
+function save(){
+ try{localStorage.setItem(STORAGE,JSON.stringify(state));persistent=true}catch(e){persistent=false}
+ $("storageInfo").textContent=persistent?"Dados salvos neste navegador. Exporte uma cópia em Materiais.":"Dados apenas nesta sessão. Exporte antes de fechar.";
+}
+const changed=()=>JSON.stringify(state.params)!==JSON.stringify(DEFAULTS);
+function model(p,side,hours=p.hours){
+ const s=p[side],n=p.years,r=p.rate/100;
+ const factor=r===0?n:-Math.expm1(-n*Math.log1p(r))/r;
+ const initial=s.purchase+s.engineering+s.logistics+s.installation+s.commissioning;
+ const energy=s.power*hours*p.tariff,failures=hours/s.mtbf,corrective=failures*s.repair;
+ const downHours=failures*s.downtime,loss=downHours*p.loss;
+ const directAnnual=energy+s.operation+s.planned+corrective,annual=directAnnual+loss;
+ const renewalPV=p.renewalYear<=n?s.renewal/Math.pow(1+r,p.renewalYear):0;
+ const terminalPV=(s.disposal-s.residual)/Math.pow(1+r,n);
+ const directLCC=initial+directAnnual*factor+renewalPV+terminalPV,lossPV=loss*factor,lcc=directLCC+lossPV;
+ const flow=[{year:0,initial,energy:0,operation:0,planned:0,corrective:0,loss:0,renewal:0,disposal:0,residual:0,total:initial,pv:initial}];
+ for(let year=1;year<=n;year++){
+  const renewal=year===p.renewalYear?s.renewal:0,disposal=year===n?s.disposal:0,residual=year===n?s.residual:0,total=annual+renewal+disposal-residual;
+  flow.push({year,initial:0,energy,operation:s.operation,planned:s.planned,corrective,loss,renewal,disposal,residual,total,pv:total/Math.pow(1+r,year)});
+ }
+ return {initial,energy,failures,corrective,downHours,loss,directAnnual,annual,factor,renewalPV,terminalPV,directLCC,lossPV,lcc,cae:lcc/factor,flow};
+}
+function comparison(hours=state.params.hours,p=state.params){
+ const A=model(p,"A",hours),B=model(p,"B",hours);return {A,B,delta:A.lcc-B.lcc};
+}
+function threshold(){
+ const d0=comparison(0).delta,slope=comparison(1).delta-d0;
+ return Math.abs(slope)<1e-8?null:-d0/slope;
+}
+function conclusion(d){return Math.abs(d)<.01?"Custos equivalentes neste cenário.":(d>0?"B":"A")+" apresenta menor LCC neste cenário."}
+function caseLabel(h=state.params.hours){
+ const p=state.params;return num(h,0)+" h/ano · "+p.years+" anos · "+num(p.rate)+"% real a.a. · "+(changed()?"premissas editadas":"caso didático original");
+}
+const slides=[];
+topics.forEach((t,ti)=>t.slides.forEach((r,si)=>slides.push({
+ title:r[0],message:r[1],items:r[2],notes:r[3],question:r[4],transition:r[5],kind:r[6],
+ topic:ti,local:si,id:(ti+1)+"."+(si+1),minutes:t.times[si]
+})));
+let current=Number.isInteger(state.current)?Math.max(0,Math.min(63,state.current)):0,step=0;
+let activeMaterial="opening",panelMode="notes";
+function rev(html,index=0){return '<div class="reveal" data-step="'+index+'">'+html+'</div>'}
+function cards(items){return '<div class="grid '+(items.length===3?"three":"")+'">'+items.map((item,i)=>rev('<div class="card"><small>'+String(i+1).padStart(2,"0")+'</small><div class="text">'+esc(item)+'</div></div>',i)).join("")+'</div>'}
+function proposals(){return '<div class="proposals">'+["A","B"].map(side=>'<section class="proposal"><div class="label">Bomba industrial · '+side+'</div><div class="price">'+money(state.params[side].purchase)+'</div></section>').join("")+'</div>'}
+function results(a,b,label,index=0){return rev('<div class="proposals"><section class="proposal"><div class="label">A · '+esc(label)+'</div><div class="value">'+esc(a)+'</div></section><section class="proposal"><div class="label">B · '+esc(label)+'</div><div class="value">'+esc(b)+'</div></section></div>',index)}
+function bars(a,b){
+ if(a<0||b<0)return results(money(a),money(b),"LCC");
+ const max=Math.max(a,b,1);
+ return ["A","B"].map((side,i)=>{const value=i?b:a;return rev('<div class="bar-row"><span class="bar-label">'+side+'</span><div><div class="track"><div class="bar '+(i?"hatch":"")+'" style="width:'+Math.max(.1,value/max*100)+'%"></div></div><div class="bar-value">'+money(value)+'</div></div></div>',i)}).join("")+'<p class="micro">Escala comum com origem zero · Valor presente.</p>';
+}
+function resultBlock(c,h){
+ return bars(c.A.lcc,c.B.lcc)+rev('<p class="statement">'+esc(conclusion(c.delta))+'</p><p class="small">Diferença A − B: '+money(c.delta)+'</p>',2)+'<p class="micro">'+esc(caseLabel(h))+' · Inclui perdas econômicas.</p>';
+}
+function field(name,label,type="text",initial=""){return '<label>'+esc(label)+'<input type="'+type+'" data-field="'+esc(name)+'" value="'+esc(state.fields[name]??initial)+'"></label>'}
+function textField(name,label,initial=""){return '<label>'+esc(label)+'<textarea data-field="'+esc(name)+'">'+esc(state.fields[name]??initial)+'</textarea></label>'}
+function table(headers,rows){return '<div class="table-wrap"><table><thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join("")+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>'}
+function curveSVG(){
+ const t=threshold();let xmax=t!==null&&t>0?Math.min(8760,Math.max(1000,t*1.7)):1000;
+ const points=Array.from({length:31},(_,i)=>{const h=xmax*i/30,c=comparison(h);return {h,a:c.A.lcc,b:c.B.lcc}});
+ const values=points.flatMap(p=>[p.a,p.b]),low=Math.min(...values),high=Math.max(...values),span=Math.max(1,high-low);
+ const x=h=>95+h/xmax*680,y=v=>220-(v-low)/span*165;
+ const path=key=>points.map((p,i)=>(i?"L":"M")+x(p.h)+","+y(p[key])).join(" ");
+ const marker=t!==null&&t>=0&&t<=xmax?'<line x1="'+x(t)+'" y1="35" x2="'+x(t)+'" y2="235" stroke="#000" stroke-dasharray="3 5"/><text x="'+x(t)+'" y="268" text-anchor="middle" font-size="13">'+num(t,0)+' h/ano</text>':"";
+ return '<svg viewBox="0 0 860 305" role="img" aria-label="Curvas calculadas de LCC por horas anuais"><path d="M95 25V235H785" fill="none" stroke="#000"/><path d="'+path("a")+'" fill="none" stroke="#000" stroke-width="3"/><path d="'+path("b")+'" fill="none" stroke="#000" stroke-width="3" stroke-dasharray="9 5"/>'+marker+'<text x="95" y="18" font-size="13">LCC (R$)</text><text x="2" y="58" font-size="11">'+num(high,0)+'</text><text x="2" y="223" font-size="11">'+num(low,0)+'</text><text x="95" y="253" font-size="11">0</text><text x="785" y="253" text-anchor="end" font-size="11">'+num(xmax,0)+'</text><text x="435" y="296" text-anchor="middle" font-size="13">Horas por ano · A contínua · B tracejada</text></svg>';
+}
+let sensSpread=20,curveVariable="tariff";
+function highlightTitle(title){
+ const words=title.trim().split(/\s+/),last=words.splice(-Math.min(2,words.length)).join(' ');
+ return esc(words.join(' '))+' <span class="title-focus">'+esc(last)+'</span>';
+}
+const sensDrivers=[
+ {key:'hours',name:'Horas de operação',unit:'h/ano'},
+ {key:'tariff',name:'Tarifa de energia',unit:'R$/kWh'},
+ {key:'mtbf',name:'MTBF das duas bombas',unit:'fator × base'},
+ {key:'loss',name:'Perda por hora parada',unit:'R$/h'},
+ {key:'planned',name:'Manutenção planejada',unit:'fator × base'},
+ {key:'repair',name:'Custo por reparo',unit:'fator × base'},
+ {key:'rate',name:'Taxa de desconto',unit:'% a.a.'}
+];
+function varied(key,mult,p=state.params){
+ const q=clone(p);
+ if(key==='planned'){for(const side of ['A','B']){q[side].planned*=mult;q[side].renewal*=mult;}}
+ else if(key==='mtbf'||key==='repair'){for(const side of ['A','B'])q[side][key]*=mult;}
+ else q[key]*=mult;
+ q.hours=Math.min(8760,q.hours);
+ return q;
+}
+function compareParams(p){return comparison(p.hours,p);}
+function signed(v){return (v>0?'+':'')+money(v);}
+function winner(v){return Math.abs(v)<.01?'Empate':v>0?'B':'A';}
+function sensitivityData(){
+ const base=comparison().delta;
+ return sensDrivers.map(d=>{
+  const lo=varied(d.key,1-sensSpread/100),hi=varied(d.key,1+sensSpread/100);
+  const a=compareParams(lo).delta,b=compareParams(hi).delta;
+  return {...d,lo,hi,a,b,impact:Math.max(Math.abs(a-base),Math.abs(b-base))};
+ }).sort((a,b)=>b.impact-a.impact);
+}
+function tornadoSVG(rows){
+ const base=comparison().delta,limit=Math.max(1,...rows.flatMap(d=>[Math.abs(d.a-base),Math.abs(d.b-base)]));
+ const x=v=>465+(v/limit)*230;
+ let body='<line x1="465" y1="24" x2="465" y2="330" stroke="#aab0ba"/><text x="465" y="351" text-anchor="middle" font-size="13">0</text>';
+ rows.forEach((d,i)=>{
+  const y=30+i*42,a=d.a-base,b=d.b-base;
+  body+='<text x="10" y="'+(y+17)+'" font-size="16">'+esc(d.name)+'</text>';
+  body+='<rect x="'+Math.min(x(a),465)+'" y="'+y+'" width="'+Math.max(1,Math.abs(x(a)-465))+'" height="12" fill="#111827"/>';
+  body+='<rect x="'+Math.min(x(b),465)+'" y="'+(y+14)+'" width="'+Math.max(1,Math.abs(x(b)-465))+'" height="12" fill="#fff" stroke="#111827"/>';
+ });
+ body+='<text x="230" y="351" font-size="13">'+signed(-limit)+'</text><text x="700" y="351" text-anchor="end" font-size="13">'+signed(limit)+'</text>';
+ return '<svg viewBox="0 0 735 365" role="img" aria-label="Tornado: efeito das variações na diferença de LCC em relação à base">'+body+'</svg>';
+}
+function curveInfo(){
+ const p=state.params,key=curveVariable,max=key==='hours'?8760:Math.max(.1,p.tariff*2),q=clone(p);
+ q[key]=0;const zero=compareParams(q).delta;q[key]=1;const slope=compareParams(q).delta-zero;
+ const root=Math.abs(slope)<1e-8?null:-zero/slope;
+ const points=Array.from({length:51},(_,i)=>{q[key]=max*i/50;const c=compareParams(q);return {x:q[key],a:c.A.lcc,b:c.B.lcc};});
+ return {key,max,root,points};
+}
+function decisionCurve(){
+ const f=curveInfo(),vals=f.points.flatMap(p=>[p.a,p.b]),min=Math.min(...vals),span=Math.max(1,Math.max(...vals)-min);
+ const x=v=>86+v/f.max*565,y=v=>260-(v-min)/span*210;
+ const path=k=>f.points.map((p,i)=>(i?'L':'M')+x(p.x)+','+y(p[k])).join(' ');
+ let axes='';for(let i=0;i<=4;i++){const v=min+span*i/4;axes+='<line x1="86" y1="'+y(v)+'" x2="651" y2="'+y(v)+'" stroke="#e1e4e8"/><text x="75" y="'+(y(v)+5)+'" text-anchor="end" font-size="13">'+num(v/1000,1)+'</text>';const t=f.max*i/4;axes+='<text x="'+x(t)+'" y="288" text-anchor="middle" font-size="13">'+num(t,f.key==='hours'?0:2)+'</text>';}
+ const inRange=f.root!==null&&f.root>=0&&f.root<=f.max;
+ let marker=inRange?'<line x1="'+x(f.root)+'" y1="30" x2="'+x(f.root)+'" y2="264" stroke="#b63d3d" stroke-dasharray="5 4"/>':'';
+ marker+='<line x1="'+x(state.params[f.key])+'" y1="30" x2="'+x(state.params[f.key])+'" y2="264" stroke="#a0a7b0" stroke-dasharray="2 5"/>';
+ const unit=f.key==='hours'?'h/ano':'R$/kWh';
+ const message=inRange?'Empate em '+num(f.root,f.key==='hours'?0:3)+' '+unit+'. A preferência muda nesse limite.':f.root!==null&&f.root>=0?'Empate fora da faixa exibida: '+num(f.root,3)+' '+unit+'.':'Sem inversão para valores não negativos, nas premissas atuais.';
+ return '<svg viewBox="0 0 720 330" role="img" aria-label="Curvas de LCC das bombas A e B"><text x="10" y="18" font-size="13">LCC · R$ mil (VP)</text>'+axes+marker+'<path d="'+path('a')+'" fill="none" stroke="#14171c" stroke-width="3"/><path d="'+path('b')+'" fill="none" stroke="#14171c" stroke-width="3" stroke-dasharray="8 5"/><text x="370" y="321" text-anchor="middle" font-size="14">'+(f.key==='hours'?'Horas efetivas anuais':'Tarifa de energia · R$/kWh')+'</text></svg><div class="legend"><span>━ A</span><span>┄ B</span><span>Tracejado vertical: base / limite</span></div><p class="micro curve-verdict">'+message+'</p>';
+}
+function sensitivityVisualBody(){
+ const rows=sensitivityData(),c=comparison();
+ return '<div class="sens-summary"><span>Maior impacto nesta faixa: <b>'+esc(rows[0].name)+'</b></span><span>Δ base <b>'+signed(c.delta)+'</b> · favorece '+winner(c.delta)+'</span></div><div class="sens-grid"><section class="chart-panel"><p class="eyebrow">01 / Influência</p><h2>O que move a diferença?</h2>'+tornadoSVG(rows)+'<p class="micro">Preenchido: entrada menor · Contorno: entrada maior.<br>Eixo: mudança em Δ, em R$ de valor presente. Uma premissa por vez.</p></section><section class="chart-panel"><p class="eyebrow">02 / Decisão</p><h2>Onde a preferência muda?</h2>'+decisionCurve()+'</section></div><p class="micro">Δ = LCC A − LCC B. Positivo favorece B; negativo favorece A. Faixas didáticas, sem probabilidades. Uso limitado a 8.760 h/ano. '+esc(caseLabel())+'.</p>';
+}
+function sensitivityVisual(){return '<div class="sensitivity-controls"><label>Amplitude dos testes <input id="sensSpread" type="range" min="10" max="50" step="5" value="'+sensSpread+'"></label><strong id="spreadValue">±'+sensSpread+'%</strong><label>Curva de decisão <select id="curveVariable"><option value="tariff" '+(curveVariable==='tariff'?'selected':'')+'>Tarifa de energia</option><option value="hours" '+(curveVariable==='hours'?'selected':'')+'>Horas de operação</option></select></label><button class="btn" data-action="simulator">Editar premissas</button></div><div id="sensitivityBody">'+sensitivityVisualBody()+'</div>';}
+function sensitivityAnalytic(){
+ const p=state.params,rows=sensitivityData(),base=comparison();
+ function value(d,q){if(['planned','mtbf','repair'].includes(d.key))return num(q===d.lo?1-sensSpread/100:1+sensSpread/100,2)+'×';return d.key==='tariff'?money(q[d.key],2):num(q[d.key],2);}
+ const tests=rows.map(d=>[esc(d.name),value(d,d.lo)+' → '+value(d,d.hi)+' '+esc(d.unit),signed(d.a)+' / '+signed(d.b),money(d.impact),winner(d.a)===winner(d.b)?'Mantém '+winner(d.a):'Muda '+winner(d.a)+' → '+winner(d.b)]);
+ const scenarios=[['Base',1,1],['Menor tarifa',1,.8],['Maior tarifa',1,1.2],['Uso e tarifa maiores',1.2,1.2],['Uso e tarifa menores',.8,.8],['Uso reduzido',.05,1]];
+ const matrix=scenarios.map(([label,h,t])=>{const q=clone(p);q.hours=Math.min(8760,p.hours*h);q.tariff=p.tariff*t;const c=compareParams(q);return [label,num(q.hours,0)+' h · '+money(q.tariff,2)+'/kWh',money(c.A.lcc),money(c.B.lcc),signed(c.delta),'<b class="winner">'+winner(c.delta)+'</b>'];});
+ return '<div class="metric-strip"><div><small>LCC A · base</small><b>'+money(base.A.lcc)+'</b></div><div><small>LCC B · base</small><b>'+money(base.B.lcc)+'</b></div><div><small>Vantagem de '+winner(base.delta)+'</small><b>'+money(Math.abs(base.delta))+'</b></div></div><details class="analysis-detail"><summary>Testes isolados · ±'+sensSpread+'% · abrir memória de sensibilidade</summary>'+table(['Variável','Faixa testada','Δ menor / maior entrada','Maior efeito vs. base','Preferência'],tests)+'<p class="micro">Fatores relativos à base aplicados às duas bombas. Planejada inclui rotinas e intervenção prevista. Faixas didáticas; validar plausibilidade e dependências.</p></details><h2>Cenários combinados</h2>'+table(['Cenário','Uso e tarifa','LCC A','LCC B','Δ = A − B','Menor LCC'],matrix)+'<p class="micro">Valores em VP · '+esc(caseLabel())+'. Apenas uso e tarifa mudam nos cenários; demais entradas mantidas. Horas alteram energia, falhas, corretivas e perdas. Planejada por calendário permanece. Exemplos didáticos, sem probabilidade atribuída.</p><button class="btn" data-action="simulator">Editar premissas e recalcular</button>';
+}
+function energyView(p,c){
+ return '<div class="formula-chain"><div><small>Potência absorvida</small><b>'+num(p.A.power)+' / '+num(p.B.power)+' kW</b></div><span>×</span><div><small>Uso anual</small><b>'+num(p.hours,0)+' h</b></div><span>×</span><div><small>Tarifa</small><b>'+money(p.tariff,2)+'/kWh</b></div></div>'+rev('<div class="chart-panel"><h2>Custo anual de energia</h2>'+bars(c.A.energy,c.B.energy).replace('Valor presente.','Custos anuais, sem desconto.')+'</div><p class="statement">Diferença anual: <strong>'+money(Math.abs(c.A.energy-c.B.energy))+'</strong></p>',1)+'<p class="micro">Potências A / B · Mesmo serviço requerido · Valores fictícios.</p>';
+}
+function maintenanceView(p,c){
+ return '<div class="maintenance-grid"><section class="maintenance-card"><span class="eyebrow">01 / Planejada</span><h2>Intervenções previstas</h2><p>Rotinas anuais + intervenção prevista</p><div class="maintenance-values"><div><small>A · rotinas / ano</small><b>'+money(p.A.planned)+'</b></div><div><small>B · rotinas / ano</small><b>'+money(p.B.planned)+'</b></div></div><p class="maintenance-event">Ano '+p.renewalYear+' · intervenção planejada<br><b>A '+money(p.A.renewal)+' · B '+money(p.B.renewal)+'</b></p></section><section class="maintenance-card"><span class="eyebrow">02 / Corretiva</span><h2>Reparos por falha</h2><p>Falhas esperadas × custo por reparo</p><div class="maintenance-values"><div><small>A · esperado / ano</small><b>'+money(c.A.corrective)+'</b></div><div><small>B · esperado / ano</small><b>'+money(c.B.corrective)+'</b></div></div><p class="maintenance-event">A '+num(c.A.failures,2)+' · B '+num(c.B.failures,2)+' falhas/ano<br>Modelo: horas efetivas ÷ MTBF.</p></section></div><p class="notice">Duas categorias. A intervenção prevista integra a planejada e é somada uma única vez, no ano correspondente. Perdas produtivas são consequências, fora do custo direto de reparo.</p>';
+}
+
+function bodyFor(s){
+ const p=state.params,c=comparison(),a=c.A,b=c.B,label='<p class="micro">'+esc(caseLabel())+' · Valores fictícios.</p>';
+ switch(s.kind){
+ case "purchase":return proposals()+'<p class="small">Ambas atendem à vazão e à pressão requeridas.</p>'+rev('<p class="statement">Qual você aprovaria?</p>',1)+'<p class="micro">Caso didático · Valores fictícios.</p>';
+ case "closing":return proposals()+rev('<p class="statement">Agora, sabemos o que perguntar.</p>',1);
+ case "decision":return '<p class="lead">'+esc(s.items[0])+'</p>'+proposals();
+ case "timeline":return '<div class="timeline">'+s.items.map((v,i)=>rev('<div class="phase"><small>'+String(i+1).padStart(2,"0")+'</small>'+esc(v)+'</div>',i)).join("")+'</div>'+rev('<p class="statement">O desembolso continua depois da compra.</p>',5);
+ case "definition":return '<div class="definition"><div class="acronym">LCC</div><div><p class="lead">Custo do ciclo de vida</p><p class="small">Life Cycle Cost</p></div></div>'+rev('<p class="statement">'+esc(s.items[2])+'</p>',1);
+ case "concept":return '<div class="legend"><span><i class="swatch"></i>Aquisição</span><span><i class="swatch hatch"></i>Custos posteriores</span></div><div class="bar-row"><b>A</b><div class="track"><div class="bar" style="width:18%"></div><div class="bar hatch reveal" data-step="1" style="width:77%;border-left:0"></div></div></div><div class="bar-row"><b>B</b><div class="track"><div class="bar" style="width:25%"></div><div class="bar hatch reveal" data-step="1" style="width:42%;border-left:0"></div></div></div><p class="micro">ILUSTRATIVO, SEM ESCALA · Não representa totais calculados.</p>'+rev('<p class="statement">A diferença inicial pode se inverter.</p>',2);
+ case "boundaries":return '<div class="boundary">Sistema e interfaces<div class="boundary">Conjunto de bombeamento<div class="boundary">Bomba</div></div></div>'+rev('<p class="statement">Definir inclusões e exclusões.</p>',1);
+ case "horizon":return '<p class="formula">Horizonte da análise ≠ vida útil</p>'+rev('<p class="lead">Mesmo período de comparação.</p><p class="small">Caso didático: '+p.years+' anos.</p>',1);
+ case "initial":return '<p class="small">'+esc(s.items[0])+'</p>'+results(money(a.initial),money(b.initial),"investimento inicial",1)+label;
+ case "energy":return energyView(p,c);
+ case "energyLegacy":return '<p class="formula">'+esc(s.items[0])+'</p><p class="small">A: '+num(p.A.power)+' kW · B: '+num(p.B.power)+' kW · '+num(p.hours,0)+' h/ano · '+money(p.tariff,2)+'/kWh</p>'+results(money(a.energy),money(b.energy),"energia anual",1);
+ case "maintenance":return maintenanceView(p,c);
+ case "maintenanceLegacy":return cards(s.items)+rev('<p class="small">Planejada anual: A '+money(p.A.planned)+' · B '+money(p.B.planned)+'<br>Intervenção no ano '+p.renewalYear+': A '+money(p.A.renewal)+' · B '+money(p.B.renewal)+'</p>',3);
+ case "terminal":return cards(s.items)+rev('<p class="small">Descomissionamento: A '+money(p.A.disposal)+' · B '+money(p.B.disposal)+'<br>Residual: A '+money(p.A.residual)+' · B '+money(p.B.residual)+'</p>',3);
+ case "failures":return '<p class="formula">'+esc(s.items[0])+'</p>'+results(num(a.failures,3),num(b.failures,3),"falhas esperadas/ano",1)+'<p class="micro">Aproximação com taxa estável · MTBF não é vida útil.</p>';
+ case "downtime":return '<p class="formula">'+esc(s.items[0])+'</p>'+results(num(a.downHours,3)+" h",num(b.downHours,3)+" h","indisponibilidade esperada/ano",1);
+ case "corrective":return '<p class="formula">'+esc(s.items[0])+'</p>'+results(money(a.corrective),money(b.corrective),"corretivas esperadas/ano",1);
+ case "loss":return '<p class="formula">'+esc(s.items[0])+'</p>'+results(money(a.loss),money(b.loss),"perda econômica esperada/ano",1)+'<p class="micro">Perda líquida e não recuperável, conforme o caso.</p>';
+ case "annual":return results(money(a.annual),money(b.annual),"custo econômico anual")+rev('<p class="statement">Mesmo caso. Mais informações.</p><button class="btn" data-action="break">Intervalo · 10 minutos</button>',1)+label;
+ case "formula":return s.items.map((v,i)=>rev('<p class="'+(i?"lead":"formula")+'">'+esc(v)+'</p>',i)).join("");
+ case "lccformula":return cards(s.items)+rev('<p class="small">LCC = C₀ + Σ Cₜ/(1+r)ᵗ − créditos descontados</p>',3);
+ case "factor":return '<p class="formula">'+esc(s.items[0])+'</p>'+rev('<p class="lead">'+p.years+' anos · '+num(p.rate)+'% real ao ano</p><p class="value">F = '+num(a.factor,6)+'</p>',1);
+ case "lccresult":return resultBlock(c,p.hours);
+ case "sensitivityVisual":return sensitivityVisual();
+ case "sensitivityAnalytic":return sensitivityAnalytic();
+ case "sensitivity":return '<p class="small">Teste local: horas e custos dependentes do uso.</p><label>Horas efetivas anuais<div class="actions"><input id="sensRange" type="range" min="0" max="8760" step="10" value="'+state.sensitivityHours+'" aria-label="Horas anuais no teste"><strong id="sensHours"></strong></div></label><div id="sensResult"></div><p class="micro">Custos fixos e intervenção por calendário permanecem.</p>';
+ case "hourscompare":return cards(s.items)+rev(table(["Uso","LCC A","LCC B"],[3000,6000].map(h=>{const v=comparison(h);return [num(h,0)+" h/ano",money(v.A.lcc),money(v.B.lcc)]})),2);
+ case "noloss":{const q=clone(p);q.loss=0;const aa=model(q,"A"),bb=model(q,"B");return cards(s.items)+rev('<p class="small">Sem perda produtiva, mantendo reparos e demais custos:</p><p class="lead">A '+money(aa.lcc)+' · B '+money(bb.lcc)+'</p><p class="micro">Não inclui investimento em reserva adicional.</p>',3)}
+ case "exerciseAnnual":return '<p class="small">300 h/ano · Demais premissas mantidas · Gabarito ainda oculto.</p><div class="fields">'+field("exerciseAnnualA","Custo anual de A — R$")+field("exerciseAnnualB","Custo anual de B — R$")+'</div>'+textField("exerciseChanges","Quais parcelas mudaram?")+'<div class="actions"><button class="btn" data-action="exercise">Abrir folha do exercício</button></div>';
+ case "exerciseLCC":return '<p class="small">300 h/ano · Fator: '+num(a.factor,8)+'</p><div class="fields">'+field("exerciseLCCA","LCC de A — R$")+field("exerciseLCCB","LCC de B — R$")+'</div>'+textField("exerciseDecision","Recomendação e condições");
+ case "exerciseResult":return resultBlock(comparison(300),300);
+ case "threshold":{const t=threshold(),ok=t!==null&&t>=0&&t<=8760;return '<p class="lead">'+(ok?"Indiferença em aproximadamente "+num(t,0)+" h/ano.":"Sem cruzamento entre 0 e 8.760 h/ano nas premissas atuais.")+'</p>'+curveSVG()+'<p class="micro">Cálculo do modelo atual · Mantidas as demais premissas.</p>'}
+ case "audit":return cards(s.items)+rev('<div class="actions"><button class="btn" data-action="audit">Abrir auditoria</button></div>',3);
+ case "checklist":return cards(s.items)+rev('<div class="actions"><button class="btn" data-action="checklist">Abrir checklist</button></div>',4);
+ default:return cards(s.items);
+ }
+}
+function lastStep(){return Math.max(0,...Array.from($("stage").querySelectorAll("[data-step]")).map(el=>Number(el.dataset.step)))}
+function updateStep(){
+ $("stage").querySelectorAll("[data-step]").forEach(el=>{const hide=Number(el.dataset.step)>step;el.classList.toggle("pending",hide);el.setAttribute("aria-hidden",String(hide))});
+ $("prevButton").disabled=current===0&&step===0;
+ $("nextButton").disabled=current===63&&step===lastStep();
+ $("status").textContent=slides[current].id+" · "+(step+1)+"/"+(lastStep()+1);
+ $("nextButton").setAttribute("aria-label",step<lastStep()?"Revelar próxima informação":"Próximo slide");
+}
+function render(index,atEnd=false,keepStep=null){
+ current=Math.max(0,Math.min(63,index));state.current=current;
+ const s=slides[current];
+ $("topicName").textContent=(s.topic+1)+"/8 · "+topics[s.topic].title;
+ $("position").textContent=(current+1)+" de 64 slides";
+ $("stage").innerHTML='<article class="slide" aria-labelledby="slideTitle"><p class="kicker">'+s.id+' · '+s.minutes+' min'+(changed()?' · cenário editado':'')+'</p><h1 id="slideTitle" tabindex="-1">'+highlightTitle(s.title)+'</h1>'+bodyFor(s)+'</article>';
+ document.body.dataset.kind=s.kind;
+ document.documentElement.style.setProperty("--course-progress",((current+1)/slides.length*100)+"%");
+ $("topicRail").innerHTML=topics.map((t,i)=>'<button title="'+esc(t.title)+'" data-go="'+(i*8)+'" aria-label="Tópico '+(i+1)+': '+esc(t.title)+'" '+(i===s.topic?'aria-current="step"':'')+'><span>'+String(i+1).padStart(2,"0")+'</span></button>').join("");
+ step=keepStep!==null?Math.min(keepStep,lastStep()):atEnd?lastStep():0;
+ updateStep();document.title="LCC · "+s.id+" · "+s.title;
+ if(s.kind==="sensitivity")updateSensitivity();
+ save();
+}
+function advance(){if(step<lastStep()){step++;updateStep()}else if(current<63){render(current+1);window.scrollTo(0,0)}}
+function back(){if(step>0){step--;updateStep()}else if(current>0){render(current-1,true);window.scrollTo(0,0)}}
+function updateSensitivity(){
+ if(!$("sensResult"))return;
+ const c=comparison(state.sensitivityHours);
+ $("sensHours").textContent=num(state.sensitivityHours,0)+" h/ano";
+ $("sensResult").innerHTML=results(money(c.A.lcc),money(c.B.lcc),"LCC")+'<p class="statement">'+esc(conclusion(c.delta))+'</p>';
+}
+const visuals={
+ cards:"Blocos tipográficos com revelação progressiva.",purchase:"Duas propostas lado a lado, preços grandes e pergunta revelada.",closing:"Retorno visual às propostas de abertura.",timeline:"Linha do tempo em cinco etapas.",definition:"Sigla em grande escala, significado e definição.",concept:"Barras conceituais em contorno e hachura; ilustrativas, sem escala.",decision:"Decisão acima das duas propostas.",boundaries:"Retângulos aninhados: bomba, conjunto e sistema.",horizon:"Destaque para horizonte comum e sua diferença em relação à vida útil.",formula:"Equação e interpretação com revelação gradual.",lccformula:"Três componentes do LCC e síntese da equação.",sensitivity:"Controle de horas e resultados calculados em teste local.",threshold:"Curvas calculadas e ponto de indiferença.",exerciseAnnual:"Campos para respostas anuais sem gabarito.",exerciseLCC:"Campos de LCC e recomendação.",audit:"Escala e acesso à auditoria.",checklist:"Grupos de revisão e acesso ao checklist."
+};
+function openPanel(title,html,mode="material"){
+ panelMode=mode;$("panelTitle").textContent=title;$("panelBody").innerHTML=html;
+ $("printButton").hidden=mode==="index"||mode==="break";
+ if(!$("panel").open)$("panel").showModal();
+ document.body.classList.add("locked");$("panel").scrollTop=0;
+}
+function closePanel(){ $("panel").close() }
+function note(title,text){return '<section class="note"><h3>'+esc(title)+'</h3><p>'+esc(text)+'</p></section>'}
+function openNotes(){
+ const s=slides[current],elapsed=slides.slice(0,current).reduce((a,x)=>a+x.minutes,0)+(s.topic>=4?10:0);
+ openPanel("Notas · "+s.id+" · "+s.title,
+ '<p class="small">'+s.minutes+' minutos · Faixa sugerida: '+elapsed+'–'+(elapsed+s.minutes)+' min do curso.</p>'+
+ note("Mensagem principal",s.message)+note("Composição visual",visuals[s.kind]||"Comparação calculada com destaque para valores e premissas.")+
+ note("Fala do apresentador",s.notes)+note("Interação",s.question)+note("Transição",s.transition)+
+ '<p class="notice">As notas numéricas descrevem o caso original. Se as entradas forem alteradas, os resultados projetados serão recalculados. Este painel aparece na tela compartilhada.</p>',"notes");
+}
+function openIndex(){
+ openPanel("Percurso do curso",'<p class="small">64 slides · 230 minutos de conteúdo + intervalo de 10 minutos após o tópico 4.</p>'+
+ topics.map((t,ti)=>'<section class="nav-topic"><h3>'+(ti+1)+'. '+esc(t.title)+' · '+t.minutes+' min</h3><div class="nav-slides">'+t.slides.map((s,si)=>'<button data-go="'+(ti*8+si)+'" '+(current===ti*8+si?'aria-current="page"':'')+'>'+(ti+1)+'.'+(si+1)+' · '+esc(s[0])+'</button>').join("")+'</div></section>').join(""),"index");
+}
+
+
+
+const materialOptions=[
+ ["opening","Ficha de abertura"],["assumptions","Dados e premissas"],["costs","Estrutura de custos"],
+ ["flow","Fluxo anual"],["simulator","Simulador"],["exercise","Exercício da turma"],["answers","Gabarito do instrutor"],
+ ["checklist","Checklist"],["audit","Auditoria 1 a 5"],["decision","Registro da decisão"],
+ ["tracking","Previsto versus realizado"],["glossary","Glossário"],["references","Referências e convenções"]
+];
+function materials(id=activeMaterial){
+ activeMaterial=id;
+ openPanel("Materiais de apoio",'<div class="material-nav"><select id="materialSelect" aria-label="Material de apoio">'+materialOptions.map(([key,title])=>'<option value="'+key+'" '+(key===id?'selected':'')+'>'+esc(title)+'</option>').join("")+'</select><button class="btn" data-action="export">Exportar registros</button><button class="btn" data-action="import">Importar registros</button><input id="importFile" type="file" accept=".json,application/json" hidden></div><div id="materialContent">'+materialContent(id)+'</div>');
+}
+function annualRows(c){return [
+ ["Energia",money(c.A.energy,2),money(c.B.energy,2)],
+ ["Outros custos operacionais",money(state.params.A.operation,2),money(state.params.B.operation,2)],
+ ["Planejada — rotinas anuais",money(state.params.A.planned,2),money(state.params.B.planned,2)],
+ ["Corretivas esperadas",money(c.A.corrective,2),money(c.B.corrective,2)],
+ ["Perdas econômicas",money(c.A.loss,2),money(c.B.loss,2)],
+ ["Total anual",money(c.A.annual,2),money(c.B.annual,2)]
+]}
+function materialContent(id){
+ const p=state.params,c=comparison();
+ switch(id){
+ case "opening":return '<h2>Ficha de abertura da análise</h2><div class="fields">'+
+ field("openDecision","Decisão","text","Selecionar uma bomba industrial.")+
+ field("openNeed","Necessidade","text","Atender ao serviço requerido pela operação.")+
+ textField("openService","Serviço requerido","Vazão e pressão requeridas: detalhar especificação.")+
+ textField("openRequirements","Requisitos obrigatórios")+textField("openAlternatives","Alternativas","Bombas A e B.")+
+ textField("openScope","Fronteiras")+textField("openIncludes","Inclusões")+textField("openExcludes","Exclusões e justificativas")+
+ field("openDate","Data-base","date")+field("openHorizon","Horizonte","text",p.years+" anos")+
+ field("openOwner","Responsável pela análise")+textField("openPending","Pendências e encaminhamentos")+
+ '</div><p class="micro">Esta ficha documental não altera automaticamente o simulador.</p>';
+ case "assumptions":return '<h2>Registro de dados e premissas</h2><p class="notice">Dados iniciais fictícios. Registre a origem antes de uma aplicação real.</p>'+
+ table(["Variável","Modelo atual","Base"],[
+ ["Horas anuais",num(p.hours,0)+" h","Premissa operacional"],
+ ["Horizonte",p.years+" anos","Período da decisão"],
+ ["Taxa",num(p.rate)+"% real a.a.","Premissa didática"],
+ ["Tarifa",money(p.tariff,2)+"/kWh","Sem escalada real"],
+ ["Perda líquida",money(p.loss,2)+"/h","Não recuperável no caso"],
+ ["MTBF A / B",num(p.A.mtbf,0)+" / "+num(p.B.mtbf,0)+" h","Taxa estável"],
+ ["Planejada — intervenção prevista","Ano "+p.renewalYear,"Por calendário"]
+ ])+'<div class="fields">'+textField("assumpSources","Fontes, datas e responsáveis")+textField("assumpConfidence","Confiança e limitações")+textField("assumpRanges","Faixas plausíveis")+textField("assumpValidation","Próximas verificações")+'</div>';
+ case "costs":return '<h2>Estrutura de custos</h2>'+table(["Categoria","Momento","A","B"],[
+ ["Aquisição","t = 0",money(p.A.purchase),money(p.B.purchase)],
+ ["Engenharia","t = 0",money(p.A.engineering),money(p.B.engineering)],
+ ["Logística","t = 0",money(p.A.logistics),money(p.B.logistics)],
+ ["Instalação","t = 0",money(p.A.installation),money(p.B.installation)],
+ ["Comissionamento","t = 0",money(p.A.commissioning),money(p.B.commissioning)],
+ ...annualRows(c).map(r=>[r[0],"Anual",r[1],r[2]]),
+ ["Planejada — intervenção prevista","Fim do ano "+p.renewalYear,money(p.A.renewal),money(p.B.renewal)],
+ ["Descomissionamento","Fim do ano "+p.years,money(p.A.disposal),money(p.B.disposal)],
+ ["Residual — crédito","Fim do ano "+p.years,money(p.A.residual),money(p.B.residual)]
+ ])+'<div class="fields">'+textField("costSources","Fontes e documentos")+textField("costDouble","Verificação de dupla contagem")+textField("costExcluded","Itens excluídos e justificativa")+textField("costPending","Custos pendentes")+'</div>';
+ case "flow":return '<h2>Fluxo anual econômico</h2><p class="small">'+esc(caseLabel())+'. Custos positivos; residual deduzido. Inclui perdas de oportunidade.</p>'+
+ table(["Ano","A — valor do ano","A — VP","B — valor do ano","B — VP"],c.A.flow.map((r,i)=>[
+ String(r.year),money(r.total,2),money(r.pv,2),money(c.B.flow[i].total,2),money(c.B.flow[i].pv,2)
+ ]))+'<p><strong>LCC A: '+money(c.A.lcc,2)+' · LCC B: '+money(c.B.lcc,2)+'</strong></p><button class="btn" data-action="csv">Exportar fluxo detalhado · CSV</button>';
+ case "simulator":return simulatorHTML();
+ case "exercise":return '<h2>Exercício — 300 h/ano</h2><p class="small">Mantenha as demais premissas. Recalcule energia, falhas, corretivas e perdas. A planejada (rotinas e intervenção por calendário) e a operação fixa permanecem.</p><p class="notice">Usa as entradas atuais do simulador. Restaure o cenário original para reproduzir o gabarito original.</p>'+
+ table(["Dado","A","B"],[
+ ["Aquisição",money(p.A.purchase),money(p.B.purchase)],
+ ["Implantação adicional",money(c.A.initial-p.A.purchase),money(c.B.initial-p.B.purchase)],
+ ["Potência",num(p.A.power)+" kW",num(p.B.power)+" kW"],
+ ["MTBF",num(p.A.mtbf,0)+" h",num(p.B.mtbf,0)+" h"],
+ ["Duração por falha",num(p.A.downtime)+" h",num(p.B.downtime)+" h"],
+ ["Reparo por falha",money(p.A.repair),money(p.B.repair)],
+ ["Planejada anual",money(p.A.planned),money(p.B.planned)],
+ ["Operação fixa anual",money(p.A.operation),money(p.B.operation)],
+ ["Planejada — intervenção prevista",money(p.A.renewal),money(p.B.renewal)],
+ ["Descomissionamento",money(p.A.disposal),money(p.B.disposal)],
+ ["Residual",money(p.A.residual),money(p.B.residual)]
+ ])+'<p class="small">Tarifa: '+money(p.tariff,2)+'/kWh · Perda: '+money(p.loss)+'/h · '+p.years+' anos · '+num(p.rate)+'% real · Intervenção: ano '+p.renewalYear+'.<br>Fator da série uniforme: '+num(c.A.factor,8)+'.</p><div class="fields">'+
+ field("exerciseAnnualA","Custo anual A — R$")+field("exerciseAnnualB","Custo anual B — R$")+
+ field("exerciseLCCA","LCC A — R$")+field("exerciseLCCB","LCC B — R$")+
+ textField("exerciseDecision","Recomendação e condições")+textField("exerciseChecks","Dados que precisam de validação")+'</div>';
+ case "answers":{
+ const ex=comparison(300),t=threshold();
+ return '<h2>Gabarito do instrutor</h2><p class="notice">As respostas estão visíveis. Resultados calculados com as premissas atuais.</p><h3>Cenário atual — '+num(p.hours,0)+' h/ano</h3>'+
+ table(["Parcela","A","B"],annualRows(c))+'<p>LCC A: <strong>'+money(c.A.lcc,2)+'</strong><br>LCC B: <strong>'+money(c.B.lcc,2)+'</strong><br>Diferença A − B: '+money(c.delta,2)+'</p><h3>Exercício — 300 h/ano</h3>'+
+ table(["Parcela","A","B"],annualRows(ex))+'<p>LCC A: <strong>'+money(ex.A.lcc,2)+'</strong><br>LCC B: <strong>'+money(ex.B.lcc,2)+'</strong><br>Diferença A − B: '+money(ex.delta,2)+'<br>'+esc(conclusion(ex.delta))+'</p><p>Indiferença: '+(t!==null&&t>=0&&t<=8760?num(t,2)+" h/ano":"sem cruzamento na faixa 0–8.760 h/ano")+'.</p><h3>Referências fixas originais</h3><p>6.000 h/ano: A R$ 1.053.970,49; B R$ 889.770,48.<br>300 h/ano: A R$ 202.318,60; B R$ 207.357,10.<br>Ponto de indiferença original: aproximadamente 469,70 h/ano.</p>';
+ }
+ case "checklist":return checklistHTML();
+ case "audit":return auditHTML();
+ case "decision":return '<h2>Registro da decisão</h2><div class="fields">'+
+ field("decisionChoice","Alternativa recomendada")+field("decisionVersion","Versão do modelo")+
+ field("decisionDate","Data","date")+field("decisionApprover","Aprovador")+
+ textField("decisionResults","Resultados comparados")+textField("decisionDifferences","Principais diferenças")+
+ textField("decisionCritical","Variáveis críticas")+textField("decisionRequirements","Requisitos verificados")+
+ textField("decisionConditions","Condições de aprovação")+textField("decisionRisks","Riscos residuais")+
+ textField("decisionOwners","Responsáveis")+textField("decisionTriggers","Gatilhos de revisão")+'</div>';
+ case "tracking":return '<h2>Previsto versus realizado</h2><p class="notice">Compare períodos e bases equivalentes. Separe uso, preço e desempenho. Não compare o LCC de oito anos com desembolsos de um único ano.</p><div class="fields">'+
+ field("trackPeriod","Período acompanhado")+field("trackVersion","Versão aprovada de referência")+
+ textField("trackHours","Horas: previsto, realizado e explicação")+textField("trackEnergy","Energia: previsto, realizado e explicação")+
+ textField("trackMaintenance","Manutenção: previsto, realizado e explicação")+textField("trackFailures","Falhas e indisponibilidade")+
+ textField("trackLosses","Perdas econômicas: base e evidência")+textField("trackAction","Ações, responsáveis e próxima revisão")+'</div>';
+ case "glossary":return '<h2>Glossário</h2>'+table(["Termo","Definição"],glossary.map(row=>row.map(esc)));
+ case "references":return referencesHTML();
+ default:return "";
+ }
+}
+const commonFields=[
+ ["hours","Horas efetivas anuais","h/ano",0,8760,"any"],
+ ["years","Horizonte","anos",1,50,1],["rate","Taxa real","% a.a.",0,100,"any"],
+ ["tariff","Tarifa de energia","R$/kWh",0,1000000,"any"],
+ ["loss","Perda econômica líquida","R$/h",0,1e12,"any"],
+ ["renewalYear","Ano da intervenção planejada","ano",1,50,1]
+];
+const sideFields=[
+ ["purchase","Aquisição","R$"],["engineering","Engenharia","R$"],["logistics","Logística","R$"],
+ ["installation","Instalação","R$"],["commissioning","Comissionamento","R$"],["power","Potência elétrica absorvida","kW"],
+ ["operation","Outros custos operacionais anuais","R$/ano"],["planned","Planejada — rotinas anuais","R$/ano"],
+ ["mtbf","MTBF","h de operação"],["repair","Custo direto por falha","R$/evento"],
+ ["downtime","Indisponibilidade por falha","h/evento"],["renewal","Planejada — intervenção prevista","R$"],
+ ["disposal","Descomissionamento","R$"],["residual","Valor residual","R$"]
+];
+function numberInput(name,value,min=0,max=1e12,step="any"){
+ return '<input name="'+esc(name)+'" aria-label="'+esc(name)+'" type="number" required value="'+value+'" min="'+min+'" max="'+max+'" step="'+step+'">';
+}
+function simulatorHTML(){
+ const p=state.params,c=comparison();
+ return '<h2>Simulador do caso</h2><p class="notice">Os campos alteram a base compartilhada dos slides. Custos anuais fixos e intervenção por calendário permanecem ao variar horas. Valores fictícios.</p><form id="modelForm"><div class="fields">'+
+ commonFields.map(([key,label,unit,min,max,step])=>'<label>'+label+' · '+unit+numberInput(key,p[key],min,max,step)+'</label>').join("")+'</div>'+
+ table(["Parâmetro","A","B"],sideFields.map(([key,label,unit])=>[
+ esc(label+" · "+unit),
+ numberInput("A."+key,p.A[key],key==="mtbf"?.001:0,key==="downtime"?8760:1e12),
+ numberInput("B."+key,p.B[key],key==="mtbf"?.001:0,key==="downtime"?8760:1e12)
+ ]))+'<div class="actions"><button class="btn" type="submit">Aplicar e recalcular</button><button class="btn" type="button" data-action="restore">Restaurar cenário original</button></div></form><p id="modelError" role="alert"></p><h3>Resultado atual</h3>'+
+ table(["Parcela","A","B"],[
+ ["Investimento inicial",money(c.A.initial,2),money(c.B.initial,2)],
+ ["Custo anual",money(c.A.annual,2),money(c.B.annual,2)],
+ ["LCC de custos diretos",money(c.A.directLCC,2),money(c.B.directLCC,2)],
+ ["VP de perdas econômicas",money(c.A.lossPV,2),money(c.B.lossPV,2)],
+ ["LCC econômico",money(c.A.lcc,2),money(c.B.lcc,2)]
+ ])+'<p><strong>'+esc(conclusion(c.delta))+'</strong> Diferença A − B: '+money(c.delta,2)+'.</p>'+
+ '<p class="micro">Intervenção posterior ao horizonte não entra no cálculo. Ao mudar o horizonte, revise os valores residuais e a vida útil. Impostos, financiamento, capital de giro e acidentes não estão modelados.</p>';
+}
+const checks=[
+ ["Escopo",["A decisão está formulada?","A necessidade está descrita?","Os requisitos obrigatórios foram verificados?","As alternativas entregam serviço comparável?","As fronteiras e exclusões estão documentadas?","O horizonte e a data-base estão definidos?"]],
+ ["Dados",["As fontes e datas estão registradas?","O regime de operação foi validado?","As unidades são consistentes?","Os dados de falha representam a aplicação?","As estimativas possuem responsáveis?","As lacunas e incertezas estão registradas?"]],
+ ["Custos",["Os custos de implantação foram considerados?","Energia e operação foram avaliadas?","Planejada e corretiva estão separadas, sem dupla contagem da intervenção prevista?","Perdas de produção possuem justificativa econômica?","Descomissionamento e residual foram considerados?","Custos relevantes adicionais foram avaliados?","Duplas contagens foram eliminadas?","Custos já incorridos foram tratados corretamente?"]],
+ ["Modelo",["Os custos estão posicionados no tempo?","A taxa é coerente com a base real ou nominal?","Substituições e valores terminais estão tratados?","Fórmulas e sinais foram verificados?","Custos diretos e de oportunidade estão identificados?","O resultado pode ser reproduzido?"]],
+ ["Decisão",["Foram testadas variáveis críticas?","As condições de validade estão declaradas?","A recomendação atende aos requisitos?","Existe registro de aprovação e versão?"]],
+ ["Acompanhamento",["Há responsáveis por medir o realizado?","Existem indicadores e frequência de revisão?","Foram definidos gatilhos de reavaliação?","Os dados reais serão usados em decisões futuras?"]]
+];
+function checklistHTML(){
+ let i=0;return '<h2>Checklist da análise</h2><p class="small">34 itens. Registre evidência e responsável. “Não aplicável” exige justificativa.</p>'+
+ checks.map(([group,items])=>'<section class="check-group"><h3>'+group+'</h3>'+items.map(text=>{
+ const id=String(++i),v=state.checklist[id]||{};
+ return '<div class="check-row"><div>'+id+'. '+esc(text)+'</div><select data-check="'+id+'" data-key="status" aria-label="Status do item '+id+'">'+["Pendente","Concluído","Não aplicável"].map(s=>'<option '+((v.status||"Pendente")===s?'selected':'')+'>'+s+'</option>').join("")+'</select><textarea data-check="'+id+'" data-key="evidence" aria-label="Evidência e responsável do item '+id+'" placeholder="Evidência, responsável ou justificativa">'+esc(v.evidence||"")+'</textarea></div>';
+ }).join("")+'</section>').join("");
+}
+const auditQuestions=[
+ ["A empresa define quando uma análise de LCC é necessária?","Política, critérios de criticidade e gatilhos de investimento."],
+ ["A necessidade e os requisitos são definidos antes da comparação?","Especificação aprovada e ficha de abertura."],
+ ["As alternativas são comparadas com escopos equivalentes?","Matriz de escopo, inclusões e adequações."],
+ ["Os custos relevantes de todo o horizonte são considerados?","Estrutura de custos, encerramento e residual."],
+ ["As fontes e premissas são rastreáveis?","Registro de dados, datas e responsáveis."],
+ ["As estimativas de confiabilidade refletem a aplicação?","Histórico, população comparável e análise técnica."],
+ ["As consequências da indisponibilidade são validadas?","Gargalo, redundância e perda líquida."],
+ ["O modelo evita omissões e dupla contagem?","Revisão independente e conciliação de parcelas."],
+ ["A empresa trata corretamente tempo, inflação e desconto?","Critérios financeiros e modelo revisado."],
+ ["A sensibilidade influencia a recomendação?","Cenários, limites e decisões condicionais."],
+ ["A decisão preserva modelo, versão e responsáveis?","Registro de aprovação e controle de mudanças."],
+ ["Os resultados reais retroalimentam análises futuras?","Comparação previsto/realizado e modelos atualizados."]
+];
+function auditSummary(){
+ const vals=Array.from({length:12},(_,i)=>state.audit[String(i+1)]||{});
+ const scores=vals.map(v=>Number(v.score)).filter(n=>n>=1&&n<=5);
+ const na=vals.filter(v=>v.score==="NA").length;
+ const missing=vals.filter(v=>v.score&&!String(v.evidence||"").trim()).length;
+ return (scores.length?"Média de "+scores.length+" itens: "+num(scores.reduce((a,b)=>a+b,0)/scores.length,2)+" / 5. ":"Nenhum item pontuado. ")+na+" não aplicáveis. "+(12-scores.length-na)+" sem nota."+(missing?" "+missing+" registros sem evidência ou justificativa.":"");
+}
+function auditHTML(){
+ return '<h2>Auditoria de uso do LCC</h2><p class="notice">Instrumento didático, não certificação normativa. A média não compensa falhas críticas. Ausência de evidência não equivale a não aplicabilidade.</p>'+
+ table(["Nota","Critério"],[
+ ["1","Inexistente: sem prática ou evidência demonstrável."],["2","Pontual: iniciativas isoladas e dependentes de pessoas."],
+ ["3","Definida: método e registros, aplicação ou revisão parcial."],["4","Aplicada e verificada: uso consistente e revisão evidenciada."],
+ ["5","Aprimorada com resultados: dados reais geram melhorias demonstráveis."]
+ ])+'<p id="auditSummary" class="audit-warn">'+esc(auditSummary())+'</p>'+
+ auditQuestions.map(([q,e],i)=>{const id=String(i+1),v=state.audit[id]||{};
+ return '<section class="audit-item"><div class="audit-head"><h3>'+id+'. '+esc(q)+'</h3><select data-audit="'+id+'" data-key="score" aria-label="Nota da pergunta '+id+'"><option value="">Sem nota</option>'+["1","2","3","4","5","NA"].map(value=>'<option value="'+value+'" '+(v.score===value?'selected':'')+'>'+(value==="NA"?"Não aplicável":value)+'</option>').join("")+'</select></div><p class="small">Evidências: '+esc(e)+'</p><div class="fields">'+
+ [["evidence","Evidência ou justificativa de não aplicabilidade"],["gap","Lacuna"],["action","Ação"],["owner","Responsável e prazo"]].map(([key,label])=>'<label>'+label+'<textarea data-audit="'+id+'" data-key="'+key+'">'+esc(v[key]||"")+'</textarea></label>').join("")+'</div></section>';
+ }).join("");
+}
+const glossary=[
+ ["LCC — Life Cycle Cost","Custo do ciclo de vida nas fronteiras e no horizonte definidos."],
+ ["LCCA — Life Cycle Cost Analysis","Processo de análise dos custos do ciclo de vida."],
+ ["CAPEX","Dispêndios de capital conforme critérios contábeis aplicáveis. A classificação não define o momento do desembolso."],
+ ["OPEX","Despesas operacionais conforme a classificação adotada."],
+ ["VP","Valor equivalente na data-base."],["VPL","Valor presente líquido de benefícios e custos. Não equivale automaticamente ao LCC."],
+ ["CAE","Custo anual uniforme equivalente ao valor presente, nas condições adotadas."],
+ ["MTBF","Tempo médio de operação entre falhas de itens reparáveis. Não é vida útil."],
+ ["MTTR","Tempo médio de reparo conforme definição e fronteira declaradas."],
+ ["MDT","Tempo médio total de indisponibilidade, podendo incluir esperas além do reparo ativo."],
+ ["CMMS","Sistema informatizado de gestão da manutenção."],
+ ["EAM","Enterprise Asset Management: sistema ou abordagem de gestão de ativos empresariais."],
+ ["Taxa real","Exclui a inflação geral."],["Taxa nominal","Incorpora a inflação geral."],
+ ["Horizonte","Período escolhido para avaliar a decisão."],["Vida útil","Período de utilização do ativo nas condições consideradas."],
+ ["Valor residual","Valor econômico estimado ao final do horizonte."],
+ ["Custo de oportunidade","Consequência econômica relevante sem desembolso direto equivalente, ou valor da alternativa sacrificada."],
+ ["Custo irrecuperável","Custo já incorrido que não pode ser recuperado pela decisão atual."],
+ ["Sensibilidade","Avaliação do efeito de mudanças nas entradas."],["Cenário","Conjunto coerente de premissas."],
+ ["Ponto de indiferença","Condição em que as alternativas têm o mesmo resultado no critério analisado."],
+ ["TCO","Total Cost of Ownership. Seu escopo varia: declarar fronteiras em vez de presumir equivalência automática com LCC."],
+ ["ACV","Avaliação do ciclo de vida ambiental. Não é sinônimo de análise econômica de LCC."]
+];
+function referencesHTML(){
+ return '<h2>Referências e convenções</h2><h3>Fontes metodológicas</h3>'+
+ '<p><a href="https://doi.org/10.6028/NIST.HB.135e2025" target="_blank" rel="noopener">NIST Handbook 135 — edição 2025</a><br>Life Cycle Costing Manual for the Federal Energy Management Program. Estrutura econômica e consistência de premissas. Não importar automaticamente taxas e regras específicas do programa federal dos EUA para a empresa.</p>'+
+ '<p><a href="https://www.energy.gov/sites/default/files/2014/05/f16/pumplcc_1001.pdf" target="_blank" rel="noopener">Pump Life Cycle Costs — Executive Summary</a><br>Hydraulic Institute, Europump e U.S. Department of Energy. Componentes de custo e interfaces dos sistemas de bombeamento.</p>'+
+ '<h3>Convenções do caso</h3><ul>'+
+ ["Todos os dados iniciais são fictícios; 8% não é uma recomendação de taxa.",
+ "Valores constantes e taxa real; sem escalada real de preços.",
+ "Investimento em t=0. Custos anuais ao final de cada ano.",
+ "Intervenção por calendário; encerramento ao final do horizonte.",
+ "A planejada reúne rotinas anuais e intervenção prevista; seus valores são informados separadamente por ocorrerem em momentos diferentes. A corretiva é calculada à parte.",
+ "Custo por falha não inclui perda de produção.",
+ "A perda por hora é líquida e não recuperável, no caso.",
+ "A potência já é elétrica absorvida.",
+ "Não há reserva no cenário original.",
+ "Intervenções planejadas ocorrem sem perda adicional no exercício.",
+ "Custos fixos anuais permanecem ao variar horas.",
+ "Impostos, financiamento, capital de giro, acidentes e mudanças de demanda não são modelados.",
+ "As duas bombas permanecem utilizáveis até o fim do horizonte com as intervenções previstas.",
+ "Requisitos precisam ser verificados independentemente do resultado econômico."
+ ].map(t=>'<li>'+esc(t)+'</li>').join("")+'</ul>'+
+ '<h3>Equações</h3><p>Energia = potência × horas × tarifa.<br>Falhas esperadas ≈ horas / MTBF.<br>Corretivas = falhas esperadas × custo direto por falha.<br>Indisponibilidade = falhas esperadas × duração média total.<br>Perda = indisponibilidade × perda líquida por hora.<br>VP = custo / (1 + taxa)<sup>ano</sup>.<br>F = [1 − (1 + taxa)<sup>−n</sup>] / taxa; se taxa zero, F = n.<br>LCC = inicial + anual × F + VP(intervenção) + VP(descomissionamento − residual).<br>ΔLCC = LCC_A − LCC_B; positivo favorece B.<br>CAE = LCC / F.<br>(1 + taxa nominal) = (1 + taxa real) × (1 + inflação).</p>'+
+ '<h3>Limites</h3><p>MTBF não é vida útil. A aproximação de falhas pressupõe taxa estável. Envelhecimento e riscos graves exigem análise apropriada. Menor LCC é critério de custo entre alternativas admissíveis e não mede sozinho todo o valor gerado.</p><p>Exercícios, checklists e escala de auditoria são construções didáticas próprias. A ferramenta não emite certificação normativa.</p>';
+}
+
+
+
+/* EXPORTAÇÃO, IMPRESSÃO E CONTROLES */
+function download(filename,text,type){
+ const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function exportJSON(){
+ download("LCC_Dados_e_Registros.json",JSON.stringify({
+  format:"LCC-CURSO-8",version:2,exportedAt:new Date().toISOString(),
+  ...state,result:comparison(),exercise300:comparison(300)
+ },null,2),"application/json;charset=utf-8");
+}
+function exportCSV(){
+ const c=comparison(),rows=[["Alternativa","Ano","Inicial","Energia","Operacao","Planejada_total","Corretivas","Perdas","Descomissionamento","Residual_credito","Total_economico","Valor_presente"]];
+ for(const side of ["A","B"])for(const r of c[side].flow)rows.push([side,r.year,r.initial,r.energy,r.operation,r.planned+r.renewal,r.corrective,r.loss,r.disposal,r.residual,r.total,r.pv]);
+ const csv=rows.map(row=>row.map(v=>'"'+(typeof v==="number"?v.toFixed(2).replace(".",","):String(v)).replace(/"/g,'""')+'"').join(";")).join("\r\n");
+ download("LCC_Fluxo_Detalhado.csv","\ufeff"+csv,"text/csv;charset=utf-8");
+}
+async function importJSON(file){
+ if(!file)return;
+ if(file.size>2000000){alert("Arquivo muito grande. Use uma exportação de até 2 MB.");return}
+ try{
+  const data=JSON.parse(await file.text());
+  if(data.format!=="LCC-CURSO-8"||!validParams(data.params))throw Error("Formato ou parâmetros inválidos.");
+  const next={params:clone(data.params),fields:{},checklist:{},audit:{},current,sensitivityHours:6000};
+  if(data.fields&&typeof data.fields==="object")for(const [k,v] of Object.entries(data.fields)){
+   if(/^[a-zA-Z0-9_]+$/.test(k)&&!["__proto__","prototype","constructor"].includes(k)&&typeof v==="string")next.fields[k]=v;
+  }
+  for(let i=1;i<=34;i++){
+   const v=data.checklist?.[i];
+   if(v&&typeof v==="object")next.checklist[i]={
+    status:["Pendente","Concluído","Não aplicável"].includes(v.status)?v.status:"Pendente",
+    evidence:typeof v.evidence==="string"?v.evidence:""
+   };
+  }
+  for(let i=1;i<=12;i++){
+   const v=data.audit?.[i];
+   if(v&&typeof v==="object"){
+    next.audit[i]={score:["1","2","3","4","5","NA"].includes(v.score)?v.score:""};
+    for(const k of ["evidence","gap","action","owner"])next.audit[i][k]=typeof v[k]==="string"?v[k]:"";
+   }
+  }
+  state=next;save();materials(activeMaterial);
+ }catch(e){alert("Não foi possível importar: "+e.message)}
+}
+function printPanel(){
+ const src=$("materialContent")||$("panelBody"),copy=src.cloneNode(true);
+ copy.querySelectorAll("input,textarea,select").forEach(el=>{
+  const span=document.createElement("span");
+  span.textContent=el.tagName==="SELECT"?el.options[el.selectedIndex]?.text||"":el.value||"________________";
+  span.style.whiteSpace="pre-wrap";el.replaceWith(span);
+ });
+ copy.querySelectorAll("button,.material-nav").forEach(el=>el.remove());
+ const w=window.open("","_blank");
+ if(!w){alert("Permita a janela de impressão neste navegador.");return}
+ w.document.open();
+ w.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>LCC — Material de apoio</title><style>body{font:12pt Arial;color:#000;background:#fff;margin:20mm}h1,h2,h3{break-after:avoid}table{border-collapse:collapse;width:100%;font-size:10pt}th,td{border-bottom:1px solid #000;padding:7px;text-align:left;vertical-align:top}.fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}label{display:block;margin:12px 0}label span{display:block;margin-top:6px}.audit-item,.check-group{margin:20px 0;border-top:1px solid #000;padding-top:10px}.check-row{padding:12px 0;border-bottom:1px solid #000}.check-row span{display:block;margin:6px 0}p,li{line-height:1.45}.notice{border-left:2px solid #000;padding-left:12px}a{color:#000}</style></head><body><h1>LCC — '+esc(materialOptions.find(x=>x[0]===activeMaterial)?.[1]||"Material de apoio")+'</h1>'+copy.innerHTML+'</body></html>');
+ w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+let breakSeconds=600,breakEnd=null,breakTimer=null;
+function remaining(){return breakEnd===null?breakSeconds:Math.max(0,Math.ceil((breakEnd-Date.now())/1000))}
+function updateBreak(){
+ const sec=remaining();if($("breakClock"))$("breakClock").textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");
+ if(breakEnd!==null&&sec===0){breakEnd=null;breakSeconds=0;clearInterval(breakTimer);breakTimer=null;if($("breakMessage"))$("breakMessage").textContent="Intervalo concluído."}
+}
+function openBreak(){
+ openPanel("Intervalo · 10 minutos",'<p id="breakClock" class="price">10:00</p><p id="breakMessage">O cronômetro começa ao clicar em Iniciar.</p><div class="actions"><button class="btn" data-action="breakStart">Iniciar / continuar</button><button class="btn" data-action="breakPause">Pausar</button><button class="btn" data-action="breakReset">Reiniciar</button></div>',"break");updateBreak();
+}
+$("nextButton").onclick=advance;$("prevButton").onclick=back;$("indexButton").onclick=openIndex;
+$("notesButton").onclick=openNotes;$("materialsButton").onclick=()=>materials();$("closePanel").onclick=closePanel;$("printButton").onclick=printPanel;
+$("panel").addEventListener("close",()=>{document.body.classList.remove("locked");render(current,false,step)});
+document.addEventListener("keydown",e=>{
+ if(e.ctrlKey||e.altKey||e.metaKey||$("panel").open||e.target.closest("input,textarea,select"))return;
+ if(e.key===" "&&e.target.closest("button"))return;
+ if(["ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();advance()}
+ else if(["ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();back()}
+ else if(e.key==="Home"){e.preventDefault();render(0)}
+ else if(e.key==="End"){e.preventDefault();render(63,true)}
+ else if(e.key.toLowerCase()==="n"){e.preventDefault();openNotes()}
+ else if(e.key.toLowerCase()==="m"){e.preventDefault();materials()}
+});
+document.addEventListener("input",e=>{
+ const el=e.target;
+ if(el.dataset.field){state.fields[el.dataset.field]=el.value;save()}
+ if(el.dataset.check){const id=el.dataset.check;state.checklist[id]||={};state.checklist[id][el.dataset.key]=el.value;save()}
+ if(el.dataset.audit){const id=el.dataset.audit;state.audit[id]||={};state.audit[id][el.dataset.key]=el.value;save();if($("auditSummary"))$("auditSummary").textContent=auditSummary()}
+ if(el.id==="sensSpread"){sensSpread=Number(el.value);$("sensitivityBody").innerHTML=sensitivityVisualBody();$("spreadValue").textContent="±"+sensSpread+"%";}
+ if(el.id==="sensRange"){state.sensitivityHours=Number(el.value);updateSensitivity();save()}
+});
+document.addEventListener("change",e=>{
+ if(e.target.id==="curveVariable"){curveVariable=e.target.value;$("sensitivityBody").innerHTML=sensitivityVisualBody();}
+ if(e.target.id==="materialSelect")materials(e.target.value);
+ if(e.target.id==="importFile")importJSON(e.target.files[0]);
+});
+document.addEventListener("submit",e=>{
+ if(e.target.id!=="modelForm")return;e.preventDefault();
+ const form=e.target;if(!form.reportValidity())return;
+ const candidate=clone(state.params);
+ for(const [name,value] of new FormData(form)){
+  const n=Number(value);
+  if(name.includes(".")){const [side,key]=name.split(".");candidate[side][key]=n}else candidate[name]=n;
+ }
+ if(!validParams(candidate)){$("modelError").textContent="Verifique as entradas. MTBF deve ser positivo. Horizonte e ano da intervenção devem ser inteiros; demais valores devem ser válidos e não negativos.";return}
+ const trialA=model(candidate,"A"),trialB=model(candidate,"B");
+ if(!Number.isFinite(trialA.lcc)||!Number.isFinite(trialB.lcc)){$("modelError").textContent="Os valores excedem a faixa de cálculo. Revise as entradas.";return}
+ state.params=candidate;save();materials("simulator");
+});
+document.addEventListener("click",e=>{
+ const go=e.target.closest("[data-go]");
+ if(go){$("panel").close();render(Number(go.dataset.go));window.scrollTo(0,0);return}
+ const b=e.target.closest("[data-action]");if(!b)return;
+ switch(b.dataset.action){
+ case "simulator":materials("simulator");break;
+ case "export":exportJSON();break;
+ case "csv":exportCSV();break;
+ case "import":$("importFile").click();break;
+ case "exercise":materials("exercise");break;
+ case "audit":materials("audit");break;
+ case "checklist":materials("checklist");break;
+ case "restore":state.params=clone(DEFAULTS);state.sensitivityHours=6000;save();materials("simulator");break;
+ case "break":openBreak();break;
+ case "breakStart":if(breakEnd===null){if(breakSeconds<=0)breakSeconds=600;breakEnd=Date.now()+breakSeconds*1000;clearInterval(breakTimer);breakTimer=setInterval(updateBreak,250);if($("breakMessage"))$("breakMessage").textContent="Intervalo em andamento.";updateBreak()}break;
+ case "breakPause":breakSeconds=remaining();breakEnd=null;clearInterval(breakTimer);breakTimer=null;updateBreak();if($("breakMessage"))$("breakMessage").textContent="Pausado.";break;
+ case "breakReset":breakSeconds=600;breakEnd=null;clearInterval(breakTimer);breakTimer=null;updateBreak();if($("breakMessage"))$("breakMessage").textContent="Pronto para iniciar.";break;
+ }
+});
+$("fullButton").hidden=!document.fullscreenEnabled;
+$("fullButton").onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){$("fullButton").textContent="Tela cheia indisponível"}};
+document.addEventListener("fullscreenchange",()=>{$("fullButton").textContent=document.fullscreenElement?"Sair da tela cheia":"Tela cheia"});
+render(current);
+
+
+</script>
+</body>
+</html>
+

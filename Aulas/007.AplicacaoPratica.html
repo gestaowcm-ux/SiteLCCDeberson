@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 7 — Aplicação prática: 300 h/ano | Curso LCC</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/lcc-slides.css">
+</head>
+<body>
+  <div class="slides-container">
+    <div class="slides-wrapper" id="slides-wrapper">
+
+      <!-- Slide 1: Capa -->
+      <main class="slide-section active-slide cover-slide" id="slide-1">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Módulo 7: Aplicação Prática (300 h/ano)</h3>
+          <p>Duração sugerida: 35 min. Agora a turma aplica o método completo para as mesmas bombas A e B operando apenas 300 h/ano. Não revele o gabarito antes da oficina!</p>
+        </div>
+        <div class="cover-technical-grid"></div>
+        <div class="cover-content">
+          <span class="cover-badge animate-item">MÓDULO 07 • OFICINA PRÁTICA • 35 MIN</span>
+          <h1 class="cover-title animate-item delay-1">Aplicação prática: qual alternativa escolher?</h1>
+          <div class="cover-divider animate-item delay-2"></div>
+          <p class="cover-subtitle animate-item delay-3">Mesmas bombas A e B, mas o regime operacional mudou de 6.000 h/ano para 300 h/ano. Recalcule os custos anuais, o LCC em valor presente e defenda sua recomendação.</p>
+          <div class="cover-meta-row animate-item delay-4">
+            <span class="cover-pill">Novo Regime: 300 h/ano</span>
+            <span class="cover-pill">Oficina de Cálculo</span>
+            <button type="button" class="cover-cta" data-start-lesson>Iniciar Oficina →</button>
+          </div>
+        </div>
+        <div class="cover-footer">
+          <span>CURSO LCC — MANUTENÇÃO · CONFIABILIDADE · GESTÃO DE ATIVOS</span>
+          <span>MÓDULO 07 / 08</span>
+        </div>
+      </main>
+
+      <!-- Slide 2: A necessidade mudou + O que muda vs permanece -->
+      <section class="slide-section" id="slide-2">
+        <div class="speaker-notes" style="display: none;">
+          <h3>A necessidade mudou &amp; O que muda e o que permanece</h3>
+          <p>Peça uma previsão da turma antes de calcular. Variam energia, frequência de falhas, corretivas e perdas. A planejada (rotinas e intervenção por calendário) e a operação fixa permanecem iguais.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">NOVO CENÁRIO OPERACIONAL • 300 h/ano</span>
+          <h2 class="display-xl animate-item delay-1">A escolha continua a mesma?</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2 animate-item delay-1">
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">Variam com as Horas (300 h/ano)</span>
+              <h3 class="card-title">Custos Dependentes do Uso</h3>
+              <p class="card-text">• Energia elétrica (P × 300 × 0,80)<br>• Frequência de falhas (300 / MTBF)<br>• Manutenção corretiva e perdas produtivas</p>
+            </div>
+            <div class="lcc-card">
+              <span class="card-kicker">Permanecem Fixos (Calendário)</span>
+              <h3 class="card-title">Custos Independentes do Uso</h3>
+              <p class="card-text">• Investimento inicial (100k vs 130k)<br>• Operação fixa (2k/ano) e Planejada (6k vs 4k/ano)<br>• Intervenção Ano 4 (12k vs 8k) e Encerramento Ano 8</p>
+            </div>
+          </div>
+
+          <div class="sim-panel animate-item delay-2" style="flex-direction:row; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+            <span style="font-weight:700;">Palpite inicial da turma antes do cálculo:</span>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <button type="button" class="tab-pill" id="m7-guess-a">Aposto na Bomba A</button>
+              <button type="button" class="tab-pill" id="m7-guess-b">Aposto na Bomba B</button>
+              <span id="m7-guess-status" style="font-weight:700; font-size:13px; margin-left:8px;"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Oficina — Custos Anuais para 300 h/ano -->
+      <section class="slide-section" id="slide-3">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Refaçam os custos anuais (Oficina)</h3>
+          <p>Organize duplas ou grupos (7 min). Não revele o gabarito imediatamente. Depois que os grupos calcularem, clique em "Revelar Gabarito Anual" para conferir A = R$ 15.800/ano e B = R$ 12.250/ano.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">OFICINA PARTE 1 • CUSTOS ANUAIS (300 h/ano)</span>
+          <h2 class="display-xl animate-item delay-1">Recalculem os custos anuais antes de concluir</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="lcc-table-wrap animate-item delay-1">
+            <table class="lcc-table">
+              <thead>
+                <tr>
+                  <th>Parcela Anual</th>
+                  <th>Fórmula (300 h/ano)</th>
+                  <th>Bomba A (Resposta)</th>
+                  <th>Bomba B (Resposta)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Energia Elétrica</td>
+                  <td>P × 300 h × R$ 0,80</td>
+                  <td id="m7-a-en">? (30 × 300 × 0,80)</td>
+                  <td id="m7-b-en">? (25 × 300 × 0,80)</td>
+                </tr>
+                <tr>
+                  <td>Operação + Planejada (Fixas)</td>
+                  <td>Calendário anual</td>
+                  <td>R$ 8.000 (2k + 6k)</td>
+                  <td>R$ 6.000 (2k + 4k)</td>
+                </tr>
+                <tr>
+                  <td>Corretiva Direta</td>
+                  <td>(300 / MTBF) × R$ 4.000</td>
+                  <td id="m7-a-cor">? (0,05 × 4.000)</td>
+                  <td id="m7-b-cor">? (0,025 × 4.000)</td>
+                </tr>
+                <tr>
+                  <td>Perda Produtiva</td>
+                  <td>Falhas × D × R$ 1.000/h</td>
+                  <td id="m7-a-los">? (0,40 h × 1.000)</td>
+                  <td id="m7-b-los">? (0,15 h × 1.000)</td>
+                </tr>
+                <tr style="background:var(--color-canvas-soft); font-weight:800;">
+                  <td>Total Anual Recorrente</td>
+                  <td>Soma das parcelas</td>
+                  <td id="m7-a-tot">Aguardando conferência...</td>
+                  <td id="m7-b-tot">Aguardando conferência...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center;" class="animate-item delay-2">
+            <span style="font-size:13px; color:var(--color-body);">Dica: A tem MTBF = 6.000 h (D = 8h); B tem MTBF = 12.000 h (D = 6h).</span>
+            <button type="button" class="tab-pill active" id="m7-reveal-annual">Revelar Gabarito Anual</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Oficina — Cálculo do LCC em 300 h/ano -->
+      <section class="slide-section" id="slide-4">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Calculem o LCC (Oficina)</h3>
+          <p>Forneça o fator F = 5,7466 (8 anos, 8% a.a.). Verifique o sinal do valor residual (crédito) e o desconto da intervenção do Ano 4 (÷ 1,08^4) e do encerramento do Ano 8 (÷ 1,08^8).</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">OFICINA PARTE 2 • F = 5,7466 (8 ANOS · 8% a.a.)</span>
+          <h2 class="display-xl animate-item delay-1">Tragam todos os fluxos para Valor Presente</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2 animate-item delay-1">
+            <div class="lcc-card accent-dark">
+              <span class="card-kicker">Bomba A (300 h/ano)</span>
+              <p class="card-text">
+                • Inicial (t=0): R$ 100.000,00<br>
+                • Anual (VP): R$ 15.800 × 5,7466 = <span id="m7-vp-a-ann">?</span><br>
+                • Ano 4 (VP): R$ 12.000 / 1,08⁴ = <span id="m7-vp-a-r4">?</span><br>
+                • Ano 8 (VP): (+10k − 5k) / 1,08⁸ = <span id="m7-vp-a-end">?</span>
+              </p>
+              <div class="card-metric" id="m7-lcc-a" style="margin-top:8px;">LCC A = ?</div>
+            </div>
+
+            <div class="lcc-card">
+              <span class="card-kicker">Bomba B (300 h/ano)</span>
+              <p class="card-text">
+                • Inicial (t=0): R$ 130.000,00<br>
+                • Anual (VP): R$ 12.250 × 5,7466 = <span id="m7-vp-b-ann">?</span><br>
+                • Ano 4 (VP): R$ 8.000 / 1,08⁴ = <span id="m7-vp-b-r4">?</span><br>
+                • Ano 8 (VP): (+10k − 8k) / 1,08⁸ = <span id="m7-vp-b-end">?</span>
+              </p>
+              <div class="card-metric" id="m7-lcc-b" style="margin-top:8px;">LCC B = ?</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end;" class="animate-item delay-2">
+            <button type="button" class="tab-pill active" id="m7-reveal-lcc">Revelar Cálculo Completo do LCC</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Resultado & Inversão (~470 h/ano) -->
+      <section class="slide-section" id="slide-5">
+        <div class="speaker-notes" style="display: none;">
+          <h3>O resultado mudou &amp; O limite pertence ao cenário</h3>
+          <p>No original (300 h/ano): A = R$ 202.318,60 e B = R$ 207.357,10. Vantagem de A = R$ 5.038,51. A diferença é pequena (~2,5%) e o cruzamento ocorre perto de 470 h/ano. Abaixo de 470 h, A tende a vencer; acima, B.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">RESULTADO OFICIAL • 300 h/ano</span>
+          <h2 class="display-xl animate-item delay-1">A escolha se inverteu: Bomba A vence!</h2>
+        </div>
+
+        <div class="slide-body">
+          <div style="display:flex; gap:18px; align-items:stretch;" class="animate-item delay-1">
+            <div class="vertical-rail-type" style="color:rgba(0,0,0,0.2);">INVERSÃO</div>
+            <div class="grid-asymmetric-rev" style="flex:1;">
+              <div class="lcc-card editorial-red-frame" style="justify-content:center;">
+                <span class="editorial-red-strip" style="align-self:flex-start; margin-bottom:10px;">300 H/ANO → VENCE A</span>
+                <div class="hero-callout-num" style="color:#22c55e; margin:6px 0;">R$ 5.039</div>
+                <p class="card-text">Vantagem da <strong>Bomba A</strong> (~2,5% do LCC total). Limite de inversão: <strong>~470 h/ano</strong>.</p>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <div class="lcc-card accent-dark">
+                  <span class="card-kicker">Vencedora (300 h/ano)</span>
+                  <div class="card-metric">R$ 202.319</div>
+                  <p class="card-text">Bomba A (Anual: R$ 15.800/ano)</p>
+                </div>
+                <div class="lcc-card">
+                  <span class="card-kicker">Bomba B (300 h/ano)</span>
+                  <div class="card-metric">R$ 207.357</div>
+                  <p class="card-text">Bomba B (Anual: R$ 12.250/ano)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="statement-bar animate-item delay-2">
+            <strong>Ponto de Indiferença ≈ 470 h/ano:</strong> como 300 h/ano está relativamente próximo do limite (470 h/ano) e a vantagem é pequena (R$ 5.039), qualquer aumento no uso futuro pode devolver a liderança para a Bomba B!
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Defesa da Recomendação ao Comitê -->
+      <section class="slide-section" id="slide-6">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Como defender a decisão? &amp; O que poderia invalidar?</h3>
+          <p>Peça apresentações breves. Aceite recomendações condicionais coerentes. Avalie escopo, modelo, interpretação e ressalvas, não apenas a letra escolhida.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <div class="slide-header">
+          <span class="body-sm-strong animate-item">REGISTRO DE DECISÃO PARA O COMITÊ</span>
+          <h2 class="display-xl animate-item delay-1">Recomendação exige justificativa e condições</h2>
+        </div>
+
+        <div class="slide-body">
+          <div class="sim-panel animate-item delay-1">
+            <div class="sim-control-row">
+              <div class="sim-field">
+                <label>Alternativa Recomendada (300 h/ano)</label>
+                <select id="m7-rec-choice">
+                  <option value="Bomba A (condicionada ao regime de reserva ≤ 470 h/ano)">Bomba A (condicionada a ≤ 470 h/ano)</option>
+                  <option value="Bomba B (se houver risco de expansão de horas)">Bomba B (proteção contra aumento de uso)</option>
+                </select>
+              </div>
+              <div class="sim-field">
+                <label>Gatilho de Reavaliação</label>
+                <input type="text" id="m7-rec-trigger" value="Se previsão de uso ultrapassar 450 h/ano">
+              </div>
+            </div>
+            <div class="sim-field">
+              <label>Resumo Executivo para o Comitê</label>
+              <input type="text" id="m7-rec-note" value="No regime de reserva (300 h/ano), A economiza R$ 5.039 em VP e reduz CAPEX em R$ 30k, desde que confirmada a baixa utilização.">
+            </div>
+          </div>
+
+          <div class="grid-4 animate-item delay-2">
+            <div class="lcc-card"><span class="card-kicker">Auditoria 01</span><h3 class="card-title">Requisitos</h3><p class="card-text">Ambas atendem segurança e desempenho?</p></div>
+            <div class="lcc-card"><span class="card-kicker">Auditoria 02</span><h3 class="card-title">Omissões</h3><p class="card-text">Faltou interface ou sobressalente?</p></div>
+            <div class="lcc-card"><span class="card-kicker">Auditoria 03</span><h3 class="card-title">Consistência</h3><p class="card-text">Taxa real com moeda constante?</p></div>
+            <div class="lcc-card"><span class="card-kicker">Auditoria 04</span><h3 class="card-title">Dupla Contagem</h3><p class="card-text">Ano 4 e residual entraram só 1 vez?</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Quiz Oficial -->
+      <section class="slide-section quiz-slide" id="slide-7">
+        <div class="speaker-notes" style="display: none;">
+          <h3>Notas do Orador — Quiz do Módulo 7</h3>
+          <p>Valide o aprendizado da oficina prática de 300 h/ano.</p>
+        </div>
+        <div class="technical-grid"></div>
+        <div class="technical-border-accent"></div>
+
+        <header class="quiz-header animate-item">
+          <h2 class="quiz-title-giant">QUIZ</h2>
+          <div class="quiz-tabs-nav" id="quiz-tabs-nav"></div>
+        </header>
+
+        <div class="slide-body">
+          <div class="quiz-prompt-card animate-item delay-1">
+            <div class="quiz-prompt-tag" id="quiz-prompt-tag">DESAFIO</div>
+            <p class="quiz-prompt-text" id="quiz-prompt-text"></p>
+          </div>
+          <div class="quiz-options-grid animate-item delay-2" id="quiz-options-grid"></div>
+          <div class="quiz-feedback-banner" id="quiz-feedback-banner"></div>
+          <div class="quiz-footer-bar">
+            <span id="quiz-progress-label" style="font-weight: 700; font-size: 13px;"></span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="tab-pill" id="btn-quiz-reset">Reiniciar</button>
+              <button type="button" class="tab-pill active" id="btn-quiz-next">Próximo Cenário →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="slide-nav-indicators" aria-label="Navegação de slides">
+    <div class="slide-indicator-dot active" data-title="Capa do Módulo 7"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-0"></div><span class="slide-preview-text">Capa do Módulo 7</span></div></div>
+    <div class="slide-indicator-dot" data-title="Novo Regime: 300 h/ano"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-1"></div><span class="slide-preview-text">Novo Regime: 300 h/ano</span></div></div>
+    <div class="slide-indicator-dot" data-title="Oficina: Custos Anuais"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-2"></div><span class="slide-preview-text">Oficina: Custos Anuais</span></div></div>
+    <div class="slide-indicator-dot" data-title="Oficina: Cálculo do LCC"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-3"></div><span class="slide-preview-text">Oficina: Cálculo do LCC</span></div></div>
+    <div class="slide-indicator-dot" data-title="Resultado e Inversão"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-4"></div><span class="slide-preview-text">Resultado e Inversão</span></div></div>
+    <div class="slide-indicator-dot" data-title="Defesa ao Comitê"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-5"></div><span class="slide-preview-text">Defesa ao Comitê</span></div></div>
+    <div class="slide-indicator-dot" data-title="Quiz: Estudo de Caso"><div class="slide-preview-popover"><div class="slide-preview-thumb" id="preview-wrapper-6"></div><span class="slide-preview-text">Quiz: Estudo de Caso</span></div></div>
+  </nav>
+
+  <script type="module" src="./007.AplicacaoPratica.js"></script>
+  <script type="module" src="/js/laser-pointer.js"></script>
+</body>
+</html>
